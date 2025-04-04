@@ -1,0 +1,79 @@
+lea-market/src/public/css/verification.css */ body {
+    background-color: #ffffff;
+    font-family: Inter, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.auth-header {
+    height: 82px;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+}
+
+.logo {
+    width: 370px;
+    height: 36px;
+}
+
+.auth-content {
+    width: 720px;
+    margin: 100px auto 0;
+    text-align: center;
+}
+
+.auth-text {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 100%;
+    margin: 319px auto 50px; /* 上から319pxに設定 */
+    text-align: center;
+}
+
+.auth-button {
+    width: 257px;
+    height: 69px;
+    border-radius: 10px;
+    background: #d9d9d9;
+    border: 1px solid #000000;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 100%;
+    text-align: center;
+    cursor: pointer;
+    margin: 20px auto;
+    display: block;
+}
+
+.resend-link {
+    display: inline-block;
+    margin-top: 30px;
+    font-size: 20px;
+    text-decoration: none;
+    color: #0073cc; /* 再送ボタンの色を青色に設定 */
+    text-align: center;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 850px) {
+    .auth-content {
+        width: 90%; /* タブレットで幅を調整 */
+        margin: 50px auto 0;
+    }
+
+    .auth-text {
+        font-size: 20px; /* フォントサイズを調整 */
+    }
+
+    .auth-button {
+        width: 100%; /* ボタン幅を100%に */
+        max-width: 257px;
+        font-size: 20px; /* ボタンのフォントサイズを調整 */
+    }
+
+    .resend-link {
+        font-size: 18px; /* リンクのフォントサイズを調整 */
+    }
+}
