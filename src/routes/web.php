@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SellController;
 
 // ホームページ
 Route::get('/', function () {
@@ -48,3 +49,12 @@ Route::post('/create-profile', [UserController::class, 'storeProfile'])->name('p
 
 // プロフィール画像アップロード
 Route::post('/upload-image', [UserController::class, 'uploadImage'])->name('uploadImage');
+
+// 商品出品関連
+Route::get('/sell', [SellController::class, 'showSellForm'])->name('sell.form');
+
+// マイページ関連
+Route::get('/mypage', [UserController::class, 'showMypage'])->name('mypage');
+
+// ログアウト
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
