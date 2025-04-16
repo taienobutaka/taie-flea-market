@@ -1,0 +1,224 @@
+/* 全体のリセット */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Inter-Regular", sans-serif;
+    background-color: #ffffff;
+}
+
+.profile-container {
+    max-width: 1540px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* toppage-header */
+.toppage-header {
+    position: fixed; /* 画面上部に固定 */
+    top: 0; /* 上端に配置 */
+    left: 0; /* 左端に配置 */
+    width: 100vw; /* 画面幅いっぱいに表示 */
+    height: 80px; /* ヘッダーの高さを80pxに設定 */
+    background-color: #000000; /* 背景色 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 1000; /* 他の要素より前面に表示 */
+}
+
+.toppage-header-logo-img {
+    position: absolute;
+    top: 22px;
+    left: 40px;
+    width: 370px; /* 幅を370pxに設定 */
+    height: auto; /* 高さを36pxに設定 */
+    object-fit: contain; /* アスペクト比を維持しつつ画像全体を表示 */
+    padding: 0px; /* 余白をリセット */
+    margin: 0; /* 余白をリセット */
+    display: block; /* インライン要素の余白を防ぐ */
+    box-sizing: border-box; /* 幅と高さにパディングを含める */
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1540px) and (min-width: 1400px) {
+    .toppage-header-logo {
+        left: 40px; /* PCサイズでの左位置 */
+    }
+}
+
+@media (max-width: 850px) and (min-width: 768px) {
+    .toppage-header-logo {
+        left: 20px; /* タブレットサイズでの左位置 */
+        width: 300px; /* タブレットサイズでの幅 */
+    }
+}
+
+@media (max-width: 1512px) {
+    .toppage-header-logo {
+        width: 370px; /* 画面幅が1512pxのときに幅を370pxに設定 */
+    }
+}
+
+/* toppage-header-nav */
+.toppage-header-nav {
+    position: absolute; /* 絶対位置指定 */
+    top: 0; /* 画面上端に揃える */
+    right: 15px; /* 画面右端に揃える */
+    width: 463px; /* 幅を463pxに設定 */
+    height: 80px; /* 高さを80pxに設定 */
+    display: flex; /* 横並びに配置 */
+    align-items: flex-start; /* 上端揃え */
+    gap: 9px; /* デフォルトのアイテム間隔を9pxに設定 */
+}
+
+/* nav-item (共通スタイル) */
+.nav-item {
+    width: 135px; /* 幅 */
+    height: 47px; /* 高さ */
+    position: relative; /* 相対位置指定 */
+    top: 18px; /* toppage-header-navの上から20px */
+    font-family: "Inter", sans-serif; /* フォントファミリー */
+    font-weight: 400; /* フォントウェイト */
+    font-size: 24px; /* フォントサイズ */
+    line-height: 47px; /* 高さに合わせて中央揃え */
+    letter-spacing: 0%; /* 文字間隔 */
+    text-align: center; /* テキストの中央揃え */
+    color: #ffffff; /* テキスト色 */
+    cursor: pointer; /* ポインタを表示 */
+    display: inline-block; /* インラインブロック要素 */
+}
+
+/* nav-item (ログアウト専用スタイル) */
+.nav-item:first-child {
+    margin-left: 37px; /* toppage-header-navの左から37px */
+}
+
+/* nav-item (マイページ専用スタイル) */
+.nav-item:nth-child(2) {
+    position: absolute; /* 絶対位置指定 */
+    top: 18px; /* toppage-header-navの上から20px */
+    left: 181px; /* toppage-header-navの左から181px */
+    right: 147px; /* toppage-header-navの右から147px */
+    width: 135px; /* 幅 */
+    height: 47px; /* 高さ */
+    font-family: "Inter", sans-serif; /* フォントファミリー */
+    font-weight: 400; /* フォントウェイト */
+    font-size: 24px; /* フォントサイズ */
+    line-height: 47px; /* 高さに合わせて中央揃え */
+    letter-spacing: 0%; /* 文字間隔 */
+    text-align: center; /* テキストの中央揃え */
+    color: #ffffff; /* テキスト色 */
+    cursor: pointer; /* ポインタを表示 */
+    display: inline-block; /* インラインブロック要素 */
+}
+
+/* nav-item (出品専用スタイル) */
+.nav-item:last-child {
+    width: 100px; /* 幅 */
+    height: 50px; /* 高さ */
+    position: absolute; /* 絶対位置指定 */
+    top: 18px; /* 上からの位置を18pxに設定 */
+    right: 26px; /* 画面右から26pxに配置 */
+    font-family: "Inter", sans-serif; /* フォントファミリー */
+    font-weight: 400; /* フォントウェイト */
+    font-size: 24px; /* フォントサイズ */
+    line-height: 46px; /* 高さに合わせて中央揃え */
+    letter-spacing: 0%; /* 文字間隔 */
+    text-align: center; /* テキストの中央揃え */
+    color: #000000; /* テキスト色を黒に設定 */
+    background-color: #ffffff; /* ボックスの背景色を白に設定 */
+    border-radius: 4px; /* ボックスの角を丸める */
+    cursor: pointer; /* ポインタを表示 */
+    display: inline-block; /* インラインブロック要素 */
+    padding-top: -2px; /* 文字を2px上に移動 */
+}
+
+/* 検索欄 */
+.search-bar {
+    position: absolute; /* 絶対位置指定 */
+    top: 15px; /* 上から15px */
+    left: 50%; /* 左右中央揃え */
+    transform: translateX(-50%); /* 中央揃えの補正 */
+    width: 500px; /* 幅 */
+    height: 50px; /* 高さ */
+}
+
+.search-input {
+    width: 100%; /* 親要素に合わせる */
+    height: 100%; /* 親要素に合わせる */
+    border: 1px solid #cccccc; /* 枠線 */
+    border-radius: 5px; /* 角丸 */
+    padding: 10px; /* 内側の余白 */
+    font-size: 16px; /* フォントサイズ */
+    box-sizing: border-box; /* ボックスサイズを含める */
+}
+
+/* 検索欄内のコンテナ */
+.search-container {
+    position: absolute;
+    bottom: 12px; /* 検索欄から下10px */
+    left: 0; /* 左0px */
+    right: 170px; /* 検索欄から右170px */
+    width: 330px; /* 幅330px */
+    height: 29px; /* 高さ29px */
+    font-family: "Inter", sans-serif; /* フォントファミリー */
+    font-weight: 400; /* フォントウェイト */
+    font-size: 24px; /* フォントサイズ */
+    line-height: 100%; /* 行の高さ */
+    letter-spacing: 0%; /* 文字間隔 */
+    text-align: center; /* テキストの中央揃え */
+    vertical-align: middle; /* 垂直方向の中央揃え */
+    display: flex; /* フレックスボックスを使用 */
+    align-items: center; /* 垂直方向の中央揃え */
+    justify-content: center; /* 水平方向の中央揃え */
+    color: #000000; /* テキスト色 */
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1540px) and (min-width: 1400px) {
+    .update-button-container {
+        height: 60px; /* PCサイズでの高さ */
+    }
+    .update-button-text {
+        font-size: 26px; /* PCサイズでのフォントサイズ */
+    }
+}
+
+@media (max-width: 850px) and (min-width: 768px) {
+    .update-button-container {
+        height: 50px; /* タブレットサイズでの高さ */
+    }
+    .update-button-text {
+        font-size: 20px; /* タブレットサイズでのフォントサイズ */
+    }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 850px) {
+    .profile-container {
+        padding: 10px;
+    }
+
+    .profile-title {
+        font-size: 28px;
+    }
+
+    .profile-form {
+        max-width: 100%;
+    }
+
+    .action-bar {
+        height: 50px;
+    }
+
+    .action-bar-text {
+        font-size: 20px;
+    }
+}
