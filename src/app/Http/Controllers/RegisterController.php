@@ -125,4 +125,18 @@ class RegisterController extends Controller
             'login' => 'ログイン情報が登録されていません',
         ])->withInput();
     }
+
+    /**
+     * ログアウト処理
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login');
+    }
 }
