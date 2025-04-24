@@ -13,6 +13,7 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+docker/mysql/data/#innodb_temp/
 
 # Allow src/storage/img to be tracked
 !src/storage/app/public/img

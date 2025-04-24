@@ -6,6 +6,11 @@
     <title>プロフィール設定</title>
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/create-profile.css') }}">
+    <style>
+        .toppage-header-nav .nav-item {
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
 <div class="profile-container">
@@ -18,26 +23,26 @@
             <input type="text" placeholder="" class="search-input">
         </div>
         <nav class="toppage-header-nav">
-            <div class="nav-item">ログアウト</div>
-            <div class="nav-item">マイページ</div>
-            <div class="nav-item">出品</div>
+            <a href="{{ route('login') }}" class="nav-item">ログアウト</a>
+            <a href="{{ route('mypage') }}" class="nav-item">マイページ</a>
+            <a href="{{ route('sell.form') }}" class="nav-item">出品</a>
         </nav>
     </header>
     <h1 class="profile-title">プロフィール設定</h1>
 
     <div class="profile-image">
         @if (session('imagePath'))
-            <img src="{{ asset('storage/' . session('imagePath')) }}" alt="プロフィール画像" style="max-width: 100%; height: auto;">
+            <img src="{{ asset('storage/' . session('imagePath')) }}" alt="プロフィール画像">
         @endif
     </div>
 
     <form id="image-upload-form" action="{{ route('uploadImage') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="image-select-button">
-            <label for="image" id="image-button-label" style="cursor: pointer;">
+            <label for="image" style="cursor: pointer;">
                 画像を選択する
             </label>
-            <input type="file" id="image" name="image" accept="image/*" style="display: none;" onchange="document.getElementById('image-upload-form').submit();">
+            <input type="file" id="image" name="image" accept="image/*" style="display: none;" onchange="this.form.submit()">
         </div>
     </form>
 

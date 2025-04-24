@@ -191,20 +191,24 @@ body {
 
 /* profile-image */
 .profile-image {
-    width: 150px; /* 円形の幅 */
-    height: 150px; /* 円形の高さ */
-    border-radius: 50%; /* 円形にする */
-    background-color: #d9d9d9; /* 背景色 */
-    display: flex; /* 子要素を中央揃え */
-    align-items: center; /* 垂直方向の中央揃え */
-    justify-content: center; /* 水平方向の中央揃え */
-    overflow: hidden; /* 枠を超えた部分を隠す */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #d9d9d9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
 }
 
 .profile-image img {
-    width: 100%; /* 親要素に合わせる */
-    height: 100%; /* 親要素に合わせる */
-    object-fit: cover; /* 画像を枠に合わせてトリミング */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 /* 画像選択ボタン */

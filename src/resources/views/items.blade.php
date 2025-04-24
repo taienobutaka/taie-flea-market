@@ -8,57 +8,49 @@
     <link rel="stylesheet" href="{{ asset('css/items.css') }}">
 </head>
 <body>
-<div class="profile-container">
-    <header class="toppage-header">
-        <div class="toppage-header-logo">
-            <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="toppage-header-logo-img">
-        </div>
-        <div class="search-bar">
-            <div class="search-container">なにをお探しですか？</div>
-            <input type="text" placeholder="" class="search-input">
-        </div>
-        <nav class="toppage-header-nav">
-            <div class="nav-item">ログアウト</div>
-            <div class="nav-item">マイページ</div>
-            <div class="nav-item">出品</div>
-        </nav>
-    </header>
+    <div class="screen">
+        <div class="div">
+            <div class="toppage-header">
+                <div class="toppage-header-icon">
+                    <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="toppage-header-logo-img">
+                </div>
+                <div class="search-bar">
+                    <div class="search-container">なにをお探しですか？</div>
+                    <input type="text" placeholder="" class="search-input">
+                </div>
+                <nav class="toppage-header-nav">
+                    <a href="{{ route('logout') }}" class="nav-item">ログアウト</a>
+                    <a href="{{ route('mypage') }}" class="nav-item">マイページ</a>
+                    <a href="{{ route('sell.form') }}" class="nav-item">出品</a>
+                </nav>
+            </div>
 
-    <!-- プロフィール更新フォーム -->
-    <form class="profile-form" action="{{ route('profile.store') }}" method="POST" enctype="multipart/form-data" novalidate>
-        @csrf
-        <div class="input-group">
-            <label for="username" class="input-label">ユーザー名</label>
-            <input type="text" id="username" name="username" class="input-field" value="{{ old('username') }}">
-            @error('username')
-                <span class="error-message">{{ $message }}</span>
-            @enderror
+            <div class="toppage-list">
+                <img class="line" src="{{ asset('img/line-2.svg') }}" />
+                <div class="text-wrapper-7">おすすめ</div>
+                <div class="text-wrapper-8">マイリスト</div>
+            </div>
+
+            <div class="products-container">
+                <div class="products-row">
+                    @foreach($items as $item)
+                        <div class="item-card">
+                            <a href="{{ route('item.show', $item->id) }}" class="item-link">
+                                <div class="item-image">
+                                    @if($item->image_path)
+                                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}">
+                                    @endif
+                                </div>
+                                <div class="item-info">
+                                    <p class="item-name">{{ $item->name }}</p>
+                                    <p class="item-price">¥{{ number_format($item->price) }}</p>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
-        <div class="input-group">
-            <label for="postcode" class="input-label">郵便番号</label>
-            <input type="text" id="postcode" name="postcode" class="input-field" value="{{ old('postcode') }}">
-            @error('postcode')
-                <span class="error-message">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="input-group">
-            <label for="address" class="input-label">住所</label>
-            <input type="text" id="address" name="address" class="input-field" value="{{ old('address') }}">
-            @error('address')
-                <span class="error-message">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="input-group">
-            <label for="building_name" class="input-label">建物名</label>
-            <input type="text" id="building_name" name="building_name" class="input-field" value="{{ old('building_name') }}">
-            @error('building_name')
-                <span class="error-message">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="action-bar">
-            <button type="submit" class="action-bar-text">更新する</button>
-        </div>
-    </form>
-</div>
+    </div>
 </body>
 </html>
