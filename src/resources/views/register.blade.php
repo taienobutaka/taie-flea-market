@@ -43,9 +43,9 @@
                     <p style="color: red;">{{ $message }}</p>
                 @enderror
             </div>
-            <button type="submit" class="register-button">登録する</button>
+            <button type="submit" class="register-button"><span>登録する</span></button>
         </form>
-        <a href="{{ url('/login') }}" class="login-link">ログインはこちら</a>
+        <a href="/login" class="login-link">ログインはこちら</a>
     </div>
 </body>
 </html>

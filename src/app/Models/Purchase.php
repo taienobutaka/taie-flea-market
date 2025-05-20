@@ -13,10 +13,10 @@ class Purchase extends Model
         'item_id',
         'user_id',
         'payment_method',
-        'shipping_address',
-        'postal_code',
-        'status',
-        'total_amount'
+        'address',
+        'postcode',
+        'building_name',
+        'amount'
     ];
 
     public function item()
@@ -27,5 +27,10 @@ class Purchase extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payment_method', 'id');
     }
 } 

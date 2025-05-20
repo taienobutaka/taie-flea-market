@@ -1,4 +1,6 @@
-/* 全体のリセット */
+/* ==========================================================================
+   リセットとベーススタイル
+   ========================================================================== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,75 +8,117 @@
 }
 
 body {
-    font-family: "Inter-Regular", sans-serif;
-    background-color: #ffffff;
-    min-width: 1512px;
+    font-family: "Inter", sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    min-width: 1512px; /* デザイン基準幅 */
 }
 
+/* ==========================================================================
+   レイアウト構造
+   ========================================================================== */
 .screen {
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+    min-height: 100vh;
     width: 100%;
-}
-
-.screen .div {
-    background-color: #ffffff;
-    width: 1512px;
-    height: 1947px;
+    min-width: 1512px;
+    margin: 0 auto;
     position: relative;
+    overflow-x: hidden;
 }
 
-/* ヘッダー */
+.container {
+    width: 100%;
+    min-width: 1512px;
+    position: relative;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   ヘッダー
+   ========================================================================== */
 .toppage-header {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
+    min-width: 1512px;
     height: 80px;
     background-color: #000000;
+    z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
-    z-index: 1000;
 }
 
-.toppage-header-logo-img {
+/* ロゴ */
+.toppage-header-icon {
     position: absolute;
     top: 22px;
     left: 40px;
+}
+
+.toppage-header-logo-img {
     width: 370px;
     height: auto;
     object-fit: contain;
-    padding: 0px;
+    padding: 0;
     margin: 0;
     display: block;
     box-sizing: border-box;
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 1540px) and (min-width: 1400px) {
-    .toppage-header-logo {
-        left: 40px; /* PCサイズでの左位置 */
-    }
+/* 検索バー */
+.search-bar {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 50px;
 }
 
-@media (max-width: 850px) and (min-width: 768px) {
-    .toppage-header-logo {
-        left: 20px; /* タブレットサイズでの左位置 */
-        width: 300px; /* タブレットサイズでの幅 */
-    }
+.search-form {
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
-@media (max-width: 1512px) {
-    .toppage-header-logo {
-        width: 370px; /* 画面幅が1512pxのときに幅を370pxに設定 */
-    }
+.search-input {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 8px 10px 10px 44px;
+    font-size: 24px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: left;
+    color: #000000;
 }
 
-/* toppage-header-nav */
+.search-input::placeholder {
+    color: #000000;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: left;
+}
+
+/* 検索ボタンを非表示 */
+.search-button {
+    display: none;
+}
+
+/* Navigation styles */
 .toppage-header-nav {
     position: absolute;
     top: 0;
@@ -86,7 +130,6 @@ body {
     gap: 9px;
 }
 
-/* nav-item (共通スタイル) */
 .nav-item {
     width: 135px;
     height: 47px;
@@ -102,21 +145,28 @@ body {
     cursor: pointer;
     display: inline-block;
     text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
 }
 
-/* nav-item (ログアウト専用スタイル) */
-.nav-item:first-child {
-    margin-left: 37px;
+/* ログアウトボタンのスタイル */
+.logout-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
 }
 
-/* nav-item (マイページ専用スタイル) */
-.nav-item:nth-child(2) {
-    position: absolute;
-    top: 18px;
-    left: 181px;
-    right: 147px;
+.logout-form button.nav-item {
+    background: none;
+    border: none;
+    cursor: pointer;
     width: 135px;
     height: 47px;
+    position: relative;
+    top: 18px;
     font-family: "Inter", sans-serif;
     font-weight: 400;
     font-size: 24px;
@@ -124,131 +174,189 @@ body {
     letter-spacing: 0%;
     text-align: center;
     color: #ffffff;
-    cursor: pointer;
     display: inline-block;
+    text-decoration: none;
+    margin-left: -133px;
 }
 
-/* nav-item (出品専用スタイル) */
+.nav-item:nth-child(2) {
+    position: absolute;
+    top: 18px;
+    left: 184px;
+    width: 158px;
+    height: 47px;
+}
+
 .nav-item:last-child {
     width: 100px;
     height: 50px;
     position: absolute;
     top: 18px;
-    right: 26px;
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 46px;
-    letter-spacing: 0%;
-    text-align: center;
+    right: 11px;
     color: #000000;
     background-color: #ffffff;
     border-radius: 4px;
-    cursor: pointer;
-    display: inline-block;
+    line-height: 46px;
     padding-top: -2px;
 }
 
-/* 検索欄 */
-.search-bar {
-    position: absolute;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 500px;
-    height: 50px;
-}
-
-.search-input {
+/* ==========================================================================
+   メインコンテンツ
+   ========================================================================== */
+.main-content {
+    margin-top: 80px;
+    padding: 0;
+    position: relative;
     width: 100%;
-    height: 100%;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 16px;
-    box-sizing: border-box;
+    min-width: 1512px;
+    overflow-x: hidden;
 }
 
-/* 検索欄内のコンテナ */
-.search-container {
+/* Visually hidden elements */
+.visually-hidden {
     position: absolute;
-    bottom: 12px;
-    left: 0;
-    right: 170px;
-    width: 330px;
-    height: 29px;
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 100%;
-    letter-spacing: 0%;
-    text-align: center;
-    vertical-align: middle;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #000000;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
+/* ナビゲーションタブ */
 .toppage-list {
     position: absolute;
-    top: 80px;
-    left: 0;
-    right: 0;
-    height: 40px;
+    top: 45px;
+    left: 129px;
     display: flex;
     align-items: center;
+    z-index: 2;
+}
+
+/* タブの下線 */
+.tab-underline {
+    position: absolute;
+    top: 45px;
+    left: -109px;
+    width: calc(100vw + 258px);
+    height: 2px;
+    background-color: #5f5f5f;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    transform: none;
+}
+
+.tab-link {
+    display: flex;
+    width: 155px;
+    height: 40px;
+    flex-direction: column;
     justify-content: center;
-    gap: 40px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+    color: #5f5f5f;
+    text-align: right;
+    font-family: "Inter", sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-decoration: none;
+    padding: 0;
+    border-radius: 0;
+    transition: none;
+    position: relative;
 }
 
-.text-wrapper-7,
-.text-wrapper-8 {
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-    cursor: pointer;
-    padding: 8px 16px;
+/* おすすめタブの位置 */
+.tab-link[href*="recommended"] {
+    margin-right: 0; /* マージンをリセット */
+}
+
+/* マイリストタブのスタイル */
+.tab-link[href*="favorites"] {
+    color: #ff0000;
+    position: absolute;
+    left: 207px; /* おすすめタブの幅(155px) + 間隔(40px) */
+}
+
+.tab-link.active {
+    color: #5f5f5f;
+    font-weight: 700;
+    background: none;
+}
+
+/* マイリストタブのアクティブ状態 */
+.tab-link[href*="favorites"].active {
+    color: #ff0000;
+}
+
+/* Search results message */
+.search-results-message {
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #f8f9fa;
     border-radius: 4px;
-    transition: background-color 0.2s;
+    font-size: 14px;
+    color: #666;
 }
 
-.text-wrapper-7:hover,
-.text-wrapper-8:hover {
-    background-color: #f5f5f5;
+.search-query {
+    font-weight: 600;
+    color: #333;
 }
 
+/* ==========================================================================
+   商品一覧
+   ========================================================================== */
 .products-container {
-    padding: 140px 40px 40px;
-    max-width: 1200px;
+    width: 1512px;
     margin: 0 auto;
+    padding-top: 170px;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .products-row {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(4, 290px);
+    gap: 71.51px;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 1512px;
+    box-sizing: border-box;
 }
 
+/* 商品カード */
 .product-card {
-    background-color: #ffffff;
-    border-radius: 8px;
+    width: 290px;
+    background: #fff;
+    border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
+    box-sizing: border-box;
 }
 
 .product-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.product-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* 商品画像 */
 .product-image {
-    width: 100%;
-    height: 200px;
+    position: relative;
+    width: 290px;
+    height: 281px;
     overflow: hidden;
+    border-radius: 4px;
 }
 
 .product-img {
@@ -256,55 +364,408 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s;
+    border-radius: 4px;
 }
 
 .product-card:hover .product-img {
     transform: scale(1.05);
 }
 
+/* Sold label */
+.sold-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    background-color: rgba(255, 0, 0, 0.8);
+    color: #fff;
+    padding: 8px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1;
+}
+
+/* 商品情報 */
 .product-info {
-    padding: 16px;
+    padding: 2px 0;
+    background-color: #f5f5f5;
 }
 
 .product-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 8px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-family: "Inter", sans-serif;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+    text-align: left; /* 左揃えを明示的に指定 */
 }
 
-.product-price {
-    font-size: 16px;
+/* No items message */
+.no-items-message {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.no-items-title {
+    font-size: 24px;
     font-weight: 600;
-    color: #ff5655;
+    color: #333;
+    margin-bottom: 16px;
 }
 
-@media (max-width: 768px) {
+.no-items-description {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.action-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.action-link:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   レスポンシブ対応
+   ========================================================================== */
+@media screen and (max-width: 1540px) {
+    .screen {
+        width: 100%;
+        min-width: 1400px;
+    }
+
+    .container {
+        width: 100%;
+        min-width: 1400px;
+    }
+
     .toppage-header {
-        padding: 0 20px;
+        width: 100%;
+        min-width: 1400px;
+    }
+
+    .toppage-header-icon {
+        top: 22px;
+        left: 40px;
+    }
+
+    .toppage-header-logo-img {
+        width: 370px;
+        height: auto;
     }
 
     .search-bar {
+        width: 33.1%;
+    }
+
+    .tab-underline {
+        left: -40px;
+        width: calc(100vw + 80px);
+    }
+
+    .products-container {
+        width: 100%;
+        min-width: 1400px;
+    }
+}
+
+@media screen and (max-width: 1200px) and (min-width: 851px) {
+    .screen {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .container {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .toppage-header {
+        min-width: auto;
+        width: 100%;
+        height: 80px;
+        padding: 0 20px;
+    }
+
+    .toppage-header-icon {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 300px;
+    }
+
+    .toppage-header-logo-img {
+        width: 100%;
+        height: auto;
+    }
+
+    .search-bar {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
+        width: 35%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .search-form {
+        width: 100%;
+    }
+
+    .search-input {
+        font-size: 14px;
+        height: 40px;
+    }
+
+    .toppage-header-nav {
+        position: relative;
+        top: 0;
+        right: 0;
+        width: auto;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .nav-item {
+        font-size: 16px;
+        padding: 8px 12px;
+        width: auto;
+        height: 40px;
+        line-height: 40px;
+        position: relative;
+        top: 0;
+    }
+
+    .tab-underline {
+        left: -20px;
+        width: calc(100vw + 40px);
+    }
+
+    .products-container {
+        width: 100%;
+        min-width: auto;
+        padding: 180px 20px 0;
+        box-sizing: border-box;
+    }
+
+    .products-row {
+        width: 100%;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        padding: 0;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .screen {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .container {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .toppage-header {
+        min-width: auto;
+        width: 100%;
+        height: auto;
+        padding: 15px;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .toppage-header-icon {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 250px;
+        margin: 0 auto;
+    }
+
+    .toppage-header-logo-img {
+        width: 100%;
+        height: auto;
+    }
+
+    .search-bar {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
+        width: 100%;
+        max-width: 300px;
+        margin: 10px auto;
+    }
+
+    .search-form {
+        width: 100%;
+    }
+
+    .search-input {
+        font-size: 14px;
+        height: 40px;
+    }
+
+    .toppage-header-nav {
+        position: relative;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 10px 0;
+    }
+
+    .nav-item {
+        font-size: 14px;
+        padding: 6px 10px;
+        width: auto;
+        height: 35px;
+        line-height: 35px;
+        position: relative;
+        top: 0;
+    }
+
+    .tab-underline {
+        position: absolute;
+        top: 120px;
+        left: -15px;
+        width: calc(100vw + 30px);
+    }
+
+    .products-container {
+        width: 100%;
+        min-width: auto;
+        padding-top: 150px;
+        padding-left: 15px;
+        padding-right: 15px;
+        box-sizing: border-box;
+    }
+
+    .products-row {
+        width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 0;
+    }
+
+    .product-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+        position: relative;
+    }
+
+    .product-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-info {
+        padding: 6px 0;
+    }
+
+    .product-name {
+        font-size: 14px;
+        line-height: 1.4;
+        font-weight: 500;
+    }
+
+    .sold-label {
+        font-size: 13px;
+        padding: 4px 14px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .toppage-header {
+        height: 60px;
+    }
+
+    .toppage-header-icon {
+        width: 100px;
+        height: 30px;
+    }
+
+    .search-bar {
+        position: static;
+        transform: none;
+        width: 100%;
         margin: 0 20px;
     }
 
     .toppage-header-nav {
-        gap: 16px;
+        gap: 10px;
     }
 
-    .products-container {
-        padding: 140px 20px 20px;
+    .nav-item {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    .main-content {
+        margin-top: 60px;
     }
 
     .products-row {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 16px;
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 
     .product-image {
-        height: 160px;
+        height: 240px;
+    }
+
+    .sold-label {
+        font-size: 20px;
+        padding: 6px 30px;
+    }
+}
+
+/* Responsive styles for header */
+@media (max-width: 1540px) and (min-width: 1400px) {
+    .toppage-header-icon {
+        left: 40px;
+    }
+}
+
+@media (max-width: 850px) and (min-width: 768px) {
+    .toppage-header-icon {
+        left: 20px;
+        width: 300px;
+    }
+}
+
+@media (max-width: 1512px) {
+    .toppage-header-icon {
+        width: 370px;
     }
 }

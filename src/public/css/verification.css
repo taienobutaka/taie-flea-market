@@ -1,8 +1,13 @@
-lea-market/src/public/css/verification.css */ body {
+body {
     background-color: #ffffff;
     font-family: Inter, sans-serif;
     margin: 0;
     padding: 0;
+    min-width: 768px;
+    max-width: 1540px;
+    margin: 0 auto;
+    min-height: 982px;
+    overflow-x: hidden;
 }
 
 .auth-header {
@@ -11,16 +16,39 @@ lea-market/src/public/css/verification.css */ body {
     display: flex;
     align-items: center;
     padding-left: 25px;
+    width: 100%;
+    min-width: 1512px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .logo {
     width: 370px;
-    height: 36px;
+    height: auto;
+    position: absolute;
+    top: 20px;
+    left: 25px;
+    object-fit: contain;
+    padding: 0px;
+    margin: 0;
+    display: block;
+    box-sizing: border-box;
 }
 
 .auth-content {
     width: 720px;
     margin: 100px auto 0;
+    text-align: center;
+    padding-top: 82px;
+}
+
+.auth-title {
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 100%;
+    margin: 0 0 30px;
     text-align: center;
 }
 
@@ -28,8 +56,15 @@ lea-market/src/public/css/verification.css */ body {
     font-weight: 700;
     font-size: 24px;
     line-height: 100%;
-    margin: 319px auto 50px; /* 上から319pxに設定 */
+    margin: 137px auto 0;
     text-align: center;
+    position: relative;
+    left: 3px;
+}
+
+.gap {
+    display: block;
+    height: 6px;
 }
 
 .auth-button {
@@ -40,40 +75,99 @@ lea-market/src/public/css/verification.css */ body {
     border: 1px solid #000000;
     font-weight: 700;
     font-size: 24px;
-    line-height: 100%;
+    line-height: 69px;
     text-align: center;
     cursor: pointer;
-    margin: 20px auto;
+    margin: 64.5px auto 0;
     display: block;
+    text-decoration: none;
+    color: #000000;
+    position: relative;
+    left: 0.5px;
+}
+
+.resend-form {
+    display: block;
+    text-align: center;
+    margin-top: 62px;
 }
 
 .resend-link {
     display: inline-block;
-    margin-top: 30px;
     font-size: 20px;
     text-decoration: none;
-    color: #0073cc; /* 再送ボタンの色を青色に設定 */
+    color: #0073cc;
+    text-align: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    left: 0px;
+}
+
+form[action*="verification.resend"] {
+    display: block;
     text-align: center;
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 850px) {
+@media (max-width: 1512px) {
+    .logo {
+        width: calc(370px * (100vw / 1512));
+        left: calc(25px * (100vw / 1512));
+    }
+
     .auth-content {
-        width: 90%; /* タブレットで幅を調整 */
-        margin: 50px auto 0;
+        width: calc(720px * (100vw / 1512));
+    }
+
+    .auth-title {
+        font-size: calc(36px * (100vw / 1512));
     }
 
     .auth-text {
-        font-size: 20px; /* フォントサイズを調整 */
+        font-size: calc(24px * (100vw / 1512));
     }
 
     .auth-button {
-        width: 100%; /* ボタン幅を100%に */
-        max-width: 257px;
-        font-size: 20px; /* ボタンのフォントサイズを調整 */
+        width: calc(257px * (100vw / 1512));
+        height: calc(69px * (100vw / 1512));
+        font-size: calc(24px * (100vw / 1512));
+        line-height: calc(69px * (100vw / 1512));
     }
 
     .resend-link {
-        font-size: 18px; /* リンクのフォントサイズを調整 */
+        font-size: calc(20px * (100vw / 1512));
+    }
+}
+
+@media (max-width: 850px) and (min-width: 768px) {
+    .auth-content {
+        width: 90%;
+        margin: 50px auto 0;
+    }
+
+    .auth-title {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    .auth-text {
+        font-size: 20px;
+        margin: 200px auto 30px;
+        left: 0;
+    }
+
+    .auth-button {
+        width: 100%;
+        max-width: 257px;
+        font-size: 20px;
+        left: 0;
+    }
+
+    .resend-link {
+        font-size: 18px;
+        left: 0;
     }
 }

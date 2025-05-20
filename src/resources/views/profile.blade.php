@@ -14,7 +14,7 @@
                 <img src="{{ asset('img/logo.svg') }}" alt="ロゴ" class="logo-img">
             </div>
             <div class="search-bar">
-                <div class="search-placeholder">なにをお探しですか？</div>
+                <div class="search-container">なにをお探しですか？</div>
                 <input type="text" class="search-input">
             </div>
             <nav class="header-nav">

@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->id(); // PRIMARY KEY
             $table->string('username')->nullable(false); // ユーザー名
             $table->string('email')->unique()->nullable(false); // メールアドレス
+            $table->timestamp('email_verified_at')->nullable(); // メール認証日時
             $table->string('password')->nullable(false); // パスワード
             $table->timestamps();
         });

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ログイン</title>
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
 <body>
     <div class="auth-header">
@@ -13,7 +13,7 @@
     </div>
     <div class="auth-content">
         <h1>ログイン</h1>
-        <form action="{{ route('login.post') }}" method="POST" novalidate>
+        <form action="/login" method="POST" novalidate>
             @csrf
             <div class="form-group">
                 <label for="email">メールアドレス</label>

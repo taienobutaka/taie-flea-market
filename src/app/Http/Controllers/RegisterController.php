@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -25,17 +25,11 @@ class RegisterController extends Controller
     /**
      * 会員登録処理
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\RegisterRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $request->validate([
-            'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
         // ユーザーを作成
         $user = User::create([
             'username' => $request->username,
@@ -49,8 +43,13 @@ class RegisterController extends Controller
         // 認証メール送信
         $user->sendEmailVerificationNotification();
 
-        // 認証確認画面にリダイレクト
-        return redirect()->route('verification');
+        // メール認証済みの場合はプロフィール設定画面へ
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->route('profile.create');
+        }
+
+        // メール認証誘導画面にリダイレクト
+        return redirect('/verification');
     }
 
     /**
@@ -64,8 +63,8 @@ class RegisterController extends Controller
         // メールアドレスを認証済みにする
         $request->fulfill();
 
-        // プロフィール設定画面にリダイレクト
-        return redirect('/create-profile');
+        // ログイン画面にリダイレクト
+        return redirect()->route('login');
     }
 
     /**
@@ -75,6 +74,13 @@ class RegisterController extends Controller
      */
     public function showVerificationForm()
     {
+        $user = Auth::user();
+
+        // メール認証済みの場合はプロフィール設定画面へ
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->route('profile.create');
+        }
+
         return view('verification');
     }
 
@@ -113,16 +119,18 @@ class RegisterController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validated();
 
         if (Auth::attempt($credentials)) {
-            // ログイン成功時、商品一覧画面にリダイレクト
+            $user = Auth::user();
+            $request->session()->regenerate();
+
+            // 全てのログインユーザーを商品一覧画面へリダイレクト
             return redirect('/');
         }
 
-        // ログイン失敗時、エラーメッセージを返す
         return back()->withErrors([
-            'login' => 'ログイン情報が登録されていません',
+            'login' => 'メールアドレスまたはパスワードが間違っています',
         ])->withInput();
     }
 
@@ -137,6 +145,6 @@ class RegisterController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login');
+        return redirect('/login');
     }
 }

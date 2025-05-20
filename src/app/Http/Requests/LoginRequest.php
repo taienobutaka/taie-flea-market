@@ -38,9 +38,23 @@ class LoginRequest extends FormRequest
     {
         return [
             'email.required' => 'メールアドレスを入力してください',
-            'email.email' => '正しいメールアドレスを入力してください',
+            'email.email' => 'ログイン情報が登録されていません。',
             'password.required' => 'パスワードを入力してください',
-            'password.min' => 'パスワードは8文字以上で入力してください',
+            'password.min' => 'ログイン情報が登録されていません。',
+            'login' => 'ログイン情報が登録されていません。',
+        ];
+    }
+
+    /**
+     * バリデーションエラーの属性名を日本語に変更
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'email' => 'メールアドレス',
+            'password' => 'パスワード',
         ];
     }
 }
