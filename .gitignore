@@ -1,0 +1,36 @@
+# MySQL data directory
+docker/mysql/data/
+docker/mysql/data/*
+
+# Laravel storage
+src/storage/*
+!src/storage/.gitkeep
+
+# Laravel public storage
+public/storage
+
+# Composer
+src/vendor/
+
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.backup
+.phpunit.result.cache
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 

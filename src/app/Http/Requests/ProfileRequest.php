@@ -14,20 +14,23 @@ class ProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|max:255',
-            'postcode' => 'required|string|max:10',
-            'address' => 'required|string|max:255',
-            'building_name' => 'nullable|string|max:255', // 建物名をバリデーションから外す
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png|max:2048',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'username.required' => 'ユーザー名を入力してください。',
-            'postcode.required' => '郵便番号を入力してください。',
-            'address.required' => '住所を入力してください。',
+            'image.image' => '画像ファイルを選択してください。',
+            'image.mimes' => '画像はjpegまたはpng形式でアップロードしてください。',
+            'image.max' => '画像サイズは2MB以下にしてください。',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'image' => 'プロフィール画像',
         ];
     }
 }

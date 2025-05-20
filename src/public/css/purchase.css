@@ -203,19 +203,15 @@
 .purchase__price-box {
     border-bottom: none;
     z-index: 1;
-}
-
-.purchase__payment-box {
-    margin-top: 0;
-    z-index: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    position: relative;
 }
 
-.purchase__section-title {
+.purchase__price-box .purchase__section-title {
     position: absolute;
-    width: auto;
+    width: 220px; /* 枠線の半分の幅 */
     height: 115px;
     top: 0;
     left: 0;
@@ -229,29 +225,31 @@
     letter-spacing: 0;
     margin: 0;
     padding: 0;
-    display: inline-block;
-    margin-left: 47px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     white-space: nowrap;
-    line-height: 115px;
+    box-sizing: border-box;
 }
 
 .purchase__price {
     position: absolute;
-    width: auto;
+    width: 220px; /* 枠線の半分の幅 */
     height: 115px;
     top: 0;
-    left: 0;
-    margin-left: 274px;
+    left: 220px; /* 左半分の幅分移動 */
+    margin: 0;
+    padding: 0;
     font-family: "Inter-Regular", Helvetica;
     font-weight: 400;
     color: #000000;
     font-size: 24px;
-    text-align: left;
+    text-align: center;
     letter-spacing: 0;
-    line-height: 115px;
-    padding: 0;
-    display: inline-block;
-    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .purchase__price-symbol {
@@ -263,7 +261,7 @@
     line-height: normal;
     margin-right: 4px;
     position: relative;
-    top: 5px;
+    top: 0;
 }
 
 .purchase__price-amount {
@@ -274,20 +272,60 @@
     font-weight: 400;
     line-height: normal;
     position: relative;
-    top: 5px;
+    top: 0;
 }
 
-.purchase__payment-method {
-    color: #5f5f5f;
-    text-align: center;
+.purchase__payment-box {
+    margin-top: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.purchase__payment-box .purchase__section-title {
+    position: absolute;
+    width: 220px; /* 枠線の半分の幅 */
+    height: 115px;
+    top: 0;
+    left: 0;
+    color: #000;
     font-family: Inter;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    width: 100%;
+    text-align: center;
+    letter-spacing: 0;
     margin: 0;
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.purchase__payment-method {
+    color: #000;
+    text-align: center;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 220px; /* 枠線の半分の幅 */
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 220px; /* 左半分の幅分移動 */
+    top: 0;
+    height: 115px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 /* 配送先情報
@@ -307,7 +345,7 @@
     width: 805px;
     height: 1px;
     background: #000;
-    top: 85px;
+    top: 215px;
     left: -15px;
     z-index: 0;
 }
@@ -325,6 +363,9 @@
     color: #0073cc;
     font-size: 20px;
     text-decoration: none;
+    position: absolute;
+    right: 567px;
+    top: 34px;
 }
 
 .purchase__address-details {
@@ -332,7 +373,8 @@
     flex-direction: column;
     gap: 10px;
     font-style: normal;
-    margin-left: 35px;
+    margin-left: 80px;
+    margin-top: 80px;
 }
 
 .purchase__address-postcode,
@@ -412,7 +454,7 @@
     height: 1px;
     background: #000;
     top: -67px;
-    left: -15px;
+    left: -17px;
     z-index: 0;
 }
 
@@ -423,8 +465,8 @@
     width: 805px;
     height: 1px;
     background: #000;
-    top: 85px;
-    left: -15px;
+    top: 123px;
+    left: -17px;
     z-index: 0;
 }
 
@@ -437,152 +479,156 @@
     font-weight: 700;
     line-height: normal;
     position: absolute;
-    top: -40px;
-    left: -27px;
+    top: -38px;
+    left: 18px;
     z-index: 1;
 }
 
 /* プルダウンの基本スタイル */
 .purchase__payment-select-wrapper {
-    width: 265px;
+    width: 234px;
     position: relative;
-    margin-left: 42px;
-    margin-top: 10px;
+    margin-left: 80px;
+    margin-top: 30px;
     display: inline-block;
+    z-index: 10;
+}
+
+/* カスタムセレクトのスタイル */
+.custom-select {
+    position: relative;
+    width: 100%;
+    font-family: "Inter", sans-serif;
+}
+
+.select-trigger {
+    position: relative;
+    width: 100%;
+    height: 31px;
+    flex-shrink: 0;
+    background-color: #ffffff;
+    border: 1px solid #5f5f5f;
+    border-radius: 4px;
+    padding: 0 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    color: #5e5e5e;
+    font-weight: 700;
+    line-height: 31px;
+    user-select: none;
+}
+
+.select-trigger:hover {
+    border-color: #5f5f5f;
+}
+
+.select-trigger .selected-text {
+    color: #5e5e5e;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.select-options {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 251px;
+    background-color: #636769;
+    border: 1px solid #5e5e5e;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 6px 7px;
+}
+
+/* ドロップダウンの表示制御を.openクラスで管理 */
+.custom-select.open .select-options {
+    display: block;
+}
+
+/* ドロップダウンが開いているときのトリガーのスタイル */
+.custom-select.open .select-trigger {
+    border-color: #5599eb;
+}
+
+.custom-select.open .polygon {
+    transform: translateY(-50%) rotate(0deg) scale(2);
+}
+
+.option {
+    padding: 0 15px 0 30px;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #5e5e5e;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all 0.2s;
+    background-color: #636769;
+    color: #eaeaea;
+    position: relative;
+}
+
+.option-text {
+    flex: 1;
+    padding-left: 15px;
+}
+
+.option:hover {
+    background-color: #5599eb;
+    color: #ffffff;
+    border-radius: 5px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='12' viewBox='0 0 15 12' fill='none'%3E%3Cpath d='M1 6L5 10L14 1' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 15px center;
+    background-size: 15px 12px;
+    margin: 0;
+}
+
+.option.selected {
+    color: #ffffff;
 }
 
 /* プルダウン矢印 */
-.purchase__payment-select-wrapper::after {
-    content: "";
+.polygon {
     position: absolute;
     top: 50%;
     right: 16px;
-    transform: translateY(-50%) rotate(0deg);
-    width: 8px;
-    height: 8px;
+    transform: translateY(-50%) rotate(-180deg);
+    width: 13px;
+    height: 11px;
+    flex-shrink: 0;
     background-color: #5f5f5f;
-    clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+    clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
     pointer-events: none;
-    z-index: 3;
-}
-
-/* プルダウンが開いているときの矢印のスタイル */
-.purchase__payment-select:focus + .purchase__payment-select-wrapper::after {
-    transform: translateY(-50%) rotate(180deg);
-}
-
-/* セレクトボックスの基本スタイル */
-.purchase__payment-select {
-    width: 100%;
-    height: 31px;
-    border: 1px solid #5f5f5f;
-    border-radius: 4px;
-    padding: 0 30px 0 15px;
-    font-family: Inter;
-    font-size: 16px;
-    font-weight: 700;
-    color: #5f5f5f;
-    background-color: #ffffff;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    box-sizing: border-box;
-    position: relative;
-    z-index: 2;
-}
-
-/* オプションの基本スタイル */
-.purchase__payment-select option {
-    background-color: #636769;
-    color: #eaeaea;
-    font-size: 16px;
-    height: 30px;
-    line-height: 30px;
-    padding: 0 15px !important;
-    margin: 0;
-    cursor: pointer;
-    text-indent: 0 !important;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    position: relative;
-    z-index: 3;
-}
-
-/* オプションのホバー・選択状態 */
-.purchase__payment-select option:hover,
-.purchase__payment-select option:focus,
-.purchase__payment-select option:active {
-    background-color: #5599eb !important;
-    color: #ffffff !important;
-    padding: 0 15px !important;
-    text-indent: 0 !important;
-}
-
-/* 選択済みオプションのスタイル */
-.purchase__payment-select option:checked {
-    background-color: #636769 !important;
-    color: #eaeaea !important;
-    padding: 0 15px !important;
-    text-indent: 0 !important;
-}
-
-/* プレースホルダーオプションを非表示 */
-.purchase__payment-select option[value=""] {
-    display: none !important;
 }
 
 /* フォーカス時のスタイル */
-.purchase__payment-select:focus {
-    outline: none;
-    border-color: #5599eb;
-    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-}
-
-/* ホバー時のスタイル */
-.purchase__payment-select:hover {
+.custom-select:focus-within .select-trigger {
     border-color: #5599eb;
 }
 
-/* カスタムセレクトのスタイルを完全に削除 */
-.custom-select,
-.select-trigger,
-.select-options,
-.option,
-.option-text,
-.polygon {
+/* エラー表示のスタイル */
+.purchase__payment-form.has-error .select-trigger {
+    border-color: #ff5655;
+}
+
+.purchase__payment-form.has-error .purchase__error-message {
+    color: #ff5655;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* 古いセレクトボックスのスタイルを無効化 */
+.purchase__payment-select {
     display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-/* プルダウンの表示を確実にする */
-.purchase__payment-select,
-.purchase__payment-select option {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-}
-
-/* プルダウンのコンテナの表示を確実にする */
-.purchase__payment-select-wrapper {
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-}
-
-/* オプションのテキスト位置を強制的に調整 */
-.purchase__payment-select option {
-    padding: 0 15px !important;
-    text-indent: 0 !important;
-    -webkit-padding-start: 15px !important;
-    -webkit-padding-end: 15px !important;
-    -moz-padding-start: 15px !important;
-    -moz-padding-end: 15px !important;
 }
 
 /* アクションボタン
@@ -817,8 +863,8 @@
     }
 }
 
-.purchase__payment-box .purchase__section-title {
-    margin-left: 39px;
+.purchase__price-box .purchase__section-title {
+    margin-left: 0;
 }
 
 /* エラーメッセージのスタイル
@@ -869,4 +915,17 @@
     margin: 0;
     padding: 0;
     width: 100%;
+}
+
+.purchase__address .purchase__section-title {
+    color: #000;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    position: absolute;
+    top: 27px;
+    left: 20px;
+    z-index: 1;
 }

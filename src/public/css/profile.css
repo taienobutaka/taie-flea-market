@@ -9,6 +9,7 @@ body {
     font-family: "Inter", sans-serif;
     background-color: #ffffff;
     min-height: 100vh;
+    min-width: 768px;
 }
 
 /* コンテナ */
@@ -48,19 +49,24 @@ body {
     height: 50px;
     background-color: #ffffff;
     border-radius: 4px;
-    padding: 0 20px;
+    padding: 0 15px;
+    position: relative;
 }
 
-.search-placeholder {
+.search-container {
     color: #000000;
-    font-size: 24px;
+    font-size: 20px;
+    white-space: nowrap;
 }
 
 .search-input {
     width: 100%;
     border: none;
     outline: none;
-    font-size: 24px;
+    font-size: 20px;
+    background: transparent;
+    padding: 0 5px;
+    margin-left: 10px;
 }
 
 .header-nav {
@@ -190,50 +196,113 @@ body {
 }
 
 /* レスポンシブ対応 */
-@media (max-width: 1540px) {
+@media (max-width: 1540px) and (min-width: 1400px) {
     .profile-container {
-        max-width: 100%;
+        max-width: 1400px;
     }
-}
 
-@media (max-width: 850px) {
     .header {
-        flex-direction: column;
-        height: auto;
-        padding: 20px;
+        padding: 0 30px;
     }
 
     .header-logo {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 20px;
+        width: 320px;
     }
 
     .search-bar {
-        width: 100%;
-        margin-bottom: 20px;
+        width: 450px;
+    }
+}
+
+@media (max-width: 1399px) and (min-width: 1100px) {
+    .header {
+        padding: 0 25px;
+    }
+
+    .header-logo {
+        width: 300px;
+    }
+
+    .search-bar {
+        width: 400px;
+    }
+
+    .nav-link,
+    .nav-button {
+        font-size: 20px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 1099px) and (min-width: 850px) {
+    .header {
+        padding: 0 20px;
+    }
+
+    .header-logo {
+        width: 280px;
+    }
+
+    .search-bar {
+        width: 350px;
+    }
+
+    .search-placeholder {
+        font-size: 20px;
+    }
+
+    .search-input {
+        font-size: 20px;
+    }
+
+    .nav-link,
+    .nav-button {
+        font-size: 18px;
+        padding: 8px 14px;
+    }
+}
+
+@media (max-width: 849px) {
+    .header {
+        padding: 0 15px;
+        height: auto;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header-logo {
+        width: 250px;
+        margin: 10px 0;
+    }
+
+    .search-bar {
+        width: 300px;
+        height: 40px;
+        margin: 10px 0;
+        padding: 0 8px;
+    }
+
+    .search-container {
+        font-size: 14px;
+    }
+
+    .search-input {
+        font-size: 14px;
+        padding: 0 4px;
+        margin-left: 8px;
     }
 
     .header-nav {
         width: 100%;
+        display: flex;
         justify-content: center;
+        margin: 10px 0;
+        gap: 10px;
     }
 
-    .profile-main {
-        margin-top: 200px;
-    }
-}
-
-@media (max-width: 768px) {
-    .profile-main {
-        padding: 0 10px;
-    }
-
-    .form-input {
+    .nav-link,
+    .nav-button {
         font-size: 16px;
-    }
-
-    .submit-button {
-        font-size: 20px;
+        padding: 6px 12px;
     }
 }

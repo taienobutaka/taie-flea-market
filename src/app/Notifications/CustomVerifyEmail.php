@@ -21,8 +21,7 @@ class CustomVerifyEmail extends BaseVerifyEmail
             ->subject('メールアドレスの確認')
             ->line('以下のリンクをクリックして、メールアドレスの確認を完了してください。')
             ->action('メールアドレスを確認する', $verificationUrl)
-            ->line('初回ログインはこちらから:')
-            ->action('プロフィール設定画面へ', url('/create-profile'))
+            ->line('メール認証完了後は、ログイン画面からログインしてください。')
             ->line('もしこのメールに心当たりがない場合は、このメールを無視してください。');
     }
 }

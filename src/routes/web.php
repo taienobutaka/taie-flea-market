@@ -2,89 +2,143 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SellController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CommentController;
+use Illuminate\Support\Facades\Auth;
 
-// ホームページ（商品一覧）
+/*
+|--------------------------------------------------------------------------
+| 未ログインユーザーもアクセス可能なルート
+|--------------------------------------------------------------------------
+| これらのルートは認証なしでアクセス可能です。
+| 商品一覧画面と商品詳細画面のみが公開されています。
+*/
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
+Route::get('/search', [ItemController::class, 'search'])->name('items.search');
+Route::get('/item/{id}', [ItemController::class, 'show'])->name('item.show');
 
-// ユーザー登録関連
+/*
+|--------------------------------------------------------------------------
+| ユーザー登録関連のルート
+|--------------------------------------------------------------------------
+| 新規ユーザー登録のためのルートです。
+| 認証は不要です。
+*/
 Route::prefix('register')->group(function () {
-    Route::get('/', [RegisterController::class, 'showRegisterForm'])->name('register.form'); // 登録フォーム表示
-    Route::post('/', [RegisterController::class, 'register'])->name('register'); // 登録処理
+    Route::get('/', [RegisterController::class, 'showRegisterForm'])->name('register.form');
+    Route::post('/', [RegisterController::class, 'register'])->name('register');
 });
 
-// ログイン関連
-Route::get('/login', [RegisterController::class, 'showLoginForm'])->name('login'); // ログインフォーム表示
-Route::post('/login', [RegisterController::class, 'login'])->name('login.post'); // ログイン処理
+/*
+|--------------------------------------------------------------------------
+| ログイン関連のルート
+|--------------------------------------------------------------------------
+| ユーザーのログイン・ログアウト処理のためのルートです。
+| 認証は不要です。
+*/
+Route::get('/login', [RegisterController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [RegisterController::class, 'login']);
+Route::post('/logout', [RegisterController::class, 'logout'])->name('logout');
 
-// メール認証関連
-Route::prefix('email')->middleware('auth')->group(function () {
-    Route::get('/verify', function () {
-        return view('auth.verify-email'); // 認証メール送付画面
+/*
+|--------------------------------------------------------------------------
+| メール認証関連のルート
+|--------------------------------------------------------------------------
+| メールアドレスの認証に関するルートです。
+| authミドルウェアで保護されており、ログイン済みユーザーのみアクセス可能です。
+*/
+Route::prefix('verification')->middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        if (Auth::user()->hasVerifiedEmail()) {
+            return redirect()->route('profile.create');
+        }
+        return view('verification');
     })->name('verification.notice');
 
-    Route::get('/verify/{id}/{hash}', [RegisterController::class, 'verify'])
-        ->middleware('signed')
+    Route::get('/{id}/{hash}', [RegisterController::class, 'verify'])
+        ->middleware(['signed'])
         ->name('verification.verify');
 
     Route::post('/resend', [RegisterController::class, 'resendVerificationEmail'])
         ->middleware('throttle:6,1')
-        ->name('verification.resend');
+        ->name('verification.send');
 });
 
-// 認証メール再送信
-Route::post('/email/resend', [RegisterController::class, 'resendVerificationEmail'])
-    ->middleware(['auth', 'throttle:6,1'])
-    ->name('verification.resend');
+/*
+|--------------------------------------------------------------------------
+| プロフィール設定関連のルート
+|--------------------------------------------------------------------------
+| ユーザープロフィールの設定に関するルートです。
+| auth, verifiedミドルウェアで保護されており、
+| ログイン済みでメール認証が完了しているユーザーのみアクセス可能です。
+*/
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/create-profile', [UserController::class, 'showCreateProfile'])->name('profile.create');
+    Route::post('/create-profile', [UserController::class, 'storeProfile'])->name('profile.store');
+    Route::post('/upload-image', [UserController::class, 'uploadImage'])->name('uploadImage');
+    
+    // マイページと出品画面へのルートを追加
+    Route::get('/mypage', [UserController::class, 'showMypage'])->name('mypage');
+    Route::get('/sell', [ItemController::class, 'create'])->name('sell.form');
 
-Route::get('/verification', [RegisterController::class, 'showVerificationForm'])->name('verification');
+    // プロフィール編集画面のルートを追加
+    Route::get('/mypage/profile', [UserController::class, 'showEditProfile'])->name('profile.edit');
+    Route::post('/mypage/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/mypage/profile/image', [UserController::class, 'uploadImage'])->name('profile.uploadImage');
+});
 
-// プロフィール設定関連
-Route::get('/create-profile', [UserController::class, 'showCreateProfile'])->name('profile.create'); // プロフィール設定画面
-Route::post('/create-profile', [UserController::class, 'storeProfile'])->name('profile.store');
+/*
+|--------------------------------------------------------------------------
+| 認証必須のルート（プロフィール設定完了チェックも必要）
+|--------------------------------------------------------------------------
+| 以下のルートは全ての認証チェックが必要です：
+| - ログイン済み（auth）
+| - メール認証完了（verified）
+| - プロフィール設定完了（profile.completed）
+*/
+Route::middleware(['auth', 'verified', 'profile.completed'])->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | 商品出品関連のルート
+    |--------------------------------------------------------------------------
+    | 商品の出品と画像アップロードに関するルートです。
+    */
+    Route::post('/sell/upload-image', [ItemController::class, 'uploadImage'])->name('sell.upload-image');
+    Route::post('/sell/remove-image', [ItemController::class, 'removeImage'])->name('sell.remove-image');
+    Route::post('/sell', [ItemController::class, 'store'])->name('item.store');
 
-// プロフィール画像アップロード
-Route::post('/upload-image', [UserController::class, 'uploadImage'])->name('uploadImage');
-
-// 商品出品関連（認証必須）
-Route::middleware(['auth'])->group(function () {
-    Route::get('/sell', [ItemController::class, 'create'])->name('sell.form'); // 商品出品画面
-    Route::post('/items/upload-image', [ItemController::class, 'uploadImage'])->name('item.uploadImage'); // 商品画像アップロード
-    Route::post('/items/remove-image', [ItemController::class, 'removeImage'])->name('item.removeImage'); // 商品画像削除
-    Route::post('/items', [ItemController::class, 'store'])->name('item.store'); // 商品出品処理
-
-    // 商品購入関連
+    /*
+    |--------------------------------------------------------------------------
+    | 商品購入関連のルート
+    |--------------------------------------------------------------------------
+    | 商品の購入プロセスに関するルートです。
+    | 住所入力、確認、完了などの各ステップを含みます。
+    */
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'show'])->name('purchase');
     Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'showAddressForm'])->name('purchase.address');
     Route::put('/purchase/address/{item_id}', [PurchaseController::class, 'updateAddress'])->name('purchase.address.update');
     Route::post('/purchase/confirm/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm');
-});
+    Route::get('/purchase/{item_id}/complete', [PurchaseController::class, 'complete'])->name('purchase.complete');
+    Route::get('/purchase/{item_id}/stripe-callback', [PurchaseController::class, 'handleStripeCallback'])->name('purchase.stripe.callback');
+    Route::post('/purchase/{item_id}/payment-method', [PurchaseController::class, 'updatePaymentMethod'])->name('purchase.payment-method');
 
-// マイページ関連（認証必須）
-Route::get('/mypage', [UserController::class, 'showMypage'])->name('mypage')->middleware('auth');
+    /*
+    |--------------------------------------------------------------------------
+    | お気に入り関連のルート
+    |--------------------------------------------------------------------------
+    | 商品のお気に入り登録・解除に関するルートです。
+    */
+    Route::post('/favorites/{item_id}', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
 
-// プロフィール設定関連（認証必須）
-Route::middleware(['auth'])->group(function () {
-    Route::get('/mypage/profile', [UserController::class, 'showEditProfile'])->name('profile.edit'); // プロフィール編集画面
-    Route::post('/mypage/profile', [UserController::class, 'updateProfile'])->name('profile.update'); // プロフィール更新処理
-    Route::post('/mypage/profile/image', [UserController::class, 'uploadImage'])->name('profile.uploadImage'); // プロフィール画像アップロード
-});
-
-// ログアウト
-Route::post('/logout', [RegisterController::class, 'logout'])->name('logout');
-
-// 商品関連
-Route::get('/items', [ItemController::class, 'index'])->name('items.index'); // 商品一覧画面
-Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('item.show'); // 商品詳細画面
-Route::post('/item/{item_id}/comment', [ItemController::class, 'addComment'])->name('item.comment'); // 商品コメント投稿
-
-// 購入関連のルート
-Route::prefix('purchase')->group(function () {
-    Route::get('/{item_id}', [PurchaseController::class, 'show'])->name('purchase');
-    Route::post('/{item_id}/confirm', [PurchaseController::class, 'confirm'])->name('purchase.confirm');
-    Route::get('/{item_id}/complete', [PurchaseController::class, 'complete'])->name('purchase.complete');
+    /*
+    |--------------------------------------------------------------------------
+    | コメント関連のルート
+    |--------------------------------------------------------------------------
+    | 商品へのコメント投稿に関するルートです。
+    */
+    Route::post('/item/{item_id}/comment', [CommentController::class, 'store'])->name('comment.store');
 });

@@ -16,11 +16,16 @@
                     <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="toppage-header-logo-img">
                 </div>
                 <div class="search-bar">
-                    <div class="search-container">なにをお探しですか？</div>
-                    <input type="text" placeholder="" class="search-input">
+                    <form action="{{ route('items.index') }}" method="GET" class="search-form">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="なにをお探しですか？" class="search-input">
+                        <button type="submit" class="search-button" style="display: none;">検索</button>
+                    </form>
                 </div>
                 <nav class="toppage-header-nav">
-                    <a href="{{ route('logout') }}" class="nav-item">ログアウト</a>
+                    <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                        @csrf
+                        <button type="submit" class="nav-item logout-button">ログアウト</button>
+                    </form>
                     <a href="{{ route('mypage') }}" class="nav-item">マイページ</a>
                     <a href="{{ route('sell.form') }}" class="nav-item">出品</a>
                 </nav>
@@ -33,34 +38,34 @@
                 <div class="overlap">
                     <div class="rectangle-5">
                         <div class="upload-container">
-                            @if (!session('imagePath'))
-                                <form action="{{ route('item.uploadImage') }}" method="POST" enctype="multipart/form-data" class="upload-form">
+                            @if (session('imagePath'))
+                                <div class="preview-container">
+                                    <img src="{{ asset('storage/' . session('imagePath')) }}" alt="商品画像" class="preview-image">
+                                    <form action="{{ route('sell.remove-image') }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="remove-button">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            @else
+                                <form action="{{ route('sell.upload-image') }}" method="POST" enctype="multipart/form-data" class="upload-form">
                                     @csrf
-                                    <input type="file" name="image" id="imageInput" class="file-input" accept="image/*" style="display: none;" onchange="this.form.submit()">
                                     <label for="imageInput" class="group-6">
                                         <div class="overlap-group-3">
                                             <div class="rectangle-4"></div>
                                             <div class="text-wrapper-20">画像を選択する</div>
                                         </div>
+                                        <input type="file" name="image" id="imageInput" class="file-input" accept="image/*" onchange="this.form.submit()">
                                     </label>
                                 </form>
-                            @else
-                                <div class="image-item" style="display: flex; align-items: center; justify-content: space-between; background-color: #f5f5f5; padding: 10px; border-radius: 4px; margin: 10px 0; border: 1px solid #ddd;">
-                                    <span style="font-size: 14px; color: #333;">{{ basename(session('imagePath')) }}</span>
-                                    <form action="{{ route('item.removeImage') }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <button type="submit" class="remove-button" style="background: none; border: none; cursor: pointer; color: #ff4444; font-size: 18px; padding: 0 5px;">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </form>
-                                </div>
                             @endif
                         </div>
                     </div>
                 </div>
             </div>
 
-            <form action="{{ route('item.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('item.store') }}" method="POST" enctype="multipart/form-data" novalidate>
                 @csrf
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -82,62 +87,62 @@
                         <div class="text-wrapper-19">カテゴリー</div>
                         <div class="category-buttons">
                             @php
-                                $selectedCategory = old('category', session('selected_category'));
+                                $selectedCategories = old('category', []);
                             @endphp
-                            <label class="category-label {{ $selectedCategory === 'fashion' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="fashion" class="category-checkbox" {{ $selectedCategory === 'fashion' ? 'checked' : '' }} required>
+                            <label class="category-label {{ in_array('fashion', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="fashion" class="category-checkbox" {{ in_array('fashion', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">ファッション</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'electronics' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="electronics" class="category-checkbox" {{ $selectedCategory === 'electronics' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('electronics', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="electronics" class="category-checkbox" {{ in_array('electronics', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">家電</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'interior' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="interior" class="category-checkbox" {{ $selectedCategory === 'interior' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('interior', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="interior" class="category-checkbox" {{ in_array('interior', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">インテリア</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'ladies' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="ladies" class="category-checkbox" {{ $selectedCategory === 'ladies' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('ladies', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="ladies" class="category-checkbox" {{ in_array('ladies', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">レディース</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'mens' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="mens" class="category-checkbox" {{ $selectedCategory === 'mens' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('mens', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="mens" class="category-checkbox" {{ in_array('mens', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">メンズ</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'cosmetics' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="cosmetics" class="category-checkbox" {{ $selectedCategory === 'cosmetics' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('cosmetics', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="cosmetics" class="category-checkbox" {{ in_array('cosmetics', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">コスメ</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'books' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="books" class="category-checkbox" {{ $selectedCategory === 'books' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('books', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="books" class="category-checkbox" {{ in_array('books', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">本</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'games' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="games" class="category-checkbox" {{ $selectedCategory === 'games' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('games', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="games" class="category-checkbox" {{ in_array('games', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">ゲーム</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'sports' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="sports" class="category-checkbox" {{ $selectedCategory === 'sports' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('sports', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="sports" class="category-checkbox" {{ in_array('sports', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">スポーツ</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'kitchen' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="kitchen" class="category-checkbox" {{ $selectedCategory === 'kitchen' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('kitchen', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="kitchen" class="category-checkbox" {{ in_array('kitchen', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">キッチン</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'handmade' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="handmade" class="category-checkbox" {{ $selectedCategory === 'handmade' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('handmade', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="handmade" class="category-checkbox" {{ in_array('handmade', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">ハンドメイド</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'accessories' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="accessories" class="category-checkbox" {{ $selectedCategory === 'accessories' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('accessories', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="accessories" class="category-checkbox" {{ in_array('accessories', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">アクセサリー</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'toys' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="toys" class="category-checkbox" {{ $selectedCategory === 'toys' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('toys', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="toys" class="category-checkbox" {{ in_array('toys', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">おもちゃ</span>
                             </label>
-                            <label class="category-label {{ $selectedCategory === 'baby' ? 'selected' : '' }}">
-                                <input type="radio" name="category" value="baby" class="category-checkbox" {{ $selectedCategory === 'baby' ? 'checked' : '' }}>
+                            <label class="category-label {{ in_array('baby', $selectedCategories) ? 'selected' : '' }}">
+                                <input type="checkbox" name="category[]" value="baby" class="category-checkbox" {{ in_array('baby', $selectedCategories) ? 'checked' : '' }}>
                                 <span class="category-text">ベビー・キッズ</span>
                             </label>
                         </div>
@@ -147,14 +152,30 @@
                         <div class="text-wrapper-3">商品の状態</div>
                         <div class="overlap-group-wrapper">
                             <div class="overlap-group-2">
-                                <select name="condition" class="rectangle condition-select" required>
-                                    <option value="" disabled selected>選択してください</option>
-                                    <option value="良好">良好</option>
-                                    <option value="目立った傷や汚れなし">目立った傷や汚れなし</option>
-                                    <option value="やや傷や汚れあり">やや傷や汚れあり</option>
-                                    <option value="状態が悪い">状態が悪い</option>
-                                </select>
-                                <div class="polygon"></div>
+                                <input type="hidden" name="condition" id="selected-condition" value="{{ old('condition', '') }}">
+                                <div class="custom-select">
+                                    <div class="select-trigger" onclick="this.parentElement.classList.toggle('open')">
+                                        <span class="selected-text">{{ old('condition', '選択してください') }}</span>
+                                        <div class="polygon"></div>
+                                    </div>
+                                    <div class="select-options">
+                                        @php
+                                            $conditions = [
+                                                '良好' => '良好',
+                                                '目立った傷や汚れなし' => '目立った傷や汚れなし',
+                                                'やや傷や汚れあり' => 'やや傷や汚れあり',
+                                                '状態が悪い' => '状態が悪い'
+                                            ];
+                                        @endphp
+                                        @foreach($conditions as $value => $label)
+                                            <div class="option {{ old('condition') === $value ? 'selected' : '' }}" 
+                                                 data-value="{{ $value }}"
+                                                 onclick="document.getElementById('selected-condition').value = '{{ $value }}'; this.closest('.custom-select').querySelector('.selected-text').textContent = '{{ $label }}'; this.closest('.custom-select').classList.remove('open');">
+                                                <span class="option-text">{{ $label }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,29 +183,29 @@
 
                 <div class="group-5">
                     <div class="text-wrapper-4">商品名と説明</div>
-                    <img class="line" src="{{ asset('img/line-8.svg') }}" />
+                    <img class="img" src="{{ asset('img/line-7.svg') }}" />
                 </div>
 
                 <div class="group-4">
                     <div class="text-wrapper-3">ブランド名</div>
-                    <input type="text" name="brand" class="rectangle-3" required>
+                    <input type="text" name="brand" class="rectangle-3">
                 </div>
 
                 <div class="group-3">
                     <div class="text-wrapper-3">商品名</div>
-                    <input type="text" name="name" class="rectangle-3" required>
+                    <input type="text" name="name" class="rectangle-3">
                 </div>
 
                 <div class="group-2">
                     <div class="text-wrapper-3">商品の説明</div>
-                    <textarea name="description" class="rectangle-2" required></textarea>
+                    <textarea name="description" class="rectangle-2"></textarea>
                 </div>
 
                 <div class="group">
                     <div class="text-wrapper-3">販売価格</div>
                     <div class="overlap-group">
                         <div class="text-wrapper-2">¥</div>
-                        <input type="number" name="price" class="rectangle" required>
+                        <input type="number" name="price" class="rectangle">
                     </div>
                 </div>
 

@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profile;
+use App\Http\Requests\AddressRequest;
+use App\Http\Requests\ProfileRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Item;
+use App\Models\Purchase;
 
 class UserController extends Controller
 {
@@ -16,74 +20,94 @@ class UserController extends Controller
 
     public function showCreateProfile()
     {
+        $user = Auth::user();
+        
+        // プロフィールが既に設定されている場合は商品一覧画面にリダイレクト
+        if ($user->profile()->exists()) {
+            return redirect('/');
+        }
+
         return view('create-profile');
     }
 
     public function uploadImage(Request $request)
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
-        $user = Auth::user();
-        $profile = Profile::where('user_id', $user->id)->first();
-
-        if ($request->hasFile('image')) {
-            // 古い画像を削除
-            if ($profile && $profile->image_path) {
-                Storage::delete('public/' . $profile->image_path);
-            }
-
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            
-            // 画像を保存
-            $path = $image->storeAs('public/img/profiles', $imageName);
-            
-            if ($path) {
-                $imagePath = 'img/profiles/' . $imageName;
+        try {
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
                 
-                // セッションに画像パスを保存
-                session(['imagePath' => $imagePath]);
-                
-                // プロフィールが存在しない場合は新規作成
-                if (!$profile) {
-                    $profile = new Profile();
-                    $profile->user_id = $user->id;
+                // デバッグ情報をログに記録
+                \Log::info('Image upload debug:', [
+                    'original_name' => $image->getClientOriginalName(),
+                    'mime_type' => $image->getMimeType(),
+                    'size' => $image->getSize(),
+                    'extension' => $image->getClientOriginalExtension()
+                ]);
+
+                // 既存の画像を削除
+                if (session('profile_image')) {
+                    $oldImagePath = storage_path('app/public/' . session('profile_image'));
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
                 }
-                
-                $profile->image_path = $imagePath;
-                $profile->save();
-                
-                return redirect()->back()->with('success', 'プロフィール画像が更新されました。');
+
+                // 画像を保存
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $path = $image->storeAs('img/profiles', $imageName, 'public');
+
+                if ($path) {
+                    // ファイルのパーミッションを設定
+                    $fullPath = storage_path('app/public/' . $path);
+                    chmod($fullPath, 0644);
+                    
+                    // セッションに画像パスを保存
+                    session(['profile_image' => $path]);
+
+                    // 保存後のデバッグ情報
+                    \Log::info('Image saved debug:', [
+                        'saved_path' => $fullPath,
+                        'exists' => file_exists($fullPath),
+                        'is_readable' => is_readable($fullPath),
+                        'permissions' => substr(sprintf('%o', fileperms($fullPath)), -4),
+                        'size' => file_exists($fullPath) ? filesize($fullPath) : 0,
+                        'url' => '/storage/' . $path
+                    ]);
+
+                    return redirect()->back()->with('success', '画像が正常にアップロードされました。');
+                }
             }
+        } catch (\Exception $e) {
+            \Log::error('Image upload error:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->with('error', '画像のアップロード中にエラーが発生しました。');
         }
 
-        return redirect()->back()->with('error', '画像のアップロードに失敗しました。');
+        return redirect()->back()->with('error', '画像が選択されていません。');
     }
 
-    public function storeProfile(Request $request)
+    public function storeProfile(AddressRequest $request)
     {
-        $request->validate([
-            'username' => 'required|string|max:255',
-            'postcode' => 'required|string|max:10',
-            'address' => 'required|string|max:255',
-            'building_name' => 'nullable|string|max:255',
-            'image_path' => 'nullable|string', // 画像パスのバリデーション
-        ]);
+        $validated = $request->validated();
+        $user = Auth::user();
 
-        $imagePath = $request->image_path;
+        // プロフィールを作成
+        $profile = new Profile();
+        $profile->user_id = $user->id;
+        $profile->username = $validated['username'];
+        $profile->postcode = $validated['postcode'];
+        $profile->address = $validated['address'];
+        $profile->building_name = $validated['building_name'];
+        
+        // セッションから画像パスを取得
+        if (session()->has('profile_image')) {
+            $profile->image_path = session('profile_image');
+            session()->forget('profile_image'); // セッションから削除
+        }
 
-        Profile::updateOrCreate(
-            ['user_id' => Auth::id()],
-            [
-                'username' => $request->username,
-                'postcode' => $request->postcode,
-                'address' => $request->address,
-                'building_name' => $request->building_name,
-                'image_path' => $imagePath,
-            ]
-        );
+        $profile->save();
 
         return redirect('/')->with('success', 'プロフィールが更新されました。');
     }
@@ -96,8 +120,28 @@ class UserController extends Controller
     public function showMypage()
     {
         $user = Auth::user();
-        $profile = Profile::where('user_id', $user->id)->first();
-        return view('mypage', compact('user', 'profile'));
+        $activeTab = request('tab', 'selling');
+        $profile = $user->profile;
+        
+        // 出品した商品を取得
+        $sellingItems = Item::where('user_id', $user->id)
+            ->latest()
+            ->get();
+            
+        // 購入した商品を取得（purchasesテーブルから）
+        $purchasedItems = Item::whereHas('purchases', function($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->latest()->get();
+
+        // アクティブなタブに応じて表示する商品を選択
+        $items = $activeTab === 'selling' ? $sellingItems : $purchasedItems;
+        
+        return view('mypage', [
+            'user' => $user,
+            'profile' => $profile,
+            'items' => $items,
+            'activeTab' => $activeTab
+        ]);
     }
 
     public function showEditProfile()
@@ -107,23 +151,27 @@ class UserController extends Controller
         return view('profile', compact('user', 'profile'));
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(AddressRequest $request)
     {
-        $request->validate([
-            'username' => 'required|string|max:255',
-            'postcode' => 'required|string|max:10',
-            'address' => 'required|string|max:255',
-            'building_name' => 'nullable|string|max:255',
-        ]);
+        $validated = $request->validated();
+        $user = Auth::user();
+
+        $profileData = [
+            'username' => $validated['username'],
+            'postcode' => $validated['postcode'],
+            'address' => $validated['address'],
+            'building_name' => $validated['building_name'],
+        ];
+
+        // セッションから画像パスを取得
+        if (session()->has('profile_image')) {
+            $profileData['image_path'] = session('profile_image');
+            session()->forget('profile_image'); // セッションから削除
+        }
 
         $profile = Profile::updateOrCreate(
-            ['user_id' => Auth::id()],
-            [
-                'username' => $request->username,
-                'postcode' => $request->postcode,
-                'address' => $request->address,
-                'building_name' => $request->building_name,
-            ]
+            ['user_id' => $user->id],
+            $profileData
         );
 
         return redirect()->route('mypage')->with('success', 'プロフィールを更新しました。');
@@ -135,5 +183,16 @@ class UserController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');
+    }
+
+    public function showSellForm()
+    {
+        $user = Auth::user();
+        
+        if (!$user->hasVerifiedEmail()) {
+            return redirect()->route('login');
+        }
+
+        return view('sell');
     }
 }
