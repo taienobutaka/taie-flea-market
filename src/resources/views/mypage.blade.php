@@ -44,13 +44,13 @@
             </div>
 
             <div class="toppage-list">
-                <a href="{{ route('mypage', ['tab' => 'selling']) }}" 
-                   class="tab-link {{ $activeTab === 'selling' ? 'active' : '' }}">
+                <a href="{{ route('mypage', ['page' => 'sell']) }}" 
+                   class="tab-link {{ $page === 'sell' ? 'active' : '' }}">
                     <div class="text-wrapper-3">出品した商品</div>
                 </a>
                 <img class="line" src="{{ asset('img/line-2.svg') }}" />
-                <a href="{{ route('mypage', ['tab' => 'purchased']) }}" 
-                   class="tab-link {{ $activeTab === 'purchased' ? 'active' : '' }}">
+                <a href="{{ route('mypage', ['page' => 'buy']) }}" 
+                   class="tab-link {{ $page === 'buy' ? 'active' : '' }}">
                     <div class="text-wrapper-4">購入した商品</div>
                 </a>
             </div>
@@ -58,7 +58,7 @@
             <div class="product-sample-data">
                 @if($items->isEmpty())
                     <div class="no-items">
-                        @if($activeTab === 'selling')
+                        @if($page === 'sell')
                             <p class="no-items-message">出品した商品はありません</p>
                         @else
                             <p class="no-items-message">購入した商品はありません</p>
@@ -81,9 +81,9 @@
                                                      alt="No Image" 
                                                      class="product-img">
                                             @endif
-                                            @if($activeTab === 'selling' && $item->status === 'sold')
+                                            @if($page === 'sell' && $item->status === 'sold')
                                                 <div class="sold-label" aria-label="売り切れ">SOLD</div>
-                                            @elseif($activeTab === 'purchased')
+                                            @elseif($page === 'buy')
                                                 <div class="sold-label" aria-label="購入済み">購入済み</div>
                                             @endif
                                         </div>

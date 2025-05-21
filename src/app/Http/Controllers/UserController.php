@@ -120,7 +120,7 @@ class UserController extends Controller
     public function showMypage()
     {
         $user = Auth::user();
-        $activeTab = request('tab', 'selling');
+        $page = request('page', 'sell');  // tabをpageに変更
         $profile = $user->profile;
         
         // 出品した商品を取得
@@ -133,14 +133,14 @@ class UserController extends Controller
             $query->where('user_id', $user->id);
         })->latest()->get();
 
-        // アクティブなタブに応じて表示する商品を選択
-        $items = $activeTab === 'selling' ? $sellingItems : $purchasedItems;
+        // アクティブなページに応じて表示する商品を選択
+        $items = $page === 'sell' ? $sellingItems : $purchasedItems;
         
         return view('mypage', [
             'user' => $user,
             'profile' => $profile,
             'items' => $items,
-            'activeTab' => $activeTab
+            'page' => $page  // activeTabをpageに変更
         ]);
     }
 

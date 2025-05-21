@@ -18,6 +18,7 @@
                 <div class="search-bar">
                     <form action="{{ route('items.index') }}" method="GET" class="search-form">
                         <input type="text" name="search" value="{{ request('search') }}" placeholder="なにをお探しですか？" class="search-input">
+                        <input type="hidden" name="page" value="recommended">
                         <button type="submit" class="search-button" style="display: none;">検索</button>
                     </form>
                 </div>

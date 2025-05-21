@@ -15,7 +15,7 @@
             </div>
             <form action="{{ route('items.index') }}" method="GET" class="header__search">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="なにをお探しですか？" class="header__search-input">
-                <input type="hidden" name="view" value="recommended">
+                <input type="hidden" name="page" value="recommended">
             </form>
             <nav class="header__nav">
                 <ul class="header__nav-list">

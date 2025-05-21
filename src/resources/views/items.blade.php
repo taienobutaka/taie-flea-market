@@ -18,7 +18,7 @@
                 <div class="search-bar">
                     <form action="{{ route('items.index') }}" method="GET" class="search-form">
                         <input type="text" name="search" value="{{ request('search') }}" placeholder="なにをお探しですか？" class="search-input">
-                        <input type="hidden" name="view" value="{{ $view }}">
+                        <input type="hidden" name="page" value="{{ $page }}">
                         <button type="submit" class="search-button">検索</button>
                     </form>
                 </div>
@@ -39,12 +39,12 @@
                 <!-- ナビゲーションタブ -->
                 <nav class="toppage-list" aria-label="商品表示切り替え">
                     <img class="line" src="{{ asset('img/line-2.svg') }}" alt="" />
-                    <a href="{{ route('items.index', ['view' => 'recommended', 'search' => request('search')]) }}" 
-                       class="tab-link {{ $view === 'recommended' ? 'active' : '' }}"
-                       aria-current="{{ $view === 'recommended' ? 'page' : 'false' }}">おすすめ</a>
-                    <a href="{{ route('items.index', ['view' => 'favorites', 'search' => request('search')]) }}" 
-                       class="tab-link {{ $view === 'favorites' ? 'active' : '' }}"
-                       aria-current="{{ $view === 'favorites' ? 'page' : 'false' }}">マイリスト</a>
+                    <a href="{{ route('items.index', ['page' => 'recommended', 'search' => request('search')]) }}" 
+                       class="tab-link {{ $page === 'recommended' ? 'active' : '' }}"
+                       aria-current="{{ $page === 'recommended' ? 'page' : 'false' }}">おすすめ</a>
+                    <a href="{{ route('items.index', ['page' => 'mylist', 'search' => request('search')]) }}" 
+                       class="tab-link {{ $page === 'mylist' ? 'active' : '' }}"
+                       aria-current="{{ $page === 'mylist' ? 'page' : 'false' }}">マイリスト</a>
                     <div class="tab-underline"></div>
                 </nav>
 
@@ -65,7 +65,7 @@
                         <div class="no-items-message">
                             <h2 class="no-items-title">表示できる商品がありません</h2>
                             <p class="no-items-description">
-                                @if($view === 'favorites')
+                                @if($page === 'mylist')
                                     お気に入り商品はまだありません。
                                 @elseif(Auth::check())
                                     商品を出品するには<a href="{{ route('sell.form') }}" class="action-link">こちら</a>をクリックしてください。

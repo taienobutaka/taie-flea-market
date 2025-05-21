@@ -22,22 +22,22 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         try {
-            $view = $request->input('view', 'recommended');
+            $page = $request->input('page', 'recommended');
             $search = $request->input('search');
             $user = Auth::user();
             $isGuest = !Auth::check();
             
             \Log::info('商品一覧表示開始', [
-                'view' => $view,
+                'page' => $page,
                 'search' => $search,
                 'user_id' => $user ? $user->id : '未ログイン',
                 'is_authenticated' => !$isGuest
             ]);
             
-            if ($view === 'favorites') {
+            if ($page === 'mylist') {
                 if ($isGuest) {
                     // 未ログインユーザーの場合は空の商品リストを表示
-                    return view('items', ['items' => collect(), 'view' => 'favorites', 'search' => $search]);
+                    return view('items', ['items' => collect(), 'page' => 'mylist', 'search' => $search]);
                 }
                 // お気に入り商品を取得（自分が出品した商品は除外）
                 \Log::info('お気に入り商品取得開始', [
@@ -241,11 +241,11 @@ class ItemController extends Controller
                 }
             }
 
-            return view('items', compact('items', 'view', 'search'));
+            return view('items', compact('items', 'page', 'search'));
         } catch (\Exception $e) {
             \Log::error('商品一覧取得エラー: ' . $e->getMessage());
             \Log::error('スタックトレース: ' . $e->getTraceAsString());
-            return view('items', ['items' => collect(), 'view' => $view, 'search' => $search]);
+            return view('items', ['items' => collect(), 'page' => $page, 'search' => $search]);
         }
     }
 
