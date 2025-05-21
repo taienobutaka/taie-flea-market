@@ -41,7 +41,7 @@
             <article class="detail__content">
                 <section class="detail__image">
                     @if($item->image_path)
-                        <img src="/storage/{{ $item->image_path }}" alt="{{ $item->name }}" class="detail__product-image">
+                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" class="detail__product-image">
                     @else
                         <div class="detail__no-image">商品画像</div>
                     @endif

@@ -289,7 +289,7 @@ class ItemController extends Controller
                 'condition' => $validated['condition'],
                 'category' => json_encode($validated['category']),
                 'user_id' => auth()->id(),
-                'image_path' => $imagePath,
+                'image_path' => $imagePath, // パスはそのまま保存
             ];
 
             \Log::info('保存するデータ: ' . json_encode($itemData));
@@ -334,17 +334,13 @@ class ItemController extends Controller
                 $fileName = time() . '_' . $originalName;
                 \Log::info('生成されたファイル名:', ['file_name' => $fileName]);
 
-                // 画像を保存（public/img/itemsディレクトリに保存）
-                $path = $request->file('image')->storeAs('public/img/items', $fileName);
+                // 画像を保存（storage/app/public/img/itemsディレクトリに保存）
+                $path = $request->file('image')->storeAs('img/items', $fileName, 'public');
                 \Log::info('画像保存パス:', ['path' => $path]);
                 
                 if ($path) {
-                    // パスから'public/'を除去して保存
-                    $imagePath = str_replace('public/', '', $path);
-                    \Log::info('保存された画像パス:', ['image_path' => $imagePath]);
-                    
-                    // セッションに保存
-                    session(['imagePath' => $imagePath]);
+                    // セッションに保存（パスはそのまま保存）
+                    session(['imagePath' => $path]);
                     \Log::info('セッションに保存された画像パス:', ['session_image_path' => session('imagePath')]);
                     
                     // デバッグ情報をログに出力
@@ -352,12 +348,11 @@ class ItemController extends Controller
                         'original_name' => $originalName,
                         'file_name' => $fileName,
                         'path' => $path,
-                        'image_path' => $imagePath,
-                        'full_path' => storage_path('app/' . $path),
-                        'public_path' => public_path('storage/' . $imagePath),
-                        'exists' => Storage::exists($path),
-                        'file_size' => Storage::size($path),
-                        'mime_type' => Storage::mimeType($path)
+                        'full_path' => storage_path('app/public/' . $path),
+                        'public_path' => public_path('storage/' . $path),
+                        'exists' => Storage::exists('public/' . $path),
+                        'file_size' => Storage::size('public/' . $path),
+                        'mime_type' => Storage::mimeType('public/' . $path)
                     ]);
                     
                     return redirect()->back()->with('success', '画像をアップロードしました。');

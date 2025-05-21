@@ -125,7 +125,17 @@ class RegisterController extends Controller
             $user = Auth::user();
             $request->session()->regenerate();
 
-            // 全てのログインユーザーを商品一覧画面へリダイレクト
+            // メール認証済みでプロフィール未設定の場合はプロフィール設定画面へ
+            if ($user->hasVerifiedEmail() && !$user->profile()->exists()) {
+                return redirect()->route('profile.create');
+            }
+
+            // メール認証未完了の場合は認証画面へ
+            if (!$user->hasVerifiedEmail()) {
+                return redirect('/verification');
+            }
+
+            // それ以外の場合は商品一覧画面へ
             return redirect('/');
         }
 
