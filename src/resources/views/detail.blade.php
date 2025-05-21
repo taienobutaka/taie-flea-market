@@ -67,7 +67,7 @@
 
                     <div class="detail__actions">
                         @auth
-                            <form action="{{ route('favorites.toggle', ['item_id' => $item->id]) }}" method="POST" class="detail__favorite-form">
+                            <form action="{{ route('favorites.toggle.ajax', $item->id) }}" method="POST" class="detail__favorite-form" id="favoriteForm">
                                 @csrf
                                 <button type="submit" class="detail__favorite-button {{ $item->isFavoritedBy(Auth::user()) ? 'detail__favorite-button--active' : '' }}">
                                     <img src="{{ asset('img/star.png') }}" alt="お気に入り" class="detail__favorite-icon">
@@ -182,5 +182,91 @@
             </article>
         </main>
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const favoriteForm = document.getElementById('favoriteForm');
+        if (favoriteForm) {
+            favoriteForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const button = this.querySelector('.detail__favorite-button');
+                const count = this.querySelector('.detail__favorite-count');
+                const formData = new FormData(this);
+
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.isFavorited) {
+                            button.classList.add('detail__favorite-button--active');
+                            count.classList.add('detail__favorite-count--active');
+                            count.textContent = parseInt(count.textContent) + 1;
+                        } else {
+                            button.classList.remove('detail__favorite-button--active');
+                            count.classList.remove('detail__favorite-count--active');
+                            count.textContent = parseInt(count.textContent) - 1;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        }
+    });
+    </script>
+
+    <style>
+    .detail__favorite-form {
+        display: inline-block;
+    }
+
+    .detail__favorite-button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .detail__favorite-icon {
+        width: 32px;
+        height: 32px;
+        opacity: 0.3;
+        transition: opacity 0.2s;
+    }
+
+    .detail__favorite-button--active .detail__favorite-icon {
+        opacity: 1;
+    }
+
+    .detail__favorite-count {
+        font-size: 16px;
+        font-weight: bold;
+        color: #999;
+        transition: color 0.2s;
+    }
+
+    .detail__favorite-count--active {
+        color: #ff4b4b;
+    }
+
+    .detail__favorite-button:hover .detail__favorite-icon {
+        opacity: 0.7;
+    }
+
+    .detail__favorite-button--active:hover .detail__favorite-icon {
+        opacity: 0.8;
+    }
+    </style>
 </body>
 </html> 

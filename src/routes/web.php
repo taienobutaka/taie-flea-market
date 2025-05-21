@@ -133,6 +133,7 @@ Route::middleware(['auth', 'verified', 'profile.completed'])->group(function () 
     | 商品のお気に入り登録・解除に関するルートです。
     */
     Route::post('/favorites/{item_id}', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
+    Route::post('/favorites/{item_id}/ajax', [FavoriteController::class, 'toggleAjax'])->name('favorites.toggle.ajax');
 
     /*
     |--------------------------------------------------------------------------

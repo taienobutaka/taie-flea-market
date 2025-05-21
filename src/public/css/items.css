@@ -769,3 +769,12 @@ body {
         width: 370px;
     }
 }
+
+.mylist-tab {
+    color: #ff0000;
+}
+
+.mylist-tab.active {
+    color: #ff0000;
+    font-weight: bold;
+}

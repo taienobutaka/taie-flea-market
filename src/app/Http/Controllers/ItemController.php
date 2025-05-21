@@ -22,6 +22,14 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         try {
+            // viewパラメータが存在する場合はpageパラメータに変換
+            if ($request->has('view')) {
+                return redirect()->route('items.index', [
+                    'page' => $request->input('view'),
+                    'search' => $request->input('search')
+                ]);
+            }
+
             $page = $request->input('page', 'recommended');
             $search = $request->input('search');
             $user = Auth::user();
@@ -33,213 +41,136 @@ class ItemController extends Controller
                 'user_id' => $user ? $user->id : '未ログイン',
                 'is_authenticated' => !$isGuest
             ]);
+
+            // 検索クエリがある場合の共通処理
+            if ($search && $user && !$isGuest) {
+                // 検索クエリを正規化（全角スペースを半角に変換、連続するスペースを1つに）
+                $normalizedSearch = preg_replace('/\s+/', ' ', mb_convert_kana($search, 's'));
+                
+                // 助詞や接続詞を除外するための配列
+                $excludeWords = ['と', 'や', 'の', 'を', 'に', 'へ', 'で', 'が', 'は', 'も', 'から', 'まで', 'など'];
+                
+                // 検索クエリを単語に分割し、助詞や接続詞を除外
+                $words = array_filter(explode(' ', $normalizedSearch), function($word) use ($excludeWords) {
+                    return !in_array($word, $excludeWords) && mb_strlen($word) > 0;
+                });
+
+                // 検索用の配列を作成
+                $searchTerms = [];
+                
+                // 元の検索クエリをそのまま追加
+                $searchTerms[] = $normalizedSearch;
+                
+                // 各単語を個別に追加
+                foreach ($words as $word) {
+                    if (mb_strlen($word) >= 2) {
+                        $searchTerms[] = $word;
+                    }
+                }
+                
+                // 重複を除去
+                $searchTerms = array_unique($searchTerms);
+
+                // 検索条件に一致する商品を取得
+                $searchQuery = Item::where(function($q) use ($searchTerms) {
+                    foreach ($searchTerms as $term) {
+                        $q->orWhere('name', 'LIKE', '%' . $term . '%');
+                    }
+                });
+
+                // 自分が出品した商品を除外
+                $searchQuery->where('user_id', '!=', $user->id);
+
+                // 検索結果の商品をお気に入りに追加
+                $searchItems = $searchQuery->get();
+                foreach ($searchItems as $item) {
+                    if (!$item->isFavoritedBy($user)) {
+                        $item->favorites()->create(['user_id' => $user->id]);
+                        \Log::info('検索結果の商品をお気に入りに追加', [
+                            'item_id' => $item->id,
+                            'name' => $item->name,
+                            'user_id' => $user->id
+                        ]);
+                    }
+                }
+            }
             
             if ($page === 'mylist') {
                 if ($isGuest) {
-                    // 未ログインユーザーの場合は空の商品リストを表示
                     return view('items', ['items' => collect(), 'page' => 'mylist', 'search' => $search]);
                 }
-                // お気に入り商品を取得（自分が出品した商品は除外）
-                \Log::info('お気に入り商品取得開始', [
-                    'user_id' => $user->id,
-                    'favorites_count' => $user->favorites()->count()
-                ]);
 
-                // お気に入り登録されている商品IDを取得
-                $favoriteItemIds = $user->favorites()->pluck('item_id');
-                \Log::info('お気に入り商品ID一覧', [
-                    'item_ids' => $favoriteItemIds->toArray()
-                ]);
+                // マイリスト表示用のクエリ
+                $query = Item::with(['purchases', 'favorites' => function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }]);
 
-                // お気に入り商品を取得（自分が出品した商品は除外）
-                $query = Item::whereIn('id', $favoriteItemIds)
-                    ->where('user_id', '!=', $user->id);  // 自分が出品した商品を除外
-
-                // 検索クエリがある場合は商品名で部分一致検索
+                // 検索条件がある場合は適用
                 if ($search) {
-                    // 検索クエリを個別の文字に分解
-                    $searchTerms = str_split($search);
+                    $normalizedSearch = preg_replace('/\s+/', ' ', mb_convert_kana($search, 's'));
+                    $excludeWords = ['と', 'や', 'の', 'を', 'に', 'へ', 'で', 'が', 'は', 'も', 'から', 'まで', 'など'];
+                    $words = array_filter(explode(' ', $normalizedSearch), function($word) use ($excludeWords) {
+                        return !in_array($word, $excludeWords) && mb_strlen($word) > 0;
+                    });
+                    $searchTerms = array_unique(array_merge([$normalizedSearch], $words));
+
                     $query->where(function($q) use ($searchTerms) {
-                        // 最初の文字は必須
-                        $q->where('name', 'LIKE', '%' . $searchTerms[0] . '%');
-                        // 残りの文字はOR条件で追加
-                        for ($i = 1; $i < count($searchTerms); $i++) {
-                            $q->orWhere('name', 'LIKE', '%' . $searchTerms[$i] . '%');
+                        foreach ($searchTerms as $term) {
+                            $q->orWhere('name', 'LIKE', '%' . $term . '%');
                         }
                     });
                 }
 
-                $items = $query->with(['purchases', 'favorites' => function($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                }])
-                ->latest()
-                ->get();
+                // 自分が出品した商品を除外
+                $query->where('user_id', '!=', $user->id);
 
-                \Log::info('お気に入り商品取得結果', [
-                    'count' => $items->count(),
-                    'user_id' => $user->id,
-                    'excluded_own_items' => true,
-                    'favorite_item_ids' => $favoriteItemIds->toArray(),
-                    'search_query' => $search
-                ]);
-
-                // 購入済み商品のステータスを一括更新
-                DB::transaction(function () use ($items) {
-                    foreach ($items as $item) {
-                        if ($item->purchases()->exists() && $item->status !== 'sold') {
-                            $item->status = 'sold';
-                            $item->save();
-                            \Log::info('お気に入り商品のステータスを更新:', [
-                                'item_id' => $item->id,
-                                'name' => $item->name,
-                                'status' => 'sold',
-                                'seller_id' => $item->user_id,
-                                'has_purchases' => $item->purchases()->exists()
-                            ]);
-                        }
-                    }
+                // お気に入り登録されている商品のみを取得
+                $query->whereHas('favorites', function($q) use ($user) {
+                    $q->where('user_id', $user->id);
                 });
 
-                // 取得された商品の詳細情報をログに出力
-                foreach ($items as $item) {
-                    \Log::info('お気に入り商品詳細:', [
-                        'item_id' => $item->id,
-                        'name' => $item->name,
-                        'seller_id' => $item->user_id,
-                        'is_own_item' => $item->user_id === $user->id,
-                        'favorite_count' => $item->favorites()->count(),
-                        'is_favorited_by_user' => $item->isFavoritedBy($user)
-                    ]);
-                }
+                $items = $query->latest()->get();
             } else {
-                // 通常の商品一覧を取得
+                // おすすめ表示用のクエリ
                 $query = Item::with(['purchases', 'favorites' => function($query) use ($user) {
                     if ($user) {
                         $query->where('user_id', $user->id);
                     }
                 }]);
 
-                \Log::info('検索前のクエリ状態', [
-                    'search' => $search,
-                    'user_id' => $user ? $user->id : null,
-                    'base_query_sql' => $query->toSql(),
-                    'base_query_bindings' => $query->getBindings()
-                ]);
-
-                // 検索クエリがある場合は商品名で部分一致検索
+                // 検索条件がある場合は適用
                 if ($search) {
-                    // 検索クエリを正規化（全角スペースを半角に変換、連続するスペースを1つに）
                     $normalizedSearch = preg_replace('/\s+/', ' ', mb_convert_kana($search, 's'));
-                    
-                    \Log::info('検索条件の構築開始', [
-                        'original_search' => $search,
-                        'normalized_search' => $normalizedSearch
-                    ]);
+                    $excludeWords = ['と', 'や', 'の', 'を', 'に', 'へ', 'で', 'が', 'は', 'も', 'から', 'まで', 'など'];
+                    $words = array_filter(explode(' ', $normalizedSearch), function($word) use ($excludeWords) {
+                        return !in_array($word, $excludeWords) && mb_strlen($word) > 0;
+                    });
+                    $searchTerms = array_unique(array_merge([$normalizedSearch], $words));
 
-                    // 検索クエリを単語に分割
-                    $words = array_filter(explode(' ', $normalizedSearch));
-                    \Log::info('分割された検索単語', ['words' => $words]);
-
-                    // 各単語で部分一致検索を実行
-                    $query->where(function($q) use ($words) {
-                        foreach ($words as $word) {
-                            $q->orWhere('name', 'LIKE', '%' . $word . '%');
+                    $query->where(function($q) use ($searchTerms) {
+                        foreach ($searchTerms as $term) {
+                            $q->orWhere('name', 'LIKE', '%' . $term . '%');
                         }
                     });
-
-                    \Log::info('検索条件適用後のクエリ', [
-                        'sql' => $query->toSql(),
-                        'bindings' => $query->getBindings(),
-                        'words' => $words
-                    ]);
-
-                    // 検索結果のデバッグ情報
-                    $items = $query->latest()->get();
-                    
-                    // 各商品のマッチング状況を詳細にログ出力
-                    foreach ($items as $item) {
-                        $matches = [];
-                        foreach ($words as $word) {
-                            $matches[$word] = [
-                                'full_match' => strpos($item->name, $word) !== false
-                            ];
-                        }
-                        
-                        \Log::info('商品のマッチング状況', [
-                            'item_id' => $item->id,
-                            'name' => $item->name,
-                            'matches' => $matches
-                        ]);
-                    }
-
-                    \Log::info('検索結果の概要', [
-                        'total_count' => $items->count(),
-                        'search_query' => $normalizedSearch,
-                        'matched_words' => $words
-                    ]);
-                } else {
-                    // 検索クエリがない場合のみ、自分が出品した商品を除外
-                    if ($user) {
-                        $query->where('user_id', '!=', $user->id);
-                        \Log::info('通常表示時のクエリ', [
-                            'sql' => $query->toSql(),
-                            'bindings' => $query->getBindings()
-                        ]);
-                    }
-                    $items = $query->latest()->get();
                 }
-                
-                \Log::info('検索結果', [
-                    'total_count' => $items->count(),
-                    'search_query' => $search,
-                    'items' => $items->map(function($item) {
-                        return [
-                            'id' => $item->id,
-                            'name' => $item->name,
-                            'user_id' => $item->user_id,
-                            'status' => $item->status
-                        ];
-                    })->toArray()
-                ]);
 
-                // 購入済み商品のステータスを一括更新
-                DB::transaction(function () use ($items) {
-                    foreach ($items as $item) {
-                        if ($item->purchases()->exists() && $item->status !== 'sold') {
-                            $item->status = 'sold';
-                            $item->save();
-                            \Log::info('商品ステータスを更新:', [
-                                'item_id' => $item->id,
-                                'name' => $item->name,
-                                'status' => 'sold',
-                                'seller_id' => $item->user_id,
-                                'has_purchases' => $item->purchases()->exists()
-                            ]);
-                        }
-                    }
-                });
-
-                // 取得された商品の詳細情報をログに出力
-                foreach ($items as $item) {
-                    $purchases = $item->purchases;
-                    $purchaseUserIds = $purchases->pluck('user_id');
-                    $isPurchasedByCurrentUser = $user ? $purchaseUserIds->contains($user->id) : false;
-                    
-                    \Log::info('商品情報:', [
-                        'id' => $item->id,
-                        'name' => $item->name,
-                        'status' => $item->status,
-                        'seller_id' => $item->user_id,
-                        'seller_name' => ($item->user ? $item->user->name : '不明'),
-                        'has_purchases' => $purchases->isNotEmpty(),
-                        'purchase_count' => $purchases->count(),
-                        'purchase_user_ids' => $purchaseUserIds,
-                        'is_purchased_by_current_user' => $isPurchasedByCurrentUser,
-                        'price' => $item->price,
-                        'created_at' => $item->created_at
-                    ]);
+                // 自分が出品した商品を除外
+                if ($user) {
+                    $query->where('user_id', '!=', $user->id);
                 }
+
+                $items = $query->latest()->get();
             }
+
+            // 購入済み商品のステータスを一括更新
+            DB::transaction(function () use ($items) {
+                foreach ($items as $item) {
+                    if ($item->purchases()->exists() && $item->status !== 'sold') {
+                        $item->status = 'sold';
+                        $item->save();
+                    }
+                }
+            });
 
             return view('items', compact('items', 'page', 'search'));
         } catch (\Exception $e) {

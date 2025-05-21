@@ -39,11 +39,11 @@
                 <!-- ナビゲーションタブ -->
                 <nav class="toppage-list" aria-label="商品表示切り替え">
                     <img class="line" src="{{ asset('img/line-2.svg') }}" alt="" />
-                    <a href="{{ route('items.index', ['page' => 'recommended', 'search' => request('search')]) }}" 
+                    <a href="{{ route('items.index', ['page' => 'recommended']) }}" 
                        class="tab-link {{ $page === 'recommended' ? 'active' : '' }}"
                        aria-current="{{ $page === 'recommended' ? 'page' : 'false' }}">おすすめ</a>
-                    <a href="{{ route('items.index', ['page' => 'mylist', 'search' => request('search')]) }}" 
-                       class="tab-link {{ $page === 'mylist' ? 'active' : '' }}"
+                    <a href="{{ route('items.index', ['page' => 'mylist']) }}" 
+                       class="tab-link mylist-tab {{ $page === 'mylist' ? 'active' : '' }}"
                        aria-current="{{ $page === 'mylist' ? 'page' : 'false' }}">マイリスト</a>
                     <div class="tab-underline"></div>
                 </nav>
@@ -55,6 +55,9 @@
                             <p>「<span class="search-query">{{ request('search') }}</span>」に一致する商品が見つかりませんでした。</p>
                         @else
                             <p>「<span class="search-query">{{ request('search') }}</span>」の検索結果: <span class="results-count">{{ $items->count() }}</span>件</p>
+                            @if($page === 'recommended' && Auth::check())
+                                <p class="search-note">※検索結果の商品は自動的にお気に入りに追加されました。</p>
+                            @endif
                         @endif
                     </div>
                 @endif
@@ -77,28 +80,41 @@
                     @else
                         <ul class="products-row">
                             @foreach($items as $item)
-                            <li class="product-card {{ $item->status === 'sold' ? 'sold' : '' }}">
-                                <a href="{{ route('item.show', ['id' => $item->id]) }}" class="product-link">
-                                    <div class="product-image">
-                                        @if($item->image_path)
-                                            <img src="{{ asset('storage/' . $item->image_path) }}" 
-                                                 alt="{{ $item->name }}" 
-                                                 class="product-img"
-                                                 onerror="this.onerror=null; this.src='{{ asset('img/no-image.png') }}';">
-                                        @else
-                                            <img src="{{ asset('img/no-image.png') }}" 
-                                                 alt="No Image" 
-                                                 class="product-img">
-                                        @endif
-                                        @if($item->status === 'sold')
-                                            <div class="sold-label" aria-label="売り切れ">SOLD</div>
-                                        @endif
+                                <li class="product-card {{ $item->status === 'sold' ? 'sold' : '' }}">
+                                    <div class="product-header">
+                                        <a href="{{ route('item.show', $item->id) }}" class="product-link">
+                                            <div class="product-image">
+                                                @if($item->image_path)
+                                                    <img src="{{ asset('storage/' . $item->image_path) }}" 
+                                                         alt="{{ $item->name }}" 
+                                                         class="product-img"
+                                                         onerror="this.onerror=null; this.src='{{ asset('img/no-image.png') }}';">
+                                                @else
+                                                    <img src="{{ asset('img/no-image.png') }}" 
+                                                         alt="No Image" 
+                                                         class="product-img">
+                                                @endif
+                                                @if($item->status === 'sold')
+                                                    <div class="sold-label" aria-label="売り切れ">SOLD</div>
+                                                @endif
+                                            </div>
+                                            <div class="product-info">
+                                                <h3 class="product-name">{{ $item->name }}</h3>
+                                            </div>
+                                        </a>
+                                        @auth
+                                            <form action="{{ route('favorites.toggle', $item->id) }}" method="POST" class="favorite-form">
+                                                @csrf
+                                                <input type="hidden" name="page" value="{{ $page }}">
+                                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                                <button type="submit" class="favorite-button {{ $item->isFavoritedBy(Auth::user()) ? 'favorited' : '' }}" 
+                                                        aria-label="{{ $item->isFavoritedBy(Auth::user()) ? 'お気に入りから削除' : 'お気に入りに追加' }}">
+                                                    <i class="favorite-icon {{ $item->isFavoritedBy(Auth::user()) ? 'fas' : 'far' }} fa-heart"></i>
+                                                </button>
+                                            </form>
+                                        @endauth
                                     </div>
-                                    <div class="product-info">
-                                        <h3 class="product-name">{{ $item->name }}</h3>
-                                    </div>
-                                </a>
-                            </li>
+                                </li>
                             @endforeach
                         </ul>
                     @endif
@@ -106,5 +122,51 @@
             </main>
         </div>
     </div>
+
+    <style>
+    .product-header {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .favorite-form {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1;
+    }
+
+    .favorite-button {
+        background: none;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .favorite-button:hover {
+        transform: scale(1.1);
+    }
+
+    .favorite-icon {
+        font-size: 24px;
+        color: #ff4b4b;
+    }
+
+    .favorite-button.favorited .favorite-icon {
+        color: #ff4b4b;
+    }
+
+    .favorite-button:not(.favorited) .favorite-icon {
+        color: #ccc;
+    }
+
+    .search-note {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 0.5em;
+    }
+    </style>
 </body>
 </html>
