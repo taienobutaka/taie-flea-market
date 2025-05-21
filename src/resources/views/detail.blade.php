@@ -90,21 +90,13 @@
 
                     <section class="detail__purchase">
                         @auth
-                            @if($hasComment)
-                                <form action="{{ route('purchase', $item->id) }}" method="GET" class="detail__purchase-form">
-                                    <button type="submit" class="detail__purchase-button">
-                                        <span class="detail__purchase-text">購入手続きへ</span>
-                                    </button>
-                                </form>
-                            @else
-                                <form action="{{ route('purchase', $item->id) }}" method="GET" class="detail__purchase-form">
-                                    <button type="submit" class="detail__purchase-button">
-                                        <span class="detail__purchase-text">購入手続きへ</span>
-                                    </button>
-                                </form>
-                                @if(session('error'))
-                                    <div class="detail__error">{{ session('error') }}</div>
-                                @endif
+                            <form action="{{ route('purchase', $item->id) }}" method="GET" class="detail__purchase-form">
+                                <button type="submit" class="detail__purchase-button">
+                                    <span class="detail__purchase-text">購入手続きへ</span>
+                                </button>
+                            </form>
+                            @if(session('error'))
+                                <div class="detail__error">{{ session('error') }}</div>
                             @endif
                         @else
                             <a href="{{ route('login') }}" class="detail__purchase-button">
@@ -145,12 +137,12 @@
                                 <div class="detail__comment-user">
                                     <div class="detail__user-avatar">
                                         @if($comment->user->profile && $comment->user->profile->image_path)
-                                            <img src="{{ asset('storage/' . $comment->user->profile->image_path) }}" alt="{{ $comment->user->username }}">
+                                            <img src="{{ asset('storage/' . $comment->user->profile->image_path) }}" alt="{{ $comment->user->profile->username }}">
                                         @else
-                                            <img src="{{ asset('img/no-image.png') }}" alt="{{ $comment->user->username }}">
+                                            <img src="{{ asset('img/no-image.png') }}" alt="{{ $comment->user->profile->username ?? 'ユーザー' }}">
                                         @endif
                                     </div>
-                                    <div class="detail__user-name">{{ $comment->user->username }}</div>
+                                    <div class="detail__user-name">{{ $comment->user->profile->username ?? 'ユーザー' }}</div>
                                 </div>
                                 <p class="detail__comment-text">{{ $comment->content }}</p>
                             </li>
@@ -164,7 +156,7 @@
                                     @csrf
                                     <textarea name="content" class="detail__comment-input {{ $errors->has('content') ? 'detail__comment-input--error' : '' }}" placeholder="コメントを入力してください">{{ old('content') }}</textarea>
                                     @error('content')
-                                        <div class="detail__error">{{ $message }}</div>
+                                        <div class="detail__error detail__error--above-button">{{ $message }}</div>
                                     @enderror
                                     <button type="submit" class="detail__submit-button">コメントを送信する</button>
                                 </form>
@@ -222,51 +214,5 @@
         }
     });
     </script>
-
-    <style>
-    .detail__favorite-form {
-        display: inline-block;
-    }
-
-    .detail__favorite-button {
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .detail__favorite-icon {
-        width: 32px;
-        height: 32px;
-        opacity: 0.3;
-        transition: opacity 0.2s;
-    }
-
-    .detail__favorite-button--active .detail__favorite-icon {
-        opacity: 1;
-    }
-
-    .detail__favorite-count {
-        font-size: 16px;
-        font-weight: bold;
-        color: #999;
-        transition: color 0.2s;
-    }
-
-    .detail__favorite-count--active {
-        color: #ff4b4b;
-    }
-
-    .detail__favorite-button:hover .detail__favorite-icon {
-        opacity: 0.7;
-    }
-
-    .detail__favorite-button--active:hover .detail__favorite-icon {
-        opacity: 0.8;
-    }
-    </style>
 </body>
 </html> 

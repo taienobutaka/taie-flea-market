@@ -30,17 +30,6 @@ class PurchaseController extends Controller
         $item = Item::findOrFail($item_id);
         $user = Auth::user();
 
-        // コメント投稿の有無をチェック
-        $hasComment = $item->comments()
-            ->where('user_id', $user->id)
-            ->exists();
-
-        if (!$hasComment) {
-            return redirect()
-                ->route('item.show', ['id' => $item_id])
-                ->with('error', '商品を購入する前に、コメントを投稿してください。');
-        }
-
         // 既に購入済みの商品かチェック
         if ($item->purchases()->exists()) {
             return redirect()

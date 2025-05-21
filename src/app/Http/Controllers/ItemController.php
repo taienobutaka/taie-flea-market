@@ -326,7 +326,7 @@ class ItemController extends Controller
      */
     public function show($item_id)
     {
-        $item = Item::findOrFail($item_id);
+        $item = Item::with(['comments.user.profile'])->findOrFail($item_id);
         $user = Auth::user();
         $isGuest = !Auth::check();
         $hasComment = $user ? $item->comments->where('user_id', $user->id)->count() > 0 : false;
