@@ -1,4 +1,11 @@
-/* 全体のリセット */
+/* ==========================================================================
+   マイページのスタイル
+   基準画面サイズ: 1512px x 982px
+   レスポンシブ対応: PC(1400-1540px), タブレット(768-850px)
+   ========================================================================== */
+
+/* リセットとベーススタイル
+   ========================================================================== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -12,6 +19,8 @@ body {
     min-width: 768px;
 }
 
+/* レイアウト
+   ========================================================================== */
 .screen {
     background-color: #ffffff;
     display: flex;
@@ -20,21 +29,23 @@ body {
     width: 100%;
 }
 
-.screen .div {
+.container {
     background-color: #ffffff;
-    overflow: hidden;
+    overflow: visible;
     width: 100%;
     max-width: 1512px;
     min-height: 982px;
     position: relative;
 }
 
-/* ヘッダー */
-.toppage-header {
+/* ヘッダー
+   ========================================================================== */
+.header {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
+    min-width: 1512px;
     height: 80px;
     background-color: #000000;
     display: flex;
@@ -44,25 +55,21 @@ body {
     z-index: 1000;
 }
 
-.toppage-header-icon {
+.header__logo {
     position: absolute;
     top: 22px;
     left: 40px;
     width: 370px;
-    height: auto;
+    height: 36px;
 }
 
-.toppage-header-logo-img {
+.header__logo-img {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: contain;
-    padding: 0px;
-    margin: 0;
-    display: block;
-    box-sizing: border-box;
 }
 
-.search-bar {
+.header__search {
     position: absolute;
     top: 15px;
     left: 50%;
@@ -71,37 +78,25 @@ body {
     height: 50px;
 }
 
-.search-container {
-    position: absolute;
-    bottom: 12px;
-    left: 0;
-    right: 170px;
-    width: 330px;
-    height: 29px;
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 100%;
-    letter-spacing: 0%;
-    text-align: center;
-    vertical-align: middle;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #000000;
-}
-
-.search-input {
+.header__search-input {
     width: 100%;
     height: 100%;
     border: 1px solid #cccccc;
     border-radius: 5px;
-    padding: 10px;
-    font-size: 16px;
+    padding: 0 45px;
+    font-size: 24px;
     box-sizing: border-box;
 }
 
-.toppage-header-nav {
+.header__search-input::placeholder {
+    color: #000000;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    font-size: 24px;
+    text-align: left;
+}
+
+.header__nav {
     position: absolute;
     top: 0;
     right: 15px;
@@ -112,66 +107,82 @@ body {
     gap: 9px;
 }
 
-.nav-item {
+.header__nav-list {
+    display: flex;
+    gap: 9px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.header__nav-item {
+    margin: 0;
+    padding: 0;
+}
+
+.header__nav-link {
+    display: block;
     width: 135px;
     height: 47px;
-    position: relative;
-    top: 18px;
-    font-family: "Inter", sans-serif;
+    font-family: "Inter-Regular", Helvetica;
     font-weight: 400;
     font-size: 24px;
     line-height: 47px;
-    letter-spacing: 0%;
     text-align: center;
     color: #ffffff;
     text-decoration: none;
-    transition: color 0.3s ease;
+    position: relative;
+    top: 21px;
 }
 
-.nav-item:hover {
-    color: #4a90e2;
-}
-
-.nav-item:first-child {
-    margin-left: 37px;
-}
-
-.nav-item:nth-child(2) {
-    position: absolute;
-    top: 18px;
-    left: 181px;
-    right: 147px;
+.header__nav-link--logout {
     width: 135px;
     height: 47px;
+    font-size: 24px;
+    line-height: 47px;
+    margin-left: 52px;
 }
 
-.nav-item:last-child {
+.header__nav-link--sell {
     width: 100px;
     height: 50px;
     background-color: #ffffff;
     border-radius: 4px;
     color: #000000;
+    position: absolute;
+    right: 11px;
+    top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.nav-item:last-child:hover {
-    background-color: #f0f0f0;
+/* メインコンテンツ
+   ========================================================================== */
+.main-content {
+    padding-top: 80px;
+    position: relative;
+    width: 100%;
+    z-index: 1;
 }
 
-/* ユーザー情報 */
-.user-info {
+/* ユーザープロフィール
+   ========================================================================== */
+.user-profile {
     position: absolute;
     width: 90%;
     max-width: 1019px;
     height: 150px;
-    top: 158px;
+    top: 98px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    align-items: center;
-    z-index: 1;
+    align-items: flex-start;
+    z-index: 2;
+    padding-left: 30px;
 }
 
-.ellipse {
+.user-profile__image {
     width: 150px;
     height: 150px;
     background-color: #d9d9d9;
@@ -179,91 +190,106 @@ body {
     overflow: hidden;
     flex-shrink: 0;
     position: relative;
-    z-index: 1;
-    pointer-events: none;
+    z-index: 2;
+    margin-right: 30px;
+    margin-top: 60px;
+    transform: translateX(22px);
 }
 
-.ellipse img {
+.user-profile__image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    position: relative;
-    z-index: 1;
-    pointer-events: none;
 }
 
-.text-wrapper-6 {
+.user-profile__name {
     width: 250px;
     height: 65px;
-    font-family: "Inter-Bold", Helvetica;
-    font-weight: 700;
-    color: #000000;
-    font-size: 36px;
+    color: #000;
     text-align: center;
-    margin-left: 57px;
+    font-family: "Inter", sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-left: 50px;
+    margin-top: 105px;
     position: relative;
-    z-index: 1;
-    pointer-events: none;
+    z-index: 2;
 }
 
-.overlap-group-wrapper {
+.user-profile__edit {
     margin-left: auto;
+    margin-top: 105px;
+    margin-right: -50px;
     position: relative;
-    z-index: 10;
+    z-index: 3;
 }
 
-.overlap-group-2 {
-    position: relative;
+.edit-button {
+    display: block;
     width: 310px;
     height: 59px;
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    cursor: pointer;
+    border: 2px solid #ff5555;
     background-color: transparent;
-    z-index: 10;
-}
-
-.text-wrapper-5 {
-    position: relative;
+    color: #ff5454;
     font-family: "Inter-Bold", Helvetica;
     font-weight: 700;
-    color: #ff5454;
     font-size: 26px;
-    white-space: nowrap;
-    z-index: 11;
-    pointer-events: none;
+    text-align: center;
+    line-height: 55px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 3;
 }
 
-.rectangle-2 {
+.edit-button:hover {
+    background-color: #ff5555;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.edit-button:active {
+    transform: translateY(1px);
+}
+
+/* コンテンツタブ
+   ========================================================================== */
+.content-tabs {
     position: absolute;
+    top: 385px;
+    left: 80px;
+    right: auto;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 35px;
+    background-color: #ffffff;
+    padding: 20px 0;
+    z-index: 2;
     width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    border: 2px solid #ff5454;
-    top: 0;
-    left: 0;
-    z-index: 9;
-    pointer-events: none;
+    margin-left: 0;
 }
 
-/* ホバー時のスタイル */
-.overlap-group-2:hover {
-    opacity: 0.8;
+.content-tabs::after {
+    content: "";
+    position: absolute;
+    left: calc(-80px - 50vw);
+    right: calc(-50vw);
+    top: 43px;
+    width: 200vw;
+    height: 2px;
+    background-color: #5f5f5f;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
 }
 
-.overlap-group-2:hover .rectangle-2 {
-    border-color: #ff3333;
-}
-
-.overlap-group-2:hover .text-wrapper-5 {
-    color: #ff3333;
-}
-
-/* タブリンクのスタイル */
-.tab-link {
+.content-tabs__link {
     text-decoration: none;
     color: #000000;
     font-family: "Inter-Bold", Helvetica;
@@ -272,87 +298,70 @@ body {
     padding: 5px 10px;
     border-radius: 4px;
     transition: all 0.2s;
-}
-
-.tab-link:hover {
-    background-color: #f5f5f5;
-}
-
-.tab-link.active {
-    color: #ff5655;
-    border-bottom: 2px solid #ff5655;
-}
-
-/* タブリストのスタイル */
-.toppage-list {
-    position: absolute;
-    top: 350px;
-    left: 0;
-    right: 0;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 20px 0;
+    position: relative;
+    transform: translateX(-5px);
+    cursor: pointer;
     z-index: 2;
 }
 
-/* タブの下線 */
-.tab-underline {
-    position: absolute;
-    top: 350px;
-    left: -109px;
-    width: calc(100vw + 258px);
-    height: 2px;
-    background-color: #5f5f5f;
-    z-index: 1;
-    margin: 0;
-    padding: 0;
+.content-tabs__link:hover {
+    background-color: #f5f5f5;
+    text-decoration: none;
 }
 
-.text-wrapper-3,
-.text-wrapper-4 {
+.content-tabs__link.active {
+    color: #ff5655;
+}
+
+.content-tabs__text {
     font-family: "Inter-Bold", Helvetica;
     font-weight: 700;
     font-size: 24px;
     color: inherit;
     white-space: nowrap;
+    pointer-events: none;
 }
 
-.no-items {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-    font-size: 18px;
-}
-
-.no-items-message {
-    font-family: "Inter", sans-serif;
-    font-size: 18px;
-    color: #666;
-    margin: 20px 0;
-}
-
-.line {
+.content-tabs__divider {
     width: 1px;
     height: 24px;
     background-color: #e0e0e0;
+    z-index: 2;
 }
 
-/* 商品グリッドのスタイル */
-.products-container {
+.content-tabs__link--buy {
+    margin-left: -19px !important;
+    position: relative;
+    left: -9px;
+}
+
+.content-tabs__link--sell {
+    transform: translateX(-5px);
+}
+
+/* 商品リスト
+   ========================================================================== */
+.product-list {
     width: 1512px;
     margin: 0 auto;
-    padding-top: 491px;
+    padding-top: 410px;
     box-sizing: border-box;
     position: relative;
     z-index: 1;
 }
 
-.products-row {
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.product-grid {
     display: grid;
     grid-template-columns: repeat(4, 290px);
     gap: 71.51px;
@@ -364,9 +373,8 @@ body {
     box-sizing: border-box;
 }
 
-/* 商品カード */
 .product-card {
-    width: 290px !important;
+    width: 290px;
     background: #fff;
     border-radius: 4px;
     overflow: hidden;
@@ -378,22 +386,21 @@ body {
     transform: translateY(-4px);
 }
 
-.product-link {
+.product-card__link {
     text-decoration: none;
     color: inherit;
     display: block;
 }
 
-/* 商品画像 */
-.product-image {
+.product-card__image {
     position: relative;
-    width: 290px !important;
-    height: 281px !important;
+    width: 290px;
+    height: 281px;
     overflow: hidden;
     border-radius: 4px;
 }
 
-.product-img {
+.product-card__img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -401,12 +408,11 @@ body {
     border-radius: 4px;
 }
 
-.product-card:hover .product-img {
+.product-card:hover .product-card__img {
     transform: scale(1.05);
 }
 
-/* Sold label */
-.sold-label {
+.product-card__status {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -420,13 +426,12 @@ body {
     z-index: 1;
 }
 
-/* 商品情報 */
-.product-info {
+.product-card__info {
     padding: 2px 0;
-    background-color: #ffffff !important;
+    background-color: #ffffff;
 }
 
-.product-name {
+.product-card__name {
     font-family: "Inter", sans-serif;
     font-size: 25px;
     font-style: normal;
@@ -436,308 +441,363 @@ body {
     margin: 0;
     padding: 0;
     text-align: left;
-    background-color: #ffffff !important;
 }
 
-/* レスポンシブ対応 */
-@media screen and (max-width: 1540px) {
-    .products-container {
-        width: 100%;
-        min-width: 1400px;
-    }
-
-    .products-row {
-        width: 100%;
-        min-width: 1400px;
-        grid-template-columns: repeat(4, 290px) !important;
-        gap: 71.51px !important;
-        padding: 0;
-    }
-
-    .product-card,
-    .product-image {
-        width: 290px !important;
-    }
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
 }
 
-@media screen and (max-width: 1200px) and (min-width: 851px) {
-    .products-container {
-        width: 100%;
-        min-width: auto;
-        padding: 491px 20px 0;
-        box-sizing: border-box;
-    }
-
-    .products-row {
-        width: 100%;
-        min-width: auto;
-        grid-template-columns: repeat(4, 290px) !important;
-        gap: 71.51px !important;
-        padding: 0;
-    }
+.empty-state__message {
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    color: #666;
+    margin: 20px 0;
 }
 
-@media screen and (max-width: 850px) {
-    .products-container {
-        width: 100%;
-        min-width: auto;
-        padding-top: 491px;
-        padding-left: 15px;
-        padding-right: 15px;
-        box-sizing: border-box;
+/* レスポンシブ対応
+   ========================================================================== */
+/* 1512px以上の画面幅 */
+@media screen and (min-width: 1512px) {
+    .container {
+        max-width: 1512px;
     }
 
-    .products-row {
-        width: 100%;
-        min-width: auto;
-        grid-template-columns: repeat(2, 290px) !important;
-        gap: 71.51px !important;
-        padding: 0;
-        justify-content: center;
+    .header {
+        min-width: 1512px;
     }
 
-    .product-card,
-    .product-image {
-        width: 290px !important;
-        height: 281px !important;
+    .product-list {
+        width: 1512px;
+        min-width: 1512px;
     }
 
-    .product-info {
-        padding: 2px 0;
-        background-color: #ffffff !important;
+    .product-grid {
+        width: 1512px;
+        min-width: 1512px;
+        grid-template-columns: repeat(4, 290px);
+        gap: 71.51px;
     }
 
-    .product-name {
-        font-size: 14px;
-        line-height: 1.4;
-        font-weight: 500;
-        background-color: #ffffff !important;
+    .content-tabs {
+        left: 80px;
     }
 
-    .toppage-list {
-        top: 300px;
-    }
-
-    .tab-underline {
-        top: 300px;
-        left: -15px;
-        width: calc(100vw + 30px);
+    .content-tabs::after {
+        left: calc(-80px - 50vw);
     }
 }
 
-@media screen and (max-width: 768px) {
-    .products-row {
-        grid-template-columns: 290px !important;
-        gap: 71.51px !important;
-    }
-
-    .product-card,
-    .product-image {
-        width: 290px !important;
-        height: 281px !important;
-    }
-
-    .toppage-list {
-        top: 280px;
-    }
-
-    .tab-underline {
-        top: 280px;
-    }
-}
-
-/* メディアクエリ */
-@media (max-width: 1540px) and (min-width: 1400px) {
-    .screen .div {
+/* PC対応 (1400-1540px) */
+@media screen and (max-width: 1540px) and (min-width: 1400px) {
+    .container {
         max-width: 1400px;
     }
 
-    .toppage-header-icon {
+    .header {
+        min-width: 1400px;
+    }
+
+    .header__logo {
         left: 40px;
+        width: 320px;
+    }
+
+    .header__search {
+        width: 450px;
+    }
+
+    .product-list {
+        width: 100%;
+        min-width: 1400px;
+        padding-top: 410px;
+    }
+
+    .product-grid {
+        width: 100%;
+        min-width: 1400px;
+        grid-template-columns: repeat(4, 290px);
+        gap: 71.51px;
+    }
+
+    .content-tabs {
+        left: 60px;
+    }
+
+    .content-tabs::after {
+        left: calc(-60px - 50vw);
+    }
+
+    .user-profile {
+        width: 95%;
+        max-width: 1019px;
+    }
+
+    .user-profile__name {
+        font-size: 32px;
+        margin-left: 40px;
+    }
+
+    .edit-button {
+        width: 280px;
+        font-size: 24px;
     }
 }
 
-@media (max-width: 850px) and (min-width: 768px) {
-    .screen .div {
+/* タブレット対応 (768-850px) */
+@media screen and (max-width: 850px) and (min-width: 768px) {
+    .container {
         max-width: 850px;
     }
 
-    .toppage-header-icon {
+    .header {
+        min-width: 850px;
+        padding: 0 20px;
+    }
+
+    .header__logo {
         left: 20px;
         width: 300px;
     }
 
-    .search-bar {
+    .header__search {
         width: 300px;
     }
 
-    .toppage-header-nav {
+    .header__search-input {
+        font-size: 14px;
+    }
+
+    .header__search-input::placeholder {
+        font-size: 14px;
+    }
+
+    .header__nav {
         width: 400px;
     }
 
-    .nav-item {
+    .header__nav-link,
+    .header__nav-link--logout {
         font-size: 18px;
         width: 120px;
     }
 
-    .nav-item:last-child {
+    .header__nav-link--sell {
         width: 90px;
         font-size: 18px;
     }
 
-    .user-info {
+    .user-profile {
         width: 95%;
+        padding-left: 20px;
     }
 
-    .text-wrapper-6 {
+    .user-profile__image {
+        width: 120px;
+        height: 120px;
+        border-radius: 60px;
+        margin-right: 20px;
+        margin-top: 60px;
+    }
+
+    .user-profile__name {
         font-size: 28px;
         margin-left: 30px;
+        width: 200px;
     }
 
-    .overlap-group-2 {
+    .user-profile__edit {
+        margin-right: -30px;
+    }
+
+    .edit-button {
         width: 250px;
+        height: 50px;
+        font-size: 20px;
+        line-height: 46px;
     }
 
-    .text-wrapper-5 {
+    .product-list {
+        width: 100%;
+        min-width: 850px;
+        padding-top: 380px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .product-grid {
+        width: 100%;
+        min-width: 850px;
+        grid-template-columns: repeat(2, 290px);
+        gap: 71.51px;
+    }
+
+    .content-tabs {
+        left: 40px;
+    }
+
+    .content-tabs::after {
+        left: calc(-40px - 50vw);
+    }
+
+    .content-tabs__link {
         font-size: 20px;
     }
 
-    .product-image,
-    .product-image-2,
-    .product-image-3,
-    .product-image-4 {
-        width: calc(33.33% - 14px);
+    .content-tabs__text {
+        font-size: 20px;
+    }
+
+    .product-card__name {
+        font-size: 20px;
+    }
+
+    .product-card__status {
+        font-size: 20px;
+        padding: 6px 30px;
     }
 }
 
-@media (max-width: 850px) {
-    .toppage-header {
-        padding: 0 20px;
+/* モバイル対応 (768px以下) */
+@media screen and (max-width: 768px) {
+    .container {
+        max-width: 768px;
+    }
+
+    .header {
+        min-width: 768px;
         height: auto;
+        padding: 10px;
         flex-direction: column;
     }
 
-    .toppage-header-icon {
-        width: 300px;
+    .header__logo {
         position: relative;
+        width: 200px;
         left: 0;
         top: 0;
         margin: 10px auto;
     }
 
-    .search-bar {
-        width: 300px;
-        height: 40px;
+    .header__search {
         position: relative;
+        width: 100%;
         left: 0;
         top: 0;
         transform: none;
         margin: 10px auto;
     }
 
-    .search-container {
-        width: 200px;
-        height: 24px;
-        font-size: 16px;
-        bottom: 8px;
-        right: 0;
-    }
-
-    .search-input {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .toppage-header-nav {
+    .header__nav {
         position: relative;
+        width: 100%;
         top: 0;
         right: 0;
-        width: 100%;
-        height: auto;
         display: flex;
         justify-content: center;
         gap: 10px;
         margin: 10px 0;
     }
 
-    .nav-item {
-        position: relative;
-        top: 0;
-        left: 0;
-        right: 0;
-        font-size: 16px;
-        padding: 0 8px;
-        width: auto;
-    }
-
-    .nav-item:first-child {
-        margin-left: 0;
-    }
-
-    .nav-item:nth-child(2) {
-        position: relative;
-        top: 0;
-        left: 0;
-        right: 0;
-    }
-
-    .nav-item:last-child {
-        position: relative;
-        top: 0;
-        right: 0;
-    }
-
-    .logout-button {
-        font-size: 16px;
-        width: auto;
-        margin-left: 0;
-        padding: 0 8px;
-    }
-
-    .toppage-list {
+    .header__nav-list {
+        display: flex;
+        justify-content: center;
         gap: 10px;
     }
 
-    .text-wrapper-3,
-    .text-wrapper-4 {
+    .header__nav-item {
+        position: relative;
+        top: 0;
+    }
+
+    .header__nav-link,
+    .header__nav-link--logout,
+    .header__nav-link--sell {
+        position: relative;
+        top: 0;
+        font-size: 16px;
+        padding: 0 8px;
+        width: auto;
+        margin: 0;
+    }
+
+    .user-profile {
+        width: 100%;
+        padding: 0 20px;
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+        top: 80px;
+    }
+
+    .user-profile__image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+        margin: 0 auto 20px;
+        transform: none;
+    }
+
+    .user-profile__name {
+        width: 100%;
+        text-align: center;
+        margin: 0 0 20px;
+        font-size: 24px;
+    }
+
+    .user-profile__edit {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .edit-button {
+        width: 100%;
+        height: 45px;
         font-size: 18px;
-        padding: 8px 15px;
+        line-height: 41px;
     }
 
-    .line {
-        height: 18px;
+    .product-list {
+        width: 100%;
+        min-width: 768px;
+        padding-top: 300px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
-}
 
-/* ログアウトフォームのスタイル */
-.logout-form {
-    display: inline;
-    margin: 0;
-    padding: 0;
-}
+    .product-grid {
+        width: 100%;
+        min-width: 768px;
+        grid-template-columns: 290px;
+        gap: 40px;
+    }
 
-/* ログアウトボタンのスタイル */
-.logout-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: 135px;
-    height: 47px;
-    position: relative;
-    top: 18px;
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 47px;
-    letter-spacing: 0%;
-    text-align: center;
-    color: #ffffff;
-    display: inline-block;
-    text-decoration: none;
-    margin-left: 37px;
-    transition: color 0.3s ease;
-}
+    .content-tabs {
+        left: 20px;
+        top: 280px;
+    }
 
-.logout-button:hover {
-    color: #4a90e2;
+    .content-tabs::after {
+        left: calc(-20px - 50vw);
+    }
+
+    .content-tabs__link {
+        font-size: 18px;
+        padding: 3px 8px;
+    }
+
+    .content-tabs__text {
+        font-size: 18px;
+    }
+
+    .product-card__name {
+        font-size: 18px;
+    }
+
+    .product-card__status {
+        font-size: 18px;
+        padding: 5px 25px;
+    }
 }

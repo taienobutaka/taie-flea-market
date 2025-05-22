@@ -147,7 +147,31 @@ class UserController extends Controller
     public function showEditProfile()
     {
         $user = Auth::user();
+        
+        // デバッグ情報をログに記録
+        \Log::info('Profile edit access attempt:', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'email_verified' => $user->hasVerifiedEmail(),
+            'has_profile' => $user->profile()->exists()
+        ]);
+
+        if (!$user->hasVerifiedEmail()) {
+            \Log::warning('Unverified user attempted to access profile edit', [
+                'user_id' => $user->id
+            ]);
+            return redirect()->route('verification.notice');
+        }
+
         $profile = Profile::where('user_id', $user->id)->first();
+        
+        if (!$profile) {
+            \Log::warning('User without profile attempted to access profile edit', [
+                'user_id' => $user->id
+            ]);
+            return redirect()->route('profile.create');
+        }
+
         return view('profile', compact('user', 'profile'));
     }
 
