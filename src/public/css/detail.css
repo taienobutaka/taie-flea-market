@@ -330,13 +330,6 @@ body {
     top: -7px;
 }
 
-/* カンマのスタイルをカスタマイズ */
-.detail__price-amount::after {
-    content: attr(data-amount);
-    font-feature-settings: "tnum";
-    font-variant-numeric: tabular-nums;
-}
-
 /* カンマのスタイル */
 .detail__price-amount .comma {
     font-style: normal;
@@ -740,7 +733,7 @@ body {
 }
 
 /* ==========================================================================
-   レスポンシブ対応
+/*   レスポンシブ対応
    ========================================================================== */
 /* 1512px以上の画面幅
    基準デザインを維持し、ヘッダーは画面幅に応じて隙間なく表示 */

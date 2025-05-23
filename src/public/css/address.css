@@ -43,13 +43,16 @@ body {
     font-size: var(--font-size-base);
     color: var(--color-text);
     background-color: var(--color-background);
-    min-width: var(--container-width);
+    min-width: 768px;
+    overflow-x: hidden;
 }
 
 .address {
-    width: 100%;
+    width: 1512px;
     min-height: 100vh;
     position: relative;
+    margin: 0 auto;
+    transform-origin: top center;
 }
 
 /* Header styles */
@@ -201,7 +204,9 @@ body {
 .address-form__title {
     position: absolute;
     top: 42px;
-    left: 659px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 680px;
     color: #000;
     font-family: Inter;
     font-size: 36px;
@@ -210,6 +215,7 @@ body {
     line-height: normal;
     margin: 0;
     padding: 0;
+    text-align: center;
 }
 
 .address-form__fieldset {
@@ -348,9 +354,12 @@ body {
 }
 
 /* Responsive styles */
-@media screen and (max-width: 1540px) {
-    body {
-        min-width: auto;
+/* 1512px以上の画面幅
+   基準デザインを維持し、ヘッダーは画面幅に応じて隙間なく表示 */
+@media screen and (min-width: 1512px) {
+    .address {
+        width: 100%;
+        min-width: 1512px;
     }
 
     .header {
@@ -358,143 +367,40 @@ body {
         min-width: 1512px;
     }
 
-    .header__logo {
-        width: 370px;
-        height: 36px;
-    }
-
-    .header__search {
-        width: 500px;
-    }
-
-    .address-form {
-        width: 90%;
-        max-width: 680px;
-    }
-
-    .address-form__input {
-        width: 100%;
-        max-width: 680px;
+    .address-form__title {
+        width: 680px;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
 
-@media screen and (max-width: 850px) {
-    :root {
-        --header-height: 60px;
-        --font-size-large: 20px;
-        --font-size-xlarge: 28px;
+/* PC対応 (1400-1540px)とタブレット対応 (768-1399px)
+   基準デザインをスケーリング */
+@media screen and (max-width: 1540px) and (min-width: 768px) {
+    .address {
+        transform: scale(calc(100vw / 1512));
+        transform-origin: top center;
     }
 
     .header {
-        padding: 0 var(--spacing-md);
-        min-width: auto;
-    }
-
-    .header__logo {
-        width: 300px;
-        height: 29px;
-        top: 12px;
-        left: var(--spacing-md);
-    }
-
-    .header__search {
-        width: 300px;
-        top: 10px;
-    }
-
-    .header__nav {
-        width: 300px;
-        right: var(--spacing-md);
-    }
-
-    .header__nav-item:first-child {
-        margin-left: 0;
-    }
-
-    .header__nav-item:nth-child(2) {
-        left: 120px;
-        right: auto;
-        width: 100px;
-    }
-
-    .header__nav-link {
-        font-size: var(--font-size-base);
-    }
-
-    .address-form {
-        margin-top: 100px;
-        padding: var(--spacing-md);
-    }
-
-    .address-form__input {
-        height: 45px;
-        font-size: var(--font-size-base);
-    }
-
-    .address-form__submit {
-        height: 60px;
-        font-size: 26px;
-        line-height: normal;
-        box-sizing: border-box;
-        padding: 0;
-    }
-
-    .address-form__label {
-        font-size: 20px;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .header {
-        height: auto;
-        padding: var(--spacing-sm);
-        min-width: auto;
-    }
-
-    .header__logo {
-        position: relative;
-        width: 200px;
-        height: 19px;
-        top: 0;
-        left: 0;
-    }
-
-    .header__search {
-        position: relative;
         width: 100%;
-        top: 0;
-        left: 0;
+        min-width: 100vw;
         transform: none;
-        margin-top: var(--spacing-sm);
+        left: 0;
     }
 
-    .header__nav {
-        position: relative;
-        width: 100%;
-        top: 0;
-        right: 0;
-        margin-top: var(--spacing-sm);
+    .address-form__title {
+        width: 680px;
+        left: 50%;
+        transform: translateX(-50%) scale(calc(100vw / 1512));
+        transform-origin: top center;
     }
+}
 
-    .header__nav-list {
-        justify-content: space-between;
-    }
-
-    .header__nav-item {
-        position: relative !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: auto !important;
-        margin: 0 !important;
-    }
-
-    .main {
-        margin-top: 180px;
-    }
-
-    .address-form {
-        margin: var(--spacing-sm);
-        padding: var(--spacing-md);
+/* モバイル対応 (768px未満)
+   最小幅を維持 */
+@media screen and (max-width: 767px) {
+    body {
+        min-width: 768px;
     }
 }
