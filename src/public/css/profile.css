@@ -15,7 +15,8 @@ body {
     font-family: "Inter", sans-serif;
     background-color: #ffffff;
     min-height: 100vh;
-    min-width: 768px;
+    min-width: 1512px;
+    overflow-x: hidden;
 }
 
 /* メインコンテナ
@@ -28,6 +29,7 @@ body {
     height: 1229px;
     position: relative;
     margin: 0 auto;
+    transform-origin: top center;
 }
 
 /* ヘッダー
@@ -440,74 +442,182 @@ body {
 /* レスポンシブ対応
    ========================================================================== */
 /* 1512px以上の画面幅
-   基準デザインを維持し、ヘッダーは画面幅に合わせて表示 */
-@media (min-width: 1512px) {
-    .header {
-        min-width: 1512px;
-    }
-}
-
-/* PC向けレイアウト（1400px-1540px）
-   コンテナ幅の調整と要素の位置調整 */
-@media (max-width: 1540px) and (min-width: 1400px) {
+   基準デザインを維持し、ヘッダーは画面幅に応じて隙間なく表示 */
+@media screen and (min-width: 1512px) {
     .profile-container {
         width: 100%;
-        min-width: 1400px;
-        height: auto;
-        min-height: 1229px;
+        min-width: 1512px;
     }
 
     .header {
-        min-width: 1400px;
+        width: 100%;
+        min-width: 1512px;
     }
 
     .profile-main {
-        width: 100%;
-        min-width: 1400px;
-        height: auto;
-        min-height: 1229px;
-    }
-
-    .profile-title {
-        left: calc(50% - 6px);
-        transform: translateX(-50%);
-    }
-
-    .profile-form {
-        width: 680px;
-    }
-
-    .action-bar {
-        width: 680px;
+        width: 1512px;
+        min-width: 1512px;
+        margin: 0 auto;
     }
 }
 
-/* タブレット・モバイル向けレイアウト（768px-1400px）
-   画面幅に応じて元のデザインを縮小 */
-@media (max-width: 1399px) and (min-width: 768px) {
+/* PC対応 (1400-1540px)
+   基準デザインをスケーリング */
+@media screen and (max-width: 1540px) and (min-width: 1400px) {
     .profile-container {
-        width: 1512px;
-        height: 1229px;
         transform: scale(calc(100vw / 1512));
         transform-origin: top center;
-        margin: 0 auto;
     }
 
     .header {
-        width: 1512px;
-        min-width: 1512px;
-        transform: scale(calc(100vw / 1512));
-        transform-origin: top left;
+        width: 100%;
+        min-width: 100vw;
+        transform: none;
+        left: 0;
     }
 
-    body {
-        overflow-x: hidden;
+    .header__logo {
+        left: calc(40px * (100vw / 1512));
+    }
+
+    .header__search {
+        width: calc(500px * (100vw / 1512));
+    }
+
+    .header__nav {
+        right: calc(15px * (100vw / 1512));
+    }
+
+    /* プロフィール編集画面の要素をスケーリング */
+    .profile-title {
+        width: calc(299px * (100vw / 1512));
+        height: calc(47px * (100vw / 1512));
+        top: calc(144px * (100vw / 1512));
+        left: calc(594px * (100vw / 1512));
+        font-size: calc(36px * (100vw / 1512));
+    }
+
+    .profile-image {
+        width: calc(150px * (100vw / 1512));
+        height: calc(150px * (100vw / 1512));
+        top: calc(233px * (100vw / 1512));
+        transform: translateX(calc(-50% - 265px * (100vw / 1512)));
+    }
+
+    .image-select-button {
+        width: calc(180px * (100vw / 1512));
+        height: calc(50px * (100vw / 1512));
+        top: calc(283px * (100vw / 1512));
+        transform: translateX(calc(-50% - 61px * (100vw / 1512)));
+        font-size: calc(20px * (100vw / 1512));
+    }
+
+    .profile-form {
+        top: calc(458px * (100vw / 1512));
+        width: calc(680px * (100vw / 1512));
+    }
+
+    .input-label {
+        height: calc(36px * (100vw / 1512));
+        font-size: calc(24px * (100vw / 1512));
+    }
+
+    .input-field {
+        height: calc(55px * (100vw / 1512));
+        font-size: calc(24px * (100vw / 1512));
+    }
+
+    .action-bar {
+        top: calc(564px * (100vw / 1512));
+        width: calc(680px * (100vw / 1512));
+        height: calc(60px * (100vw / 1512));
+    }
+
+    .action-bar-text {
+        font-size: calc(26px * (100vw / 1512));
     }
 }
 
-/* モバイル向けレイアウト（768px未満）
-   モバイル向けの最小幅を設定 */
-@media (max-width: 767px) {
+/* タブレット対応 (768-1399px)
+   基準デザインをスケーリング */
+@media screen and (max-width: 1399px) and (min-width: 768px) {
+    .profile-container {
+        transform: scale(calc(100vw / 1512));
+        transform-origin: top center;
+    }
+
+    .header {
+        width: 100%;
+        min-width: 100vw;
+        transform: none;
+        left: 0;
+    }
+
+    .header__logo {
+        left: calc(40px * (100vw / 1512));
+    }
+
+    .header__search {
+        width: calc(500px * (100vw / 1512));
+    }
+
+    .header__nav {
+        right: calc(15px * (100vw / 1512));
+    }
+
+    /* プロフィール編集画面の要素をスケーリング */
+    .profile-title {
+        width: calc(299px * (100vw / 1512));
+        height: calc(47px * (100vw / 1512));
+        top: calc(144px * (100vw / 1512));
+        left: calc(594px * (100vw / 1512));
+        font-size: calc(36px * (100vw / 1512));
+    }
+
+    .profile-image {
+        width: calc(150px * (100vw / 1512));
+        height: calc(150px * (100vw / 1512));
+        top: calc(233px * (100vw / 1512));
+        transform: translateX(calc(-50% - 265px * (100vw / 1512)));
+    }
+
+    .image-select-button {
+        width: calc(180px * (100vw / 1512));
+        height: calc(50px * (100vw / 1512));
+        top: calc(283px * (100vw / 1512));
+        transform: translateX(calc(-50% - 61px * (100vw / 1512)));
+        font-size: calc(20px * (100vw / 1512));
+    }
+
+    .profile-form {
+        top: calc(458px * (100vw / 1512));
+        width: calc(680px * (100vw / 1512));
+    }
+
+    .input-label {
+        height: calc(36px * (100vw / 1512));
+        font-size: calc(24px * (100vw / 1512));
+    }
+
+    .input-field {
+        height: calc(55px * (100vw / 1512));
+        font-size: calc(24px * (100vw / 1512));
+    }
+
+    .action-bar {
+        top: calc(564px * (100vw / 1512));
+        width: calc(680px * (100vw / 1512));
+        height: calc(60px * (100vw / 1512));
+    }
+
+    .action-bar-text {
+        font-size: calc(26px * (100vw / 1512));
+    }
+}
+
+/* モバイル対応 (768px未満)
+   最小幅を維持 */
+@media screen and (max-width: 767px) {
     body {
         min-width: 768px;
     }
