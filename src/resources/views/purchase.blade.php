@@ -20,10 +20,10 @@
             <nav class="header__nav">
                 <ul class="header__nav-list">
                     <li class="header__nav-item">
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        <form action="{{ route('logout') }}" method="POST" class="header__logout-form">
                             @csrf
+                            <button type="submit" class="header__nav-link header__nav-link--logout">ログアウト</button>
                         </form>
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="header__nav-link header__nav-link--logout">ログアウト</a>
                     </li>
                     <li class="header__nav-item"><a href="{{ route('mypage') }}" class="header__nav-link">マイページ</a></li>
                     <li class="header__nav-item"><a href="{{ route('sell.form') }}" class="header__nav-link header__nav-link--sell">出品</a></li>
@@ -82,12 +82,12 @@
 
             <section class="purchase__payment">
                 <h2 class="purchase__section-title">支払い方法</h2>
-                <form action="{{ route('purchase.payment-method', $item->id) }}" method="POST" class="purchase__payment-form">
-                    @csrf
-                    <div class="purchase__payment-select-wrapper">
-                        <input type="hidden" name="payment_method" id="selected-payment-method" value="{{ $selectedPaymentMethod }}">
+                <div class="purchase__payment-select-wrapper">
+                    <form action="{{ route('purchase.payment-method', ['item_id' => $item->id]) }}" method="POST" class="purchase__payment-form">
+                        @csrf
+                        <input type="hidden" name="payment_method" id="selected-payment" value="{{ $selectedPaymentMethod }}">
                         <div class="custom-select">
-                            <div class="select-trigger" onclick="this.parentElement.classList.toggle('open')">
+                            <div class="select-trigger">
                                 <span class="selected-text">
                                     @if($selectedPaymentMethod === 'convenience')
                                         コンビニ払い
@@ -97,26 +97,31 @@
                                         選択してください
                                     @endif
                                 </span>
-                                <div class="polygon"></div>
+                                <div class="select-arrow"></div>
                             </div>
-                            <div class="select-options">
-                                <div class="option {{ $selectedPaymentMethod === 'convenience' ? 'selected' : '' }}" 
-                                     data-value="convenience"
-                                     onclick="updatePaymentMethod('convenience', 'コンビニ払い', this)">
-                                    <span class="option-text">コンビニ払い</span>
-                                </div>
-                                <div class="option {{ $selectedPaymentMethod === 'credit_card' ? 'selected' : '' }}" 
-                                     data-value="credit_card"
-                                     onclick="updatePaymentMethod('credit_card', 'カード支払い', this)">
-                                    <span class="option-text">カード支払い</span>
-                                </div>
-                            </div>
+                            <ul class="select-options">
+                                <li class="option {{ $selectedPaymentMethod === 'convenience' ? 'selected' : '' }}">
+                                    <form action="{{ route('purchase.payment-method', ['item_id' => $item->id]) }}" method="POST" style="margin: 0; padding: 0;">
+                                        @csrf
+                                        <input type="hidden" name="payment_method" value="convenience">
+                                        <button type="submit" class="option-link" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                                            コンビニ払い
+                                        </button>
+                                    </form>
+                                </li>
+                                <li class="option {{ $selectedPaymentMethod === 'credit_card' ? 'selected' : '' }}">
+                                    <form action="{{ route('purchase.payment-method', ['item_id' => $item->id]) }}" method="POST" style="margin: 0; padding: 0;">
+                                        @csrf
+                                        <input type="hidden" name="payment_method" value="credit_card">
+                                        <button type="submit" class="option-link" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                                            カード支払い
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
-                    </div>
-                    @error('payment_method')
-                        <div class="purchase__error-message">支払い方法を選択してください</div>
-                    @enderror
-                </form>
+                    </form>
+                </div>
             </section>
 
             @if(!$profile || !$profile->postcode || !$profile->address)
@@ -142,17 +147,5 @@
             </div>
         </main>
     </div>
-
-    <script>
-    function updatePaymentMethod(value, text, element) {
-        // プルダウンの値を更新
-        document.getElementById('selected-payment-method').value = value;
-        element.closest('.custom-select').querySelector('.selected-text').textContent = text;
-        element.closest('.custom-select').classList.remove('open');
-
-        // フォームをサブミット
-        element.closest('form').submit();
-    }
-    </script>
 </body>
 </html>
