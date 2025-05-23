@@ -19,15 +19,7 @@ class FavoriteController extends Controller
             $item->favorites()->create(['user_id' => $user->id]);
         }
 
-        // 現在のページと検索条件を取得
-        $page = request('page', 'recommended');
-        $search = request('search');
-
-        // 現在のページと検索条件を維持してリダイレクト
-        return redirect()->route('items.index', [
-            'page' => $page,
-            'search' => $search
-        ]);
+        return redirect()->route('item.show', ['id' => $item_id]);
     }
 
     /**

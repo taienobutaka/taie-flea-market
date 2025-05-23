@@ -15,19 +15,26 @@
             <div class="header__logo">
                 <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="header__logo-img">
             </div>
-            <div class="search-bar">
-                <div class="search-bar__placeholder">なにをお探しですか？</div>
-                <input type="text" placeholder="" class="search-bar__input">
-            </div>
+            <form action="{{ route('items.index') }}" method="GET" class="header__search">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="なにをお探しですか？" class="header__search-input">
+                <input type="hidden" name="page" value="recommended">
+            </form>
             <nav class="header__nav">
-                @auth
-                    <a href="{{ route('logout') }}" class="header__nav-item">ログアウト</a>
-                    <a href="{{ route('mypage') }}" class="header__nav-item">マイページ</a>
-                    <a href="{{ route('sell.form') }}" class="header__nav-item header__nav-item--sell">出品</a>
-                @else
-                    <a href="{{ route('login') }}" class="header__nav-item">ログイン</a>
-                    <a href="{{ route('register') }}" class="header__nav-item">新規登録</a>
-                @endauth
+                <ul class="header__nav-list">
+                    @auth
+                        <li class="header__nav-item">
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="header__nav-link header__nav-link--logout">ログアウト</a>
+                        </li>
+                        <li class="header__nav-item"><a href="{{ route('mypage') }}" class="header__nav-link">マイページ</a></li>
+                        <li class="header__nav-item"><a href="{{ route('sell.form') }}" class="header__nav-link header__nav-link--sell">出品</a></li>
+                    @else
+                        <li class="header__nav-item"><a href="{{ route('login') }}" class="header__nav-link">ログイン</a></li>
+                        <li class="header__nav-item"><a href="{{ route('register') }}" class="header__nav-link">新規登録</a></li>
+                    @endauth
+                </ul>
             </nav>
         </header>
 
@@ -67,20 +74,20 @@
 
                     <div class="detail__actions">
                         @auth
-                            <form action="{{ route('favorites.toggle.ajax', $item->id) }}" method="POST" class="detail__favorite-form" id="favoriteForm">
+                            <form action="{{ route('favorites.toggle', $item->id) }}" method="POST" class="detail__favorite-form">
                                 @csrf
                                 <button type="submit" class="detail__favorite-button {{ $item->isFavoritedBy(Auth::user()) ? 'detail__favorite-button--active' : '' }}">
                                     <img src="{{ asset('img/star.png') }}" alt="お気に入り" class="detail__favorite-icon">
-                                    <span class="detail__favorite-count {{ $item->isFavoritedBy(Auth::user()) ? 'detail__favorite-count--active' : '' }}">
-                                        {{ $item->favorites->count() }}
-                                    </span>
                                 </button>
+                                <span class="detail__favorite-count {{ $item->isFavoritedBy(Auth::user()) ? 'detail__favorite-count--active' : '' }}">
+                                    {{ $item->favorites->count() }}
+                                </span>
                             </form>
                         @else
                             <a href="{{ route('login') }}" class="detail__favorite-button" title="お気に入り登録するにはログインが必要です">
                                 <img src="{{ asset('img/star.png') }}" alt="お気に入り" class="detail__favorite-icon">
-                                <span class="detail__favorite-count">{{ $item->favorites->count() }}</span>
                             </a>
+                            <span class="detail__favorite-count">{{ $item->favorites->count() }}</span>
                         @endauth
                         <div class="detail__comment-count">
                             <img src="{{ asset('img/comment.png') }}" alt="コメント" class="detail__comment-icon">
@@ -154,7 +161,7 @@
                                 <h3 class="detail__form-title">商品へのコメント</h3>
                                 <form action="{{ route('comment.store', ['item_id' => $item->id]) }}" method="POST" novalidate>
                                     @csrf
-                                    <textarea name="content" class="detail__comment-input {{ $errors->has('content') ? 'detail__comment-input--error' : '' }}" placeholder="コメントを入力してください">{{ old('content') }}</textarea>
+                                    <textarea name="content" class="detail__comment-input {{ $errors->has('content') ? 'detail__comment-input--error' : '' }}">{{ old('content') }}</textarea>
                                     @error('content')
                                         <div class="detail__error detail__error--above-button">{{ $message }}</div>
                                     @enderror
@@ -174,45 +181,5 @@
             </article>
         </main>
     </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const favoriteForm = document.getElementById('favoriteForm');
-        if (favoriteForm) {
-            favoriteForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const button = this.querySelector('.detail__favorite-button');
-                const count = this.querySelector('.detail__favorite-count');
-                const formData = new FormData(this);
-
-                fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (data.isFavorited) {
-                            button.classList.add('detail__favorite-button--active');
-                            count.classList.add('detail__favorite-count--active');
-                            count.textContent = parseInt(count.textContent) + 1;
-                        } else {
-                            button.classList.remove('detail__favorite-button--active');
-                            count.classList.remove('detail__favorite-count--active');
-                            count.textContent = parseInt(count.textContent) - 1;
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            });
-        }
-    });
-    </script>
 </body>
 </html> 
