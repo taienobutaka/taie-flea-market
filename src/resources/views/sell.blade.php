@@ -114,7 +114,7 @@
                         <div class="select-container">
                             <input type="hidden" name="condition" id="selected-condition" value="{{ old('condition', '') }}">
                             <div class="custom-select">
-                                <div class="select-trigger" onclick="this.parentElement.classList.toggle('open')">
+                                <div class="select-trigger">
                                     <span class="selected-text">{{ old('condition', '選択してください') }}</span>
                                     <div class="select-arrow"></div>
                                 </div>
@@ -125,10 +125,10 @@
                                         'やや傷や汚れあり' => 'やや傷や汚れあり',
                                         '状態が悪い' => '状態が悪い'
                                     ] as $value => $label)
-                                        <li class="option {{ old('condition') === $value ? 'selected' : '' }}" 
-                                            data-value="{{ $value }}"
-                                            onclick="document.getElementById('selected-condition').value = '{{ $value }}'; this.closest('.custom-select').querySelector('.selected-text').textContent = '{{ $label }}'; this.closest('.custom-select').classList.remove('open');">
-                                            <span class="option-text">{{ $label }}</span>
+                                        <li class="option {{ old('condition') === $value ? 'selected' : '' }}">
+                                            <button type="submit" name="condition" value="{{ $value }}" class="option-link">
+                                                {{ $label }}
+                                            </button>
                                         </li>
                                     @endforeach
                                 </ul>
