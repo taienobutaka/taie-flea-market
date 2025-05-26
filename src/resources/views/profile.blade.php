@@ -63,43 +63,43 @@
                     <legend class="profile-fieldset-legend visually-hidden">プロフィール情報</legend>
                     
                     <div class="input-group username-input-group">
+                        @error('username')
+                        <div class="error-message">{{ $message }}</div>
+                        @enderror
                         <div class="input-group-content">
                             <label for="username" class="input-label">ユーザー名</label>
                             <input type="text" id="username" name="username" class="input-field @error('username') is-invalid @enderror" value="{{ old('username', $profile->username ?? '') }}">
                         </div>
-                        @error('username')
-                        <div class="error-message">{{ $message }}</div>
-                        @enderror
                     </div>
 
                     <div class="input-group postcode-input-group">
+                        @error('postcode')
+                        <div class="error-message">{{ $message }}</div>
+                        @enderror
                         <div class="input-group-content">
                             <label for="postcode" class="input-label">郵便番号</label>
                             <input type="text" id="postcode" name="postcode" class="input-field @error('postcode') is-invalid @enderror" value="{{ old('postcode', $profile->postcode ?? '') }}">
                         </div>
-                        @error('postcode')
-                        <div class="error-message">{{ $message }}</div>
-                        @enderror
                     </div>
 
                     <div class="input-group address-input-group">
+                        @error('address')
+                        <div class="error-message">{{ $message }}</div>
+                        @enderror
                         <div class="input-group-content">
                             <label for="address" class="input-label">住所</label>
                             <input type="text" id="address" name="address" class="input-field @error('address') is-invalid @enderror" value="{{ old('address', $profile->address ?? '') }}">
                         </div>
-                        @error('address')
-                        <div class="error-message">{{ $message }}</div>
-                        @enderror
                     </div>
 
                     <div class="input-group building-input-group">
+                        @error('building_name')
+                        <div class="error-message">{{ $message }}</div>
+                        @enderror
                         <div class="input-group-content">
                             <label for="building_name" class="input-label">建物名</label>
                             <input type="text" id="building_name" name="building_name" class="input-field @error('building_name') is-invalid @enderror" value="{{ old('building_name', $profile->building_name ?? '') }}">
                         </div>
-                        @error('building_name')
-                        <div class="error-message">{{ $message }}</div>
-                        @enderror
                     </div>
                 </fieldset>
 
