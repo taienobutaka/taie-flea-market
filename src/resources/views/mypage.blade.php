@@ -52,12 +52,12 @@
                        class="content-tabs__link content-tabs__link--sell {{ $page === 'sell' ? 'active' : '' }}">
                         <span class="content-tabs__text">出品した商品</span>
                     </a>
-                    <img class="content-tabs__divider" src="{{ asset('img/line-2.svg') }}" alt="" />
                     <a href="{{ route('mypage', ['page' => 'buy']) }}" 
                        class="content-tabs__link content-tabs__link--buy {{ $page === 'buy' ? 'active' : '' }}">
                         <span class="content-tabs__text">購入した商品</span>
                     </a>
                 </nav>
+                <div class="content-tabs-underline"></div>
 
                 <section class="product-list">
                     @if($items->isEmpty())

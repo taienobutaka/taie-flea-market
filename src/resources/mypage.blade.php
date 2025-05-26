@@ -41,3 +41,22 @@
         @endforeach
     </ul>
 @endif 
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelector('.content-tabs');
+    const underline = tabs.querySelector('::after');
+    const tabsTop = tabs.offsetTop;
+    const headerHeight = 80;
+
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop >= tabsTop - headerHeight) {
+            tabs.classList.add('fixed');
+        } else {
+            tabs.classList.remove('fixed');
+        }
+    });
+});
+</script> 

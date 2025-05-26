@@ -313,20 +313,24 @@ body {
     background-color: #ffffff;
     padding: 20px 0;
     z-index: 2;
+    width: 1019px;
 }
 
-/* タブ下線
-   疑似要素で実装 */
-.content-tabs::after {
-    content: "";
-    position: fixed;
+/* 下線を独立した要素として実装 */
+.content-tabs-underline {
+    position: absolute;
+    top: 430px;
     left: 0;
     right: 0;
-    top: 430px; /* 446pxから10px上に移動 */
     width: 100%;
     height: 2px;
     background-color: #5f5f5f;
     z-index: 1;
+}
+
+/* 元の下線は非表示 */
+.content-tabs::after {
+    display: none;
 }
 
 /* タブリンク
@@ -339,15 +343,14 @@ body {
     font-size: 24px;
     padding: 5px 10px;
     border-radius: 4px;
-    transition: all 0.2s;
     position: relative;
     cursor: pointer;
     z-index: 2;
     margin-left: -116px;
 }
 
+/* ホバー効果を削除 */
 .content-tabs__link:hover {
-    background-color: #f5f5f5;
     text-decoration: none;
 }
 
@@ -365,18 +368,15 @@ body {
     pointer-events: none;
 }
 
-/* タブ区切り線 */
+/* タブ区切り線を削除 */
 .content-tabs__divider {
-    width: 1px;
-    height: 24px;
-    background-color: #e0e0e0;
-    z-index: 2;
+    display: none;
 }
 
 /* 購入タブ
    特別なマージン */
 .content-tabs__link--buy {
-    margin-left: -29px;
+    margin-left: 8px;
 }
 
 /* 商品リスト
@@ -534,6 +534,13 @@ body {
         width: 1019px;
         min-width: 1019px;
     }
+
+    .content-tabs-underline {
+        width: 100vw; /* ビューポート幅いっぱいに */
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 1512px; /* 最小幅を設定 */
+    }
 }
 
 /* PC対応 (1400-1540px)
@@ -613,7 +620,7 @@ body {
     }
 
     .content-tabs__link--buy {
-        margin-left: calc(-29px * (100vw / 1512));
+        margin-left: calc(35px * (100vw / 1512));
     }
 
     .product-list {
@@ -637,6 +644,11 @@ body {
 
     .product-card__name {
         font-size: calc(25px * (100vw / 1512));
+    }
+
+    .content-tabs-underline {
+        top: calc(430px * (100vw / 1512));
+        height: calc(2px * (100vw / 1512));
     }
 }
 
@@ -717,7 +729,7 @@ body {
     }
 
     .content-tabs__link--buy {
-        margin-left: calc(-29px * (100vw / 1512));
+        margin-left: calc(35px * (100vw / 1512));
     }
 
     .product-list {
@@ -741,6 +753,11 @@ body {
 
     .product-card__name {
         font-size: calc(25px * (100vw / 1512));
+    }
+
+    .content-tabs-underline {
+        top: calc(430px * (100vw / 1512));
+        height: calc(2px * (100vw / 1512));
     }
 }
 
