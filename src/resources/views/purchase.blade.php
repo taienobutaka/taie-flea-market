@@ -32,6 +32,50 @@
         </header>
 
         <main class="purchase__main">
+            <section class="purchase__payment">
+                <h2 class="purchase__section-title">支払い方法</h2>
+                <div class="purchase__payment-select-wrapper">
+                    @if($profile && $profile->postcode && $profile->address)
+                        <form action="{{ route('purchase.payment-method', ['item_id' => $item->id]) }}" method="POST" class="purchase__payment-form">
+                            @csrf
+                            <div class="custom-select {{ $errors->has('payment_method') ? 'has-error' : '' }}">
+                                <div class="select-trigger">
+                                    <span class="selected-text">
+                                        @if($selectedPaymentMethod === 'convenience')
+                                            コンビニ払い
+                                        @elseif($selectedPaymentMethod === 'credit_card')
+                                            カード支払い
+                                        @else
+                                            選択してください
+                                        @endif
+                                    </span>
+                                    <div class="select-arrow"></div>
+                                </div>
+                                <ul class="select-options">
+                                    <li class="option {{ $selectedPaymentMethod === 'convenience' ? 'selected' : '' }}">
+                                        <button type="submit" name="payment_method" value="convenience" class="option-link" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                                            コンビニ払い
+                                        </button>
+                                    </li>
+                                    <li class="option {{ $selectedPaymentMethod === 'credit_card' ? 'selected' : '' }}">
+                                        <button type="submit" name="payment_method" value="credit_card" class="option-link" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                                            カード支払い
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+                    @else
+                        <div class="custom-select">
+                            <div class="select-trigger">
+                                <span class="selected-text">選択してください</span>
+                                <div class="select-arrow"></div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </section>
+
             <section class="purchase__summary">
                 <div class="purchase__price-box">
                     <h2 class="purchase__section-title">商品代金</h2>
@@ -80,54 +124,18 @@
                 </div>
             </section>
 
-            <section class="purchase__payment">
-                <h2 class="purchase__section-title">支払い方法</h2>
-                <div class="purchase__payment-select-wrapper">
-                    <form action="{{ route('purchase.payment-method', ['item_id' => $item->id]) }}" method="POST" class="purchase__payment-form">
-                        @csrf
-                        <input type="hidden" name="payment_method" id="selected-payment" value="{{ $selectedPaymentMethod }}">
-                        <div class="custom-select">
-                            <div class="select-trigger">
-                                <span class="selected-text">
-                                    @if($selectedPaymentMethod === 'convenience')
-                                        コンビニ払い
-                                    @elseif($selectedPaymentMethod === 'credit_card')
-                                        カード支払い
-                                    @else
-                                        選択してください
-                                    @endif
-                                </span>
-                                <div class="select-arrow"></div>
-                            </div>
-                            <ul class="select-options">
-                                <li class="option {{ $selectedPaymentMethod === 'convenience' ? 'selected' : '' }}">
-                                    <form action="{{ route('purchase.payment-method', ['item_id' => $item->id]) }}" method="POST" style="margin: 0; padding: 0;">
-                                        @csrf
-                                        <input type="hidden" name="payment_method" value="convenience">
-                                        <button type="submit" class="option-link" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
-                                            コンビニ払い
-                                        </button>
-                                    </form>
-                                </li>
-                                <li class="option {{ $selectedPaymentMethod === 'credit_card' ? 'selected' : '' }}">
-                                    <form action="{{ route('purchase.payment-method', ['item_id' => $item->id]) }}" method="POST" style="margin: 0; padding: 0;">
-                                        @csrf
-                                        <input type="hidden" name="payment_method" value="credit_card">
-                                        <button type="submit" class="option-link" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
-                                            カード支払い
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    </form>
-                </div>
-            </section>
-
             @if(!$profile || !$profile->postcode || !$profile->address)
                 <div class="purchase__validation">
                     <p class="purchase__validation-message">配送先住所が設定されていません。</p>
                     <a href="{{ route('purchase.address', $item->id) }}" class="purchase__validation-link">配送先を設定する</a>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="purchase__validation">
+                    @foreach($errors->all() as $error)
+                        <p class="purchase__validation-message">{{ $error }}</p>
+                    @endforeach
                 </div>
             @endif
 
@@ -139,7 +147,7 @@
                         <input type="hidden" name="address" value="{{ $profile->address }}">
                         <input type="hidden" name="building_name" value="{{ $profile->building_name }}">
                         <input type="hidden" name="payment_method" value="{{ $selectedPaymentMethod }}">
-                        <button type="submit" class="purchase__submit-button" {{ empty($selectedPaymentMethod) ? 'disabled' : '' }}>購入する</button>
+                        <button type="submit" class="purchase__submit-button">購入する</button>
                     </form>
                 @else
                     <button class="purchase__submit-button purchase__submit-button--disabled" disabled>購入する</button>

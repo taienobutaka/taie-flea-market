@@ -30,6 +30,14 @@ class PurchaseController extends Controller
         $item = Item::findOrFail($item_id);
         $user = Auth::user();
 
+        \Log::info('購入画面表示', [
+            'item_id' => $item_id,
+            'session_payment_method' => session('payment_method'),
+            'session_all' => session()->all(),
+            'has_errors' => session()->has('errors'),
+            'errors' => session('errors')
+        ]);
+
         // 既に購入済みの商品かチェック
         if ($item->purchases()->exists()) {
             return redirect()
@@ -46,8 +54,23 @@ class PurchaseController extends Controller
 
         $profile = Profile::where('user_id', Auth::id())->first();
         
-        // セッションから支払い方法を取得（デフォルトは空）
-        $selectedPaymentMethod = session('payment_method', '');
+        // セッションから支払い方法を取得
+        $selectedPaymentMethod = session('payment_method');
+        
+        \Log::info('支払い方法の状態', [
+            'selected_payment_method' => $selectedPaymentMethod,
+            'is_empty' => empty($selectedPaymentMethod),
+            'is_null' => is_null($selectedPaymentMethod),
+            'is_string' => is_string($selectedPaymentMethod),
+            'length' => is_string($selectedPaymentMethod) ? strlen($selectedPaymentMethod) : 0
+        ]);
+        
+        // 支払い方法が空文字列の場合はnullに設定
+        if ($selectedPaymentMethod === '') {
+            $selectedPaymentMethod = null;
+            session()->forget('payment_method');
+            \Log::info('支払い方法をnullに設定');
+        }
         
         return view('purchase', [
             'item' => $item,
@@ -80,72 +103,82 @@ class PurchaseController extends Controller
             ->with('success', '住所を更新しました。');
     }
 
+    public function updatePaymentMethod(Request $request, $item_id)
+    {
+        $validator = \Validator::make($request->all(), [
+            'payment_method' => 'required|in:convenience,credit_card'
+        ], [
+            'payment_method.required' => '支払い方法を選択してください。',
+            'payment_method.in' => '有効な支払い方法を選択してください。'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->route('purchase', ['item_id' => $item_id])
+                ->withErrors($validator);
+        }
+
+        // 支払い方法をセッションに保存
+        session(['payment_method' => $request->payment_method]);
+
+        return redirect()->route('purchase', ['item_id' => $item_id]);
+    }
+
     public function confirm(Request $request, $item_id)
     {
         try {
-            \Log::info('購入確認処理開始', [
-                'item_id' => $item_id,
-                'request_data' => $request->all()
-            ]);
+            // セッションから支払い方法を取得
+            $paymentMethod = session('payment_method');
+
+            // 支払い方法が未選択の場合
+            if (empty($paymentMethod)) {
+                $validator = \Validator::make([], []);
+                $validator->errors()->add('payment_method', '支払い方法を選択してください。');
+                return redirect()
+                    ->route('purchase', ['item_id' => $item_id])
+                    ->withErrors($validator);
+            }
 
             // リクエストのバリデーション
-            $request->validate([
-                'payment_method' => 'required|in:convenience,credit_card',
+            $validator = \Validator::make($request->all(), [
                 'postcode' => 'required|string|max:8',
                 'address' => 'required|string|max:255',
                 'building_name' => 'nullable|string|max:255'
+            ], [
+                'postcode.required' => '郵便番号は必須です。',
+                'address.required' => '住所は必須です。'
             ]);
+
+            if ($validator->fails()) {
+                return redirect()
+                    ->route('purchase', ['item_id' => $item_id])
+                    ->withErrors($validator)
+                    ->withInput();
+            }
 
             $item = Item::findOrFail($item_id);
             $user = Auth::user();
 
-            \Log::info('購入処理開始', [
-                'item_id' => $item->id,
-                'user_id' => $user->id,
-                'payment_method' => $request->payment_method
-            ]);
-
             // 商品が売り切れていないか確認
             if ($item->status === 'sold') {
-                \Log::warning('商品は既に売り切れています', [
-                    'item_id' => $item->id,
-                    'status' => $item->status
-                ]);
                 return redirect()->route('item.show', ['id' => $item_id])
                     ->with('error', 'この商品は既に売り切れています。');
             }
 
             // 自分の出品商品でないか確認
             if ($item->user_id === $user->id) {
-                \Log::warning('自分の出品商品は購入できません', [
-                    'item_id' => $item->id,
-                    'user_id' => $user->id,
-                    'seller_id' => $item->user_id
-                ]);
                 return redirect()->route('item.show', ['id' => $item_id])
                     ->with('error', '自分の出品商品は購入できません。');
             }
 
             // ユーザーのプロフィール情報を取得
             $profile = Profile::where('user_id', $user->id)->first();
-            if (!$profile) {
-                \Log::warning('プロフィール情報が存在しません', [
-                    'user_id' => $user->id
-                ]);
+            if (!$profile || !$profile->postcode || !$profile->address) {
                 return redirect()->route('purchase.address', ['item_id' => $item_id])
                     ->with('error', '購入前に住所情報を登録してください。');
             }
 
-            // プロフィール情報の必須項目チェック
-            if (!$profile->postcode || !$profile->address) {
-                \Log::warning('プロフィール情報が不完全です', [
-                    'user_id' => $user->id,
-                    'has_postcode' => !empty($profile->postcode),
-                    'has_address' => !empty($profile->address)
-                ]);
-                return redirect()->route('purchase.address', ['item_id' => $item_id])
-                    ->with('error', '配送先住所の情報が不完全です。住所を更新してください。');
-            }
+            // 以下、既存の購入処理を続ける...
 
             // Stripeのチェックアウトセッションを作成
             $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
@@ -157,14 +190,14 @@ class PurchaseController extends Controller
                 'item_id' => $item->id,
                 'user_id' => $user->id,
                 'amount' => $amount,
-                'payment_method' => $request->payment_method
+                'payment_method' => $paymentMethod
             ]);
 
             // 購入情報を一時的に保存（pending状態）
             $purchase = Purchase::create([
                 'item_id' => $item->id,
                 'user_id' => $user->id,
-                'payment_method' => $request->payment_method,
+                'payment_method' => $paymentMethod,
                 'amount' => $item->price,
                 'status' => 'pending',
                 'postcode' => $profile->postcode,
@@ -185,7 +218,7 @@ class PurchaseController extends Controller
                         'currency' => 'jpy',
                         'product_data' => [
                             'name' => $item->name,
-                            'description' => "テスト環境 - 支払い方法: " . ($request->payment_method === 'credit_card' ? 'クレジットカード' : 'コンビニ決済'),
+                            'description' => "テスト環境 - 支払い方法: " . ($paymentMethod === 'credit_card' ? 'クレジットカード' : 'コンビニ決済'),
                         ],
                         'unit_amount' => $amount,
                     ],
@@ -198,7 +231,7 @@ class PurchaseController extends Controller
                     'item_id' => $item->id,
                     'user_id' => $user->id,
                     'purchase_id' => $purchase->id,
-                    'payment_method' => $request->payment_method,
+                    'payment_method' => $paymentMethod,
                 ],
             ]);
 
@@ -321,26 +354,6 @@ class PurchaseController extends Controller
         // 商品詳細画面にリダイレクト
         return redirect()->route('item.show', $item_id)
             ->with('success', '購入が完了しました。');
-    }
-
-    /**
-     * 支払い方法を更新
-     */
-    public function updatePaymentMethod(Request $request, $item_id)
-    {
-        $request->validate([
-            'payment_method' => 'required|in:convenience,credit_card'
-        ]);
-
-        // 支払い方法をセッションに保存
-        session(['payment_method' => $request->payment_method]);
-
-        \Log::info('支払い方法を更新', [
-            'item_id' => $item_id,
-            'payment_method' => $request->payment_method
-        ]);
-
-        return redirect()->route('purchase', ['item_id' => $item_id]);
     }
 
     /*
