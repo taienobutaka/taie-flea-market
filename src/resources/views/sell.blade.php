@@ -61,7 +61,7 @@
                 </div>
             </section>
 
-            <form action="{{ route('item.store') }}" method="POST" enctype="multipart/form-data" class="item-form" novalidate>
+            <form action="{{ route('item.store') }}" method="POST" enctype="multipart/form-data" class="item-form" id="item-form" novalidate>
                 @csrf
                 @if ($errors->any())
                     <div class="error-container">
@@ -101,7 +101,7 @@
                             ] as $value => $label)
                                 <li class="category-item">
                                     <label class="category-label {{ in_array($value, $selectedCategories) ? 'selected' : '' }}">
-                                        <input type="checkbox" name="category[]" value="{{ $value }}" class="category-checkbox" {{ in_array($value, $selectedCategories) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="category[]" value="{{ $value }}" class="category-checkbox" {{ in_array($value, $selectedCategories) ? 'checked' : '' }} form="item-form">
                                         <span class="category-text">{{ $label }}</span>
                                     </label>
                                 </li>
@@ -126,7 +126,7 @@
                                         '状態が悪い' => '状態が悪い'
                                     ] as $value => $label)
                                         <li class="option {{ old('condition') === $value ? 'selected' : '' }}">
-                                            <button type="submit" name="condition" value="{{ $value }}" class="option-link">
+                                            <button type="button" class="option-link" data-value="{{ $value }}">
                                                 {{ $label }}
                                             </button>
                                         </li>
@@ -172,4 +172,59 @@
         </main>
     </div>
 </body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // カテゴリーボタンのクリックイベントを設定
+    const categoryLabels = document.querySelectorAll('.category-label');
+    categoryLabels.forEach(label => {
+        label.addEventListener('click', function(e) {
+            // チェックボックスの状態を取得
+            const checkbox = this.querySelector('.category-checkbox');
+            // 選択状態を即座に反映
+            if (checkbox.checked) {
+                this.classList.add('selected');
+            } else {
+                this.classList.remove('selected');
+            }
+        });
+    });
+
+    // 商品状態の選択処理
+    const selectTrigger = document.querySelector('.select-trigger');
+    const selectOptions = document.querySelector('.select-options');
+    const selectedText = document.querySelector('.selected-text');
+    const selectedCondition = document.getElementById('selected-condition');
+    const options = document.querySelectorAll('.option-link');
+
+    // プルダウンの開閉
+    selectTrigger.addEventListener('click', function() {
+        selectOptions.classList.toggle('show');
+    });
+
+    // オプション選択時の処理
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            selectedText.textContent = value;
+            selectedCondition.value = value;
+            
+            // 選択状態の更新
+            options.forEach(opt => {
+                opt.parentElement.classList.remove('selected');
+            });
+            this.parentElement.classList.add('selected');
+            
+            // プルダウンを閉じる
+            selectOptions.classList.remove('show');
+        });
+    });
+
+    // プルダウン外クリックで閉じる
+    document.addEventListener('click', function(e) {
+        if (!selectTrigger.contains(e.target) && !selectOptions.contains(e.target)) {
+            selectOptions.classList.remove('show');
+        }
+    });
+});
+</script>
 </html>
