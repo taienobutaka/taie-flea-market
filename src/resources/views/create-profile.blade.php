@@ -19,10 +19,10 @@
             <div class="toppage-header-icon">
                 <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="toppage-header-logo-img">
             </div>
-            <div class="search-bar">
-                <div class="search-container">なにをお探しですか？</div>
-                <input type="text" class="search-input">
-            </div>
+            <form action="{{ route('items.index') }}" method="GET" class="search-bar">
+                <input type="text" name="search" value="{{ request('search') }}" class="search-input" placeholder="なにをお探しですか？">
+                <input type="hidden" name="page" value="recommended">
+            </form>
             <nav class="toppage-header-nav">
                 <a href="{{ route('login') }}" class="nav-item">ログアウト</a>
                 <a href="{{ route('mypage') }}" class="nav-item">マイページ</a>

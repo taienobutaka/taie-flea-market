@@ -22,10 +22,10 @@ body {
 /* コンテナ */
 .profile-container {
     width: 1512px;
+    height: 1229px;
     margin: 0 auto;
     padding-top: 80px;
     position: relative;
-    min-height: 100vh;
 }
 
 /* ヘッダー */
@@ -96,10 +96,28 @@ body {
     height: 100%;
     border: 1px solid #cccccc;
     border-radius: 5px;
-    padding: 10px;
+    padding: 10px 10px 10px 20px;
     font-size: 16px;
     box-sizing: border-box;
     background-color: #ffffff;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    line-height: 100%;
+    text-align: left;
+}
+
+.search-input::placeholder {
+    color: #000000;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: left;
+    vertical-align: middle;
+    position: relative;
+    left: 24px;
+    top: 2px;
 }
 
 /* ナビゲーション */
@@ -275,6 +293,8 @@ body {
 /* ユーザー名入力欄 */
 .username-input-group {
     margin-bottom: 3px;
+    position: relative;
+    min-height: 79px;
 }
 
 /* 郵便番号入力欄 */
@@ -283,6 +303,7 @@ body {
     margin-top: 19px;
     position: relative;
     top: 41px;
+    min-height: 79px;
 }
 
 /* 住所入力欄 */
@@ -291,6 +312,7 @@ body {
     margin-top: 20px;
     position: relative;
     top: 43px;
+    min-height: 79px;
 }
 
 /* 建物名入力欄 */
@@ -299,6 +321,7 @@ body {
     margin-top: 40px;
     position: relative;
     top: 45px;
+    min-height: 79px;
 }
 
 /* 入力ラベル */
@@ -329,8 +352,12 @@ body {
 .error-message {
     color: red;
     font-size: 14px;
-    margin-bottom: 5px;
+    margin-top: -20px;
+    margin-bottom: 4px;
     display: block;
+    position: absolute;
+    left: 0;
+    z-index: 1;
 }
 
 /* アクションバー */
@@ -391,6 +418,7 @@ body {
     .profile-container {
         width: 100%;
         min-width: 1400px;
+        height: calc(1229px * (100vw / 1512));
     }
 
     .toppage-header {
@@ -425,6 +453,7 @@ body {
 @media (max-width: 850px) {
     .profile-container {
         min-width: 768px;
+        height: calc(1229px * (100vw / 1512));
         padding-top: 60px;
     }
 
@@ -465,6 +494,10 @@ body {
     .search-input {
         height: 40px;
         font-size: 14px;
+    }
+
+    .search-input::placeholder {
+        font-size: 18px;
     }
 
     .toppage-header-nav {
