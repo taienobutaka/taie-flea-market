@@ -181,17 +181,6 @@ body {
     box-sizing: border-box;
 }
 
-/* ゲストメッセージ */
-.detail__message {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    padding: 15px;
-    margin: 20px 0;
-    text-align: center;
-    color: #6c757d;
-}
-
 /* 商品コンテンツのコンテナ */
 .detail__content {
     position: relative;
@@ -200,13 +189,14 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    margin-top: -17px; /* 未ログイン時のコンテンツを17px上に移動 */
 }
 
 /* 商品画像セクション */
 .detail__image {
     position: absolute;
-    left: 112px; /* 56px + 56px */
-    top: 212px;
+    left: 112px;
+    top: 195px; /* 212px - 17px */
     width: 600px;
     height: 535px;
     background-color: #d9d9d9;
@@ -251,8 +241,8 @@ body {
 /* 商品情報セクション */
 .detail__info {
     position: absolute;
-    left: 807px; /* 751px + 56px */
-    top: 211px;
+    left: 807px;
+    top: 194px; /* 211px - 17px */
     width: 690px;
     padding: 20px;
     background-color: #fff;
@@ -785,7 +775,7 @@ body {
     /* 商品詳細の要素をスケーリング */
     .detail__image {
         left: calc(112px * (100vw / 1512));
-        top: calc(212px * (100vw / 1512));
+        top: calc(195px * (100vw / 1512));
         width: calc(600px * (100vw / 1512));
         height: calc(535px * (100vw / 1512));
     }
@@ -797,7 +787,7 @@ body {
 
     .detail__info {
         left: calc(807px * (100vw / 1512));
-        top: calc(211px * (100vw / 1512));
+        top: calc(194px * (100vw / 1512));
         width: calc(690px * (100vw / 1512));
     }
 
@@ -867,6 +857,15 @@ body {
         width: calc(570px * (100vw / 1512));
         height: calc(56px * (100vw / 1512));
         font-size: calc(25px * (100vw / 1512));
+    }
+
+    .detail__message {
+        width: 100%;
+        margin: calc(100px * (100vw / 1512)) auto calc(20px * (100vw / 1512));
+    }
+
+    .detail__content {
+        margin-top: calc(-17px * (100vw / 1512));
     }
 }
 
@@ -900,7 +899,7 @@ body {
     /* 商品詳細の要素をスケーリング */
     .detail__image {
         left: calc(112px * (100vw / 1512));
-        top: calc(212px * (100vw / 1512));
+        top: calc(195px * (100vw / 1512));
         width: calc(600px * (100vw / 1512));
         height: calc(535px * (100vw / 1512));
     }
@@ -912,7 +911,7 @@ body {
 
     .detail__info {
         left: calc(807px * (100vw / 1512));
-        top: calc(211px * (100vw / 1512));
+        top: calc(194px * (100vw / 1512));
         width: calc(690px * (100vw / 1512));
     }
 
@@ -982,6 +981,15 @@ body {
         width: calc(570px * (100vw / 1512));
         height: calc(56px * (100vw / 1512));
         font-size: calc(25px * (100vw / 1512));
+    }
+
+    .detail__message {
+        width: 100%;
+        margin: calc(100px * (100vw / 1512)) auto calc(20px * (100vw / 1512));
+    }
+
+    .detail__content {
+        margin-top: calc(-17px * (100vw / 1512));
     }
 }
 

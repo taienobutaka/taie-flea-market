@@ -28,11 +28,22 @@
                             </form>
                             <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="header__nav-link header__nav-link--logout">ログアウト</a>
                         </li>
-                        <li class="header__nav-item"><a href="{{ route('mypage') }}" class="header__nav-link">マイページ</a></li>
-                        <li class="header__nav-item"><a href="{{ route('sell.form') }}" class="header__nav-link header__nav-link--sell">出品</a></li>
+                        <li class="header__nav-item">
+                            <a href="{{ route('mypage') }}" class="header__nav-link">マイページ</a>
+                        </li>
+                        <li class="header__nav-item">
+                            <a href="{{ route('sell.form') }}" class="header__nav-link header__nav-link--sell">出品</a>
+                        </li>
                     @else
-                        <li class="header__nav-item"><a href="{{ route('login') }}" class="header__nav-link">ログイン</a></li>
-                        <li class="header__nav-item"><a href="{{ route('register') }}" class="header__nav-link">新規登録</a></li>
+                        <li class="header__nav-item">
+                            <a href="{{ route('login') }}" class="header__nav-link header__nav-link--logout">ログアウト</a>
+                        </li>
+                        <li class="header__nav-item">
+                            <a href="{{ route('login') }}" class="header__nav-link">マイページ</a>
+                        </li>
+                        <li class="header__nav-item">
+                            <a href="{{ route('login') }}" class="header__nav-link header__nav-link--sell">出品</a>
+                        </li>
                     @endauth
                 </ul>
             </nav>
@@ -84,10 +95,12 @@
                                 </span>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" class="detail__favorite-button" title="お気に入り登録するにはログインが必要です">
-                                <img src="{{ asset('img/star.png') }}" alt="お気に入り" class="detail__favorite-icon">
-                            </a>
-                            <span class="detail__favorite-count">{{ $item->favorites->count() }}</span>
+                            <div class="detail__favorite-form">
+                                <a href="{{ route('login') }}" class="detail__favorite-button" title="お気に入り登録するにはログインが必要です">
+                                    <img src="{{ asset('img/star.png') }}" alt="お気に入り" class="detail__favorite-icon">
+                                </a>
+                                <span class="detail__favorite-count">{{ $item->favorites->count() }}</span>
+                            </div>
                         @endauth
                         <div class="detail__comment-count">
                             <img src="{{ asset('img/comment.png') }}" alt="コメント" class="detail__comment-icon">
