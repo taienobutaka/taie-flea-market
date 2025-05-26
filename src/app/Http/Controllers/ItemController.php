@@ -43,7 +43,7 @@ class ItemController extends Controller
             ]);
 
             // 検索クエリがある場合の共通処理
-            if ($search && $user && !$isGuest) {
+            if ($search) {
                 // 検索クエリを正規化（全角スペースを半角に変換、連続するスペースを1つに）
                 $normalizedSearch = preg_replace('/\s+/', ' ', mb_convert_kana($search, 's'));
                 
@@ -78,19 +78,21 @@ class ItemController extends Controller
                     }
                 });
 
-                // 自分が出品した商品を除外
-                $searchQuery->where('user_id', '!=', $user->id);
-
-                // 検索結果の商品をお気に入りに追加
-                $searchItems = $searchQuery->get();
-                foreach ($searchItems as $item) {
-                    if (!$item->isFavoritedBy($user)) {
-                        $item->favorites()->create(['user_id' => $user->id]);
-                        \Log::info('検索結果の商品をお気に入りに追加', [
-                            'item_id' => $item->id,
-                            'name' => $item->name,
-                            'user_id' => $user->id
-                        ]);
+                // ログインユーザーの場合のみ、自分が出品した商品を除外し、検索結果をお気に入りに追加
+                if ($user && !$isGuest) {
+                    $searchQuery->where('user_id', '!=', $user->id);
+                    
+                    // 検索結果の商品をお気に入りに追加
+                    $searchItems = $searchQuery->get();
+                    foreach ($searchItems as $item) {
+                        if (!$item->isFavoritedBy($user)) {
+                            $item->favorites()->create(['user_id' => $user->id]);
+                            \Log::info('検索結果の商品をお気に入りに追加', [
+                                'item_id' => $item->id,
+                                'name' => $item->name,
+                                'user_id' => $user->id
+                            ]);
+                        }
                     }
                 }
             }
@@ -105,8 +107,8 @@ class ItemController extends Controller
                     $query->where('user_id', $user->id);
                 }]);
 
-                // 検索条件がある場合は適用
-                if ($search) {
+                // 検索条件がある場合は適用（ログインユーザーの場合のみ）
+                if ($search && !$isGuest) {
                     $normalizedSearch = preg_replace('/\s+/', ' ', mb_convert_kana($search, 's'));
                     $excludeWords = ['と', 'や', 'の', 'を', 'に', 'へ', 'で', 'が', 'は', 'も', 'から', 'まで', 'など'];
                     $words = array_filter(explode(' ', $normalizedSearch), function($word) use ($excludeWords) {
@@ -154,7 +156,7 @@ class ItemController extends Controller
                     });
                 }
 
-                // 自分が出品した商品を除外
+                // ログインユーザーの場合のみ、自分が出品した商品を除外
                 if ($user) {
                     $query->where('user_id', '!=', $user->id);
                 }
