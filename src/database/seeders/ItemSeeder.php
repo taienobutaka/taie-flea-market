@@ -133,7 +133,7 @@ class ItemSeeder extends Seeder
                 'description' => '便利なメイクアップセット',
                 'price' => 2500.00,
                 'condition' => '目立った傷や汚れなし',
-                'image_path' => 'img/items/1747805560_外出メイクアップセット.jpg',
+                'image_path' => 'img/items/1747805560_makeup_set.jpg',
                 'category' => '["ladies","cosmetics"]',
                 'user_id' => 4,
                 'status' => 'available',
