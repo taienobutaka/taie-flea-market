@@ -1,0 +1,2 @@
+src/storage/app/public/img/items/* filter=lfs diff=lfs merge=lfs -text
+src/storage/app/public/img/profiles/* filter=lfs diff=lfs merge=lfs -text
