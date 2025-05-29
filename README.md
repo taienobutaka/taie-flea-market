@@ -217,6 +217,12 @@ php artisan migrate
 php artisan db:seed
 ```
 
+10. 画像表示用のシンボリックリンクを作成
+
+```bash
+php artisan storage:link
+```
+
 **Stripe（テスト環境）の設定**
 
 1. Stripe のインストール<br>
