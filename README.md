@@ -172,10 +172,9 @@ WORKDIR /var/www
 **Laravel 環境構築**
 
 1. `docker-compose exec php bash`
-2. php コンテナ内で html ファイルを作成
-3. html ファイルに移動して、`composer install`
-4. 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.env ファイルを作成
-5. .env に以下の環境変数を追加
+2. php コンテナ内で `composer install`
+3. 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.env ファイルを作成
+4. .env に以下の環境変数を追加
 
 ```
 DB_CONNECTION=mysql
