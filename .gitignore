@@ -5,6 +5,8 @@ docker/mysql/data/*
 # Laravel storage
 src/storage/*
 !src/storage/.gitkeep
+!src/storage/app/public/img/items/
+!src/storage/app/public/img/profiles/
 
 # Laravel public storage
 public/storage
