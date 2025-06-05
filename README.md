@@ -248,11 +248,21 @@ STRIPE_SECRET=your_stripe_secret_key
 
 ## ER 図
 
-![ER図](img/image-12.png)
+![alt text](<img/スクリーンショット 2025-06-05 112449.png>)
 
 ## テーブル仕様
 
-![テーブル仕様](img/image-13.png)
+![alt text](<img/スクリーンショット 2025-06-05 104134.png>) 
+
+![alt text](<img/スクリーンショット 2025-06-05 104154.png>) 
+
+![alt text](<img/スクリーンショット 2025-06-05 104213.png>) 
+
+![alt text](<img/スクリーンショット 2025-06-05 104232.png>) 
+
+![alt text](<img/スクリーンショット 2025-06-05 104244.png>) 
+
+![alt text](<img/スクリーンショット 2025-06-05 104259.png>)
 
 ## 機能一覧
 
