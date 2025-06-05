@@ -92,10 +92,15 @@
 
 ## 環境構築
 
-1. ```git clone git@github.com:taienobutaka/taie-flea-market.git```
+1. クローンの実行
+```
+git clone git@github.com:taienobutaka/taie-flea-market.git
+```
 2. DockerDesktop アプリを立ち上げる
 3. プロジェクト直下で、以下のコマンドを実行する
-4. ```make init```
+```
+make init
+```
 <br>
    実行内容<br>
    : 開発用Dockerコンテナ起動<br>
