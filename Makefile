@@ -1,6 +1,6 @@
 init:
 	@echo "=== 開発用Dockerコンテナ起動 ==="
-	docker-compose up -d
+	docker-compose up -d --build
 
 	@echo "=== MySQLの起動待ち ==="
 	@until docker-compose exec mysql mysqladmin ping -hlocalhost -uroot --silent; do \
@@ -15,7 +15,13 @@ init:
 	docker-compose exec php composer require stripe/stripe-php
 
 	@echo "=== .envファイル作成 ==="
-	@if [ ! -f src/.env ]; then cp src/.env.example src/.env; fi
+	@if [ ! -f src/.env ]; then docker-compose exec php cp .env.example .env; fi
+
+	@echo "=== 画像ストレージ用ディレクトリ作成 ==="
+	@mkdir -p ./src/storage/app/public/img
+
+	@echo "=== 画像ストレージ用ディレクトリに画像移動 ==="
+	@if [ -d ./src/public/img/copy_storage_img ]; then mv ./src/public/img/copy_storage_img/*.jpg ./src/storage/app/public/img || true; fi
 
 	@echo "=== アプリケーションキー生成 ==="
 	docker-compose exec php php artisan key:generate
@@ -39,3 +45,23 @@ init:
 	docker-compose exec node npm run dev
 
 	@echo "=== 開発環境初期化完了 ==="
+
+fresh:
+	docker-compose exec php php artisan migrate:fresh --seed
+
+restart:
+	@make down
+	@make up
+
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down --remove-orphans
+
+cache:
+	docker-compose exec php php artisan cache:clear
+	docker-compose exec php php artisan config:cache
+
+stop:
+	docker-compose stop
