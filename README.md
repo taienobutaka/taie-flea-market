@@ -92,13 +92,40 @@
 
 ## 環境構築
 
-**Docker ビルド**
-
-1. `git clone git@github.com:taienobutaka/taie-flea-market.git`
+1. ```git clone git@github.com:taienobutaka/taie-flea-market.git```
 2. DockerDesktop アプリを立ち上げる
-3. `docker-compose up -d --build`
-4. テスト環境で mailhog を使用しています
+3. プロジェクト直下で、以下のコマンドを実行する
+4. ```make init```
+<br>
+   実行内容<br>
+   : 開発用Dockerコンテナ起動<br>
+   : PHP依存パッケージインストール<br>
+   : StripeのPHPライブラリインストール<br>
+   : .envファイル作成/自動修正<br>
+   : 画像ストレージ用ディレクトリ作成/画像移動<br>
+   : アプリケーションキー生成<br>
+   : ストレージリンク作成<br>
+   : 権限設定<br>
+   : マイグレーション実行<br>
+   : シーディング実行<br>
 
+## メール認証
+
+テスト環境で mailhog を使用しています
+<br>
+MailHog の設定
+
+```
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=from@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+
+```
 ```bash
 version: "3.8"
 
@@ -149,90 +176,9 @@ services:
       - "8025:8025"
 ```
 
-**Docker 環境の設定**
+## Stripe（テスト環境）の設定
 
-1. Dockerfile を使用して PHP 環境を構築
-
-```bash
-FROM php:7.4.9-fpm
-
-COPY php.ini /usr/local/etc/php/
-
-RUN apt update \
-  && apt install -y default-mysql-client zlib1g-dev libzip-dev unzip \
-  && docker-php-ext-install pdo_mysql zip
-
-RUN curl -sS https://getcomposer.org/installer | php \
-  && mv composer.phar /usr/local/bin/composer \
-  && composer self-update
-
-WORKDIR /var/www
-```
-
-**Laravel 環境構築**
-
-1. `docker-compose exec php bash`
-2. php コンテナ内で `composer install`
-3. 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.env ファイルを作成
-4. .env に以下の環境変数を追加
-
-```
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=laravel_db
-DB_USERNAME=laravel_user
-DB_PASSWORD=laravel_pass
-```
-
-6. MailHog の設定
-
-```
-MAIL_MAILER=smtp
-MAIL_HOST=mailhog
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS=from@example.com
-MAIL_FROM_NAME="${APP_NAME}"
-
-```
-
-7. アプリケーションキーの作成
-
-```bash
-php artisan key:generate
-```
-
-8. マイグレーションの実行
-
-```bash
-php artisan migrate
-```
-
-9. シーディングの実行
-
-```bash
-php artisan db:seed
-```
-
-10. 画像表示用のシンボリックリンクを作成
-
-```bash
-php artisan storage:link
-```
-
-**Stripe（テスト環境）の設定**
-
-1. Stripe のインストール<br>
-   Stripe の PHP ライブラリをインストール
-
-```
-composer require stripe/stripe-php
-```
-
-2. 環境設定ファイルの更新<br>
+環境設定ファイルの更新<br>
    `.env`ファイルに Stripe の API キーを追加
 
 ```
@@ -277,4 +223,5 @@ STRIPE_SECRET=your_stripe_secret_key
 ## URL
 
 - 開発環境：http://localhost/
-- phpMyAdmin:：http://localhost:8080/
+- phpMyAdmin：http://localhost:8080/
+- mailhog：http://localhost:8025/

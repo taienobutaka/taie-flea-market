@@ -24,6 +24,16 @@ init:
 	sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=laravel_pass/' src/.env
 	sed -i 's/^DB_HOST=.*/DB_HOST=mysql/' src/.env
 
+	@echo "=== MailHog用メール設定自動修正 ==="
+	sed -i 's/^MAIL_MAILER=.*/MAIL_MAILER=smtp/' src/.env
+	sed -i 's/^MAIL_HOST=.*/MAIL_HOST=mailhog/' src/.env
+	sed -i 's/^MAIL_PORT=.*/MAIL_PORT=1025/' src/.env
+	sed -i 's/^MAIL_USERNAME=.*/MAIL_USERNAME=null/' src/.env
+	sed -i 's/^MAIL_PASSWORD=.*/MAIL_PASSWORD=null/' src/.env
+	sed -i 's/^MAIL_ENCRYPTION=.*/MAIL_ENCRYPTION=null/' src/.env
+	sed -i 's/^MAIL_FROM_ADDRESS=.*/MAIL_FROM_ADDRESS=from@example.com/' src/.env
+	sed -i 's/^MAIL_FROM_NAME=.*/MAIL_FROM_NAME="\${APP_NAME}"/' src/.env
+
 	@echo "=== 画像ストレージ用ディレクトリ作成 ==="
 	@mkdir -p ./src/storage/app/public/img
 
