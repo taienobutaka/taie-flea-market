@@ -3,10 +3,11 @@ init:
 	docker-compose up -d --build
 
 	@echo "=== MySQLの起動待ち ==="
-	@until docker-compose exec mysql mysqladmin ping -hlocalhost -uroot --silent; do \
+	@until docker-compose exec mysql mysqladmin ping -hmysql -uroot -proot --silent; do \
 		echo "Waiting for MySQL..."; \
 		sleep 2; \
 	done
+	@sleep 3
 
 	@echo "=== PHP依存パッケージインストール ==="
 	docker-compose exec php composer install
@@ -15,7 +16,7 @@ init:
 	docker-compose exec php composer require stripe/stripe-php
 
 	@echo "=== .envファイル作成 ==="
-	@if [ ! -f src/.env ]; then docker-compose exec php cp .env.example .env; fi
+	@if [ ! -f src/.env ]; then cp src/.env.example src/.env; fi
 
 	@echo "=== 画像ストレージ用ディレクトリ作成 ==="
 	@mkdir -p ./src/storage/app/public/img
