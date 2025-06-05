@@ -2,6 +2,23 @@ init:
 	@echo "=== 開発用Dockerコンテナ起動 ==="
 	docker-compose up -d
 
+	@echo "=== MySQLの起動待ち ==="
+	@until docker-compose exec php bash -c "php -r '\
+	\$env = file_exists(\"src/.env\") ? parse_ini_file(\"src/.env\") : [];\
+	\$host = isset(\$env[\"DB_HOST\"]) ? \$env[\"DB_HOST\"] : \"mysql\";\
+	\$db = isset(\$env[\"DB_DATABASE\"]) ? \$env[\"DB_DATABASE\"] : \"laravel\";\
+	\$user = isset(\$env[\"DB_USERNAME\"]) ? \$env[\"DB_USERNAME\"] : \"root\";\
+	\$pass = isset(\$env[\"DB_PASSWORD\"]) ? \$env[\"DB_PASSWORD\"] : \"\";\
+	try {\
+		new PDO(\"mysql:host=\$host;dbname=\$db\", \$user, \$pass);\
+		echo \"MySQL OK\n\";\
+		exit(0);\
+	} catch(Exception \$e) {\
+		echo \"Waiting for MySQL...\\n\";\
+		sleep(2);\
+		exit(1);\
+	}'"; do sleep 2; done
+
 	@echo "=== PHP依存パッケージインストール ==="
 	docker-compose exec php composer install
 
