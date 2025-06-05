@@ -18,6 +18,12 @@ init:
 	@echo "=== .envファイル作成 ==="
 	@if [ ! -f src/.env ]; then cp src/.env.example src/.env; fi
 
+	@echo "=== .envファイル自動修正 ==="
+	sed -i 's/^DB_DATABASE=.*/DB_DATABASE=laravel_db/' src/.env
+	sed -i 's/^DB_USERNAME=.*/DB_USERNAME=laravel_user/' src/.env
+	sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=laravel_pass/' src/.env
+	sed -i 's/^DB_HOST=.*/DB_HOST=mysql/' src/.env
+
 	@echo "=== 画像ストレージ用ディレクトリ作成 ==="
 	@mkdir -p ./src/storage/app/public/img
 
@@ -38,12 +44,6 @@ init:
 
 	@echo "=== シーディング実行 ==="
 	docker-compose exec php php artisan db:seed
-
-	@echo "=== npmパッケージインストール ==="
-	docker-compose exec node npm install
-
-	@echo "=== npm run dev 実行 ==="
-	docker-compose exec node npm run dev
 
 	@echo "=== 開発環境初期化完了 ==="
 
