@@ -230,3 +230,27 @@ STRIPE_SECRET=your_stripe_secret_key
 - 開発環境：http://localhost/
 - phpMyAdmin：http://localhost:8080/
 - mailhog：http://localhost:8025/
+
+## テストについて
+
+### テスト用ユーザーアカウント
+
+| ユーザー名 | メールアドレス        | パスワード   |
+|------------|----------------------|-------------|
+| tanaka     | tanaka@gmail.com     | 11111111    |
+| yamada     | yamada@gmail.com     | 22222222    |
+| suzuki     | suzuki@gmail.com     | 33333333    |
+| maeda      | maeda@gmail.com      | 44444444    |
+
+### Featureテスト実行方法
+
+Docker環境で実行するため、<br>以下のコマンドを実行してください。
+
+```
+docker-compose exec php bash
+```
+```
+php artisan test tests/Feature
+```
+
+全てのFeatureテストが実装済みで、上記コマンドで一括実行・確認できます。
