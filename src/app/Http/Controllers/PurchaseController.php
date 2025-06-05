@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Profile;
-use App\Http\Requests\PurchaseAddressRequest;
 use App\Http\Requests\AddressRequest;
-use App\Models\PaymentMethod;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
@@ -371,4 +369,4 @@ class PurchaseController extends Controller
      * - CVC: 任意の3桁
      * - 郵便番号: 任意の数字
      */
-} 
+}
