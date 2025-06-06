@@ -40,12 +40,23 @@
                         @endif
                     </div>
                     <h1 class="user-profile__name">{{ $profile ? $profile->username : 'ユーザー名' }}</h1>
+                    <div class="user-profile__stars-html">
+                        <span class="star-html star-html-1">&#9733;</span>
+                        <span class="star-html star-html-2">&#9733;</span>
+                        <span class="star-html star-html-3">&#9733;</span>
+                        <span class="star-html star-html-4">&#9733;</span>
+                        <span class="star-html star-html-5">&#9733;</span>
+                    </div>
                     <div class="user-profile__edit">
                         <a href="/mypage/profile" class="edit-button" role="button" aria-label="プロフィールを編集">
                             プロフィールを編集
                         </a>
                     </div>
                 </section>
+
+                <div class="trade-label">
+                  <span class="trade-label__text">取引中の商品</span>
+                </div>
 
                 <nav class="content-tabs">
                     <a href="{{ route('mypage', ['page' => 'sell']) }}" 
@@ -102,4 +113,4 @@
         </div>
     </div>
 </body>
-</html> 
+</html>
