@@ -23,6 +23,15 @@
             <div class="img" style="background:#ccc;height:4px;width:1502px;position:absolute;top:338px;left:0;"></div>
             <div class="rectangle"></div>
             <div class="text-wrapper-2">その他の取引</div>
+            <ul class="sidebar-trades">
+              @foreach($sidebarItems as $sidebarItem)
+                <li class="sidebar-trade-item">
+                  <a href="{{ route('purchaser.chat', ['item_id' => $sidebarItem->id]) }}" class="sidebar-trade-link {{ $sidebarItem->id == ($item->id ?? null) ? 'active' : '' }}">
+                    {{ $sidebarItem->name }}
+                  </a>
+                </li>
+              @endforeach
+            </ul>
           </div>
           <div class="ellipse">
             @if($sellerProfile && $sellerProfile->image_path)
@@ -42,29 +51,53 @@
           </div>
           <div class="text-wrapper-3">{{ $item ? '¥' . number_format($item->price) : '商品価格' }}</div>
           <div class="text-wrapper-4">{{ $item ? $item->name : '商品名' }}</div>
-          <div class="ellipse-2"></div>
-          <div class="overlap-2">
-            <div class="text-wrapper-5">ユーザー名</div>
-            <div class="rectangle-2"></div>
+
+          <div class="chat-area">
+            <ul class="chat-list">
+              @foreach($chats as $chat)
+                <li class="chat-message {{ $chat->user_id == auth()->id() ? 'my-message' : 'other-message' }}">
+                  <div class="chat-user-info">
+                    @if($chat->user && $chat->user->profile && $chat->user->profile->image_path)
+                      <img src="{{ asset('storage/' . $chat->user->profile->image_path) }}" alt="{{ $chat->user->username }}" class="chat-user-img">
+                    @else
+                      <div class="chat-user-img chat-user-img--noimg">No Image</div>
+                    @endif
+                    <span class="chat-username">{{ $chat->user ? $chat->user->username : 'ユーザー' }}</span>
+                  </div>
+                  <div class="chat-comment">{{ $chat->comment }}</div>
+                  <div class="chat-actions">
+                    @if($chat->user_id == auth()->id())
+                      <a href="{{ route('chat.edit.get', $chat->id) }}" class="chat-edit-btn" style="display:inline-block;">編集</a>
+                      <form action="{{ route('chat.delete', $chat->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="chat-delete-btn">削除</button>
+                      </form>
+                    @endif
+                  </div>
+                </li>
+              @endforeach
+            </ul>
+            <form action="{{ route('chat.send', ['item_id' => $item->id]) }}" method="POST" class="chat-form">
+              @csrf
+              @if(isset($editChat))
+                {{-- バリデーションエラー表示 --}}
+                @if($errors->any())
+                  <div class="chat-error-message" style="color:#d32f2f;margin-bottom:8px;">
+                    @foreach($errors->all() as $error)
+                      <div>{{ $error }}</div>
+                    @endforeach
+                  </div>
+                @endif
+                <textarea name="comment" class="chat-input" required>{{ old('comment', $editChat->comment) }}</textarea>
+                <button type="submit" class="chat-send-btn">更新</button>
+                <a href="{{ route('purchaser.chat', ['item_id' => $item->id]) }}" class="chat-send-btn" style="background:#aaa;">キャンセル</a>
+              @else
+                <textarea name="comment" class="chat-input" required placeholder="メッセージを入力">{{ old('comment') }}</textarea>
+                <button type="submit" class="chat-send-btn">送信</button>
+              @endif
+            </form>
           </div>
-          <div class="overlap-3">
-            <div class="rectangle-3"></div>
-            <div class="ellipse-3"></div>
-            <div class="text-wrapper-6">ユーザー名</div>
-          </div>
-          <div class="div-wrapper"><div class="text-wrapper-7">取引メッセージを記入してください</div></div>
-          <div class="overlap-5">
-            <div class="group">
-              <div class="overlap-6">
-                <div class="text-wrapper-10">画像を追加</div>
-                <div class="rectangle-3"></div>
-                <img class="send-image" src="/img/send.jpg" alt="送信画像" />
-              </div>
-            </div>
-          </div>
-          <div class="text-wrapper-11">編集</div>
-          <div class="text-wrapper-12">削除</div>
-          <div class="overlap-7"><div class="text-wrapper-13">取引を完了する</div></div>
         </div>
         <div class="line-wrapper"><div class="line-2"></div></div>
       </div>

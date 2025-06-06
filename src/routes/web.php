@@ -155,4 +155,13 @@ Route::middleware(['auth', 'verified', 'profile.completed'])->group(function () 
 
     // チャット開始（チャットボタン押下時の保存用）
     Route::post('/chat/start', [ChatController::class, 'start'])->name('chat.start');
+
+    // チャット送信
+    Route::post('/chat/send/{item_id}', [ChatController::class, 'send'])->name('chat.send');
+    // チャット編集（フォーム表示）
+    Route::get('/chat/edit/{chat_id}', [ChatController::class, 'edit'])->name('chat.edit.get');
+    // チャット編集（更新）
+    Route::post('/chat/edit/{chat_id}', [ChatController::class, 'edit'])->name('chat.edit');
+    // チャット削除
+    Route::delete('/chat/delete/{chat_id}', [ChatController::class, 'delete'])->name('chat.delete');
 });

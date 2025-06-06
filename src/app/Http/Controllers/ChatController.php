@@ -12,10 +12,18 @@ class ChatController extends Controller
         $item = \App\Models\Item::with('user.profile')->find($itemId);
         $seller = $item ? $item->user : null;
         $sellerProfile = $seller ? $seller->profile : null;
+        // チャット一覧（この商品のチャット）
+        $chats = \App\Models\Chat::with('user.profile')->where('item_id', $itemId)->orderBy('created_at')->get();
+        // サイドバー用：ユーザーが関わる全チャットの商品一覧
+        $user = auth()->user();
+        $sidebarItemIds = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id')->unique();
+        $sidebarItems = \App\Models\Item::whereIn('id', $sidebarItemIds)->get();
         return view('purchaser', [
             'item' => $item,
             'seller' => $seller,
             'sellerProfile' => $sellerProfile,
+            'chats' => $chats,
+            'sidebarItems' => $sidebarItems,
         ]);
     }
     public function seller(Request $request)
@@ -65,5 +73,60 @@ class ChatController extends Controller
         }
         // 取引中タブへリダイレクト
         return redirect()->route('mypage.trade', ['item_id' => $itemId]);
+    }
+    public function send(Request $request, $item_id)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+        ]);
+        \App\Models\Chat::create([
+            'user_id' => auth()->id(),
+            'item_id' => $item_id,
+            'comment' => $request->input('comment'),
+        ]);
+        return redirect()->route('purchaser.chat', ['item_id' => $item_id]);
+    }
+
+    public function edit(Request $request, $chat_id)
+    {
+        $chat = \App\Models\Chat::findOrFail($chat_id);
+        if ($chat->user_id !== auth()->id()) {
+            abort(403);
+        }
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'comment' => 'required|string|max:1000',
+            ]);
+            $chat->comment = $request->input('comment');
+            $chat->save();
+            return redirect()->route('purchaser.chat', ['item_id' => $chat->item_id]);
+        }
+        // 編集フォーム表示
+        $item = \App\Models\Item::with('user.profile')->find($chat->item_id);
+        $seller = $item ? $item->user : null;
+        $sellerProfile = $seller ? $seller->profile : null;
+        $chats = \App\Models\Chat::with('user.profile')->where('item_id', $chat->item_id)->orderBy('created_at')->get();
+        $user = auth()->user();
+        $sidebarItemIds = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id')->unique();
+        $sidebarItems = \App\Models\Item::whereIn('id', $sidebarItemIds)->get();
+        return view('purchaser', [
+            'item' => $item,
+            'seller' => $seller,
+            'sellerProfile' => $sellerProfile,
+            'chats' => $chats,
+            'sidebarItems' => $sidebarItems,
+            'editChat' => $chat,
+        ]);
+    }
+
+    public function delete($chat_id)
+    {
+        $chat = \App\Models\Chat::findOrFail($chat_id);
+        if ($chat->user_id !== auth()->id()) {
+            abort(403);
+        }
+        $item_id = $chat->item_id;
+        $chat->delete();
+        return redirect()->route('purchaser.chat', ['item_id' => $item_id]);
     }
 }
