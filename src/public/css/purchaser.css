@@ -1,0 +1,653 @@
+/* purchaser.css リファクタリング版 */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: #fff;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Layout root --- */
+.screen {
+    /* 画面全体のラッパー */
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+.screen .div {
+    /* メインコンテンツのラッパー */
+    background-color: #ffffff;
+    overflow: hidden;
+    width: 1512px;
+    height: 982px;
+    position: relative;
+}
+
+/* --- メインオーバーレイ --- */
+.screen .overlap {
+    position: absolute;
+    width: 1508px;
+    height: 902px;
+    top: 80px;
+    left: 0;
+}
+
+/* --- 取引画面タイトル --- */
+.screen .text-wrapper {
+    width: 794px;
+    top: 26px;
+    left: 388px;
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 36px;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: normal;
+}
+
+/* --- 取引リスト・区切り線 --- */
+.screen .overlap-group {
+    position: absolute;
+    width: 1508px;
+    height: 902px;
+    top: 0;
+    left: 0;
+}
+.screen .line {
+    /* 上部区切り線 */
+    width: 1508px;
+    height: 2px;
+    top: 103px;
+    position: absolute;
+    left: 0;
+}
+.screen .img {
+    /* 下部区切り線 */
+    width: 1502px;
+    height: 2px;
+    top: 338px;
+    position: absolute;
+    left: 0;
+}
+.screen .rectangle {
+    /* サイドバー背景 */
+    width: 259px;
+    height: 902px;
+    top: 0;
+    background-color: #858585;
+    position: absolute;
+    left: 0;
+}
+.screen .text-wrapper-2 {
+    /* サイドバー見出し */
+    top: 8px;
+    left: 29px;
+    -webkit-text-stroke: 1px #ffffff;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 30px;
+    letter-spacing: 3px;
+    white-space: nowrap;
+    position: absolute;
+    line-height: normal;
+}
+
+/* --- ユーザーアイコン・商品情報 --- */
+.screen .ellipse {
+    /* ユーザーアイコン */
+    width: 79px;
+    height: 79px;
+    top: 13px;
+    left: 296px;
+    border-radius: 39.5px;
+    position: absolute;
+    background-color: #d9d9d9;
+}
+.screen .text-wrapper-3 {
+    /* 商品価格 */
+    width: 265px;
+    top: 254px;
+    left: 542px;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #000000;
+    font-size: 36px;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: normal;
+}
+.screen .text-wrapper-4 {
+    /* 商品名 */
+    width: 326px;
+    top: 153px;
+    left: 542px;
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 48px;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: normal;
+}
+.screen .ellipse-2 {
+    /* サブアイコン */
+    width: 60px;
+    height: 60px;
+    top: 368px;
+    left: 284px;
+    border-radius: 30px;
+    position: absolute;
+    background-color: #d9d9d9;
+}
+
+/* --- チャット欄・ユーザー欄 --- */
+.screen .overlap-2 {
+    position: absolute;
+    width: 461px;
+    height: 108px;
+    top: 388px;
+    left: 285px;
+}
+.screen .text-wrapper-5 {
+    /* チャットユーザー名 */
+    width: 145px;
+    top: 0;
+    left: 83px;
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 20px;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: normal;
+}
+.screen .rectangle-2 {
+    /* チャット入力欄背景 */
+    width: 461px;
+    height: 60px;
+    top: 48px;
+    background-color: #d9d9d9;
+    border-radius: 4px;
+    position: absolute;
+    left: 0;
+}
+
+.screen .overlap-3 {
+    position: absolute;
+    width: 461px;
+    height: 130px;
+    top: 496px;
+    left: 1024px;
+}
+.screen .ellipse-3 {
+    /* 右側ユーザーアイコン */
+    width: 60px;
+    height: 60px;
+    top: 0;
+    left: 401px;
+    border-radius: 30px;
+    position: absolute;
+    background-color: #d9d9d9;
+}
+.screen .text-wrapper-6 {
+    /* 右側ユーザー名 */
+    width: 145px;
+    top: 21px;
+    left: 275px;
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 20px;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: normal;
+}
+
+/* --- メッセージ入力欄 --- */
+.screen .div-wrapper {
+    position: absolute;
+    width: 937px;
+    height: 44px;
+    top: 840px;
+    left: 286px;
+    border-radius: 4px;
+    border: 1px solid;
+    border-color: #5e5e5e;
+}
+.screen .text-wrapper-7 {
+    /* メッセージ入力プレースホルダー */
+    top: 8px;
+    left: 18px;
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+    color: #7a7a7a;
+    font-size: 20px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    position: absolute;
+    line-height: normal;
+}
+
+/* --- 画像追加・送信ボタン --- */
+.screen .overlap-5 .rectangle-3,
+.screen .overlap-5.rectangle-3 {
+  position: absolute;
+  width: 143px;
+  height: 44px;
+  top: 0;
+  left: 0;
+  border-radius: 10px;
+  border: 2px solid;
+  border-color: #ff5454;
+  background: #fff;
+  z-index: 1;
+}
+.screen .overlap-4 {
+    position: absolute;
+    width: 223px;
+    height: 61px;
+    top: 831px;
+    left: 1242px;
+}
+.screen .inputbuttun {
+    /* 送信ボタン画像 */
+    position: absolute;
+    width: 80px;
+    height: 61px;
+    top: 0;
+    left: 143px;
+    object-fit: cover;
+}
+.screen .group {
+    position: absolute;
+    width: 145px;
+    height: 44px;
+    top: 9px;
+    left: 0;
+}
+.screen .overlap-5 {
+    position: absolute;
+    width: 224px;
+    height: 61px;
+    top: 831px;
+    left: 1241px;
+}
+.screen .text-wrapper-8 {
+    /* position, top, left 完全削除 */
+    margin: 0;
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 20px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    line-height: normal;
+    background: none;
+    z-index: 11;
+}
+.screen .send-image {
+    width: 80px;
+    height: 61px;
+    flex-shrink: 0;
+    aspect-ratio: 80/61;
+    object-fit: contain;
+    position: absolute;
+    top: -6px;
+    left: 148px;
+    vertical-align: middle;
+}
+
+/* --- 商品画像 --- */
+.screen .overlap-wrapper {
+    position: absolute;
+    width: 203px;
+    height: 206px;
+    top: 201px;
+    left: 300px;
+    flex-shrink: 0;
+}
+.screen .overlap-6 {
+    position: relative;
+    width: 143px;
+    height: 44px;
+    border-radius: 10px;
+    background: #fff;
+}
+.screen .text-wrapper-9 {
+    /* 商品画像テキスト */
+    width: 165px;
+    top: 23px;
+    left: 29px;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #000000;
+    font-size: 30px;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: normal;
+}
+
+/* --- 取引完了・編集・削除ボタン --- */
+.screen .text-wrapper-10 {
+    width: 143px;
+    height: 43px;
+    top: 0;
+    left: 0;
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+    color: #ff5454;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: 44px;
+    z-index: 2;
+}
+.screen .text-wrapper-11 {
+    top: 635px;
+    left: 1389px;
+    text-shadow: 0px 4px 4px #00000040;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #5e5e5e;
+    font-size: 15px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    position: absolute;
+    line-height: normal;
+}
+.screen .text-wrapper-12 {
+    top: 635px;
+    left: 1440px;
+    text-shadow: 0px 4px 4px #00000040;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #5e5e5e;
+    font-size: 15px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    position: absolute;
+    line-height: normal;
+}
+.screen .overlap-7 {
+    position: absolute;
+    width: 172px;
+    height: 54px;
+    top: 26px;
+    left: 1299px;
+    background-color: #ff8282;
+    border-radius: 30px;
+}
+.screen .text-wrapper-13 {
+    top: 14px;
+    left: 20px;
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 20px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    position: absolute;
+    line-height: normal;
+}
+
+/* --- フッター・検索・ナビ --- */
+.screen .line-wrapper {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    top: 982px;
+    left: 756px;
+    background-image: url(./img/line-10.svg);
+    background-size: cover;
+    background-position: 50% 50%;
+}
+.screen .line-2 {
+    width: 1px;
+    height: 1px;
+    top: 0;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+}
+.screen .div-2 {
+    position: absolute;
+    width: 1520px;
+    height: 80px;
+    top: 0;
+    left: 0;
+}
+.screen .overlap-group-2 {
+    position: relative;
+    width: 1512px;
+    height: 80px;
+    background-color: #000000;
+}
+.screen .rectangle-5 {
+    width: 1512px;
+    height: 80px;
+    top: 0;
+    background-color: #000000;
+    position: absolute;
+    left: 0;
+}
+.screen .text-wrapper-14 {
+    width: 384px;
+    top: 24px;
+    left: 513px;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #000000;
+    font-size: 24px;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: normal;
+}
+.screen .text {
+    width: 135px;
+    top: 25px;
+    left: 1060px;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 24px;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: normal;
+}
+.screen .text-2 {
+    width: 135px;
+    top: 25px;
+    left: 1195px;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 24px;
+    letter-spacing: 0;
+    position: absolute;
+    line-height: normal;
+}
+.screen .coachtech-white {
+    position: absolute;
+    width: 370px;
+    height: 36px;
+    top: 22px;
+    left: 299px;
+    background-color: #000000;
+}
+.screen .text-wrapper-15 {
+    position: absolute;
+    width: 69px;
+    top: 25px;
+    left: 1396px;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #000000;
+    font-size: 24px;
+    letter-spacing: 0;
+    line-height: normal;
+}
+.screen .element {
+    position: absolute;
+    width: 370px;
+    height: 36px;
+    top: 22px;
+    left: 59px;
+}
+.screen .group-2 {
+    position: relative;
+    height: 36px;
+    background-image: url(./img/vector.svg);
+    background-size: 100% 100%;
+}
+.screen .group-3 {
+    position: absolute;
+    width: 301px;
+    height: 35px;
+    top: 1px;
+    left: 69px;
+}
+.screen .vector {
+    position: absolute;
+    width: 62px;
+    height: 36px;
+    top: 0;
+    left: 0;
+}
+
+/* ヘッダー（ロゴ用） */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1512px;
+    height: 80px;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 1000;
+    /* justify-content: space-between;  必要に応じて */
+}
+.header__logo {
+    /* position: absolute; 削除 */
+    margin-left: 59px; /* 40pxから19px右に移動 */
+    width: 370px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+}
+.header__logo-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+/* --- レスポンシブ対応 --- */
+@media (max-width: 1512px) {
+  html, body {
+    width: 100vw;
+    min-width: 320px;
+    overflow-x: hidden;
+  }
+  .screen {
+    width: 100vw;
+    min-width: 320px;
+  }
+  .screen .div {
+    width: 100vw;
+    min-width: 320px;
+    max-width: 1512px;
+    height: calc(100vw * 982 / 1512);
+    max-height: 982px;
+    position: relative;
+    margin: 0 auto;
+  }
+  .screen .overlap,
+  .screen .overlap-group,
+  .screen .line,
+  .screen .img,
+  .screen .rectangle,
+  .screen .text-wrapper,
+  .screen .text-wrapper-2,
+  .screen .ellipse,
+  .screen .text-wrapper-3,
+  .screen .text-wrapper-4,
+  .screen .ellipse-2,
+  .screen .overlap-2,
+  .screen .text-wrapper-5,
+  .screen .rectangle-2,
+  .screen .overlap-3,
+  .screen .rectangle-3,
+  .screen .ellipse-3,
+  .screen .text-wrapper-6,
+  .screen .div-wrapper,
+  .screen .text-wrapper-7,
+  .screen .overlap-4,
+  .screen .inputbuttun,
+  .screen .group,
+  .screen .overlap-5,
+  .screen .text-wrapper-8,
+  .screen .send-image,
+  .screen .overlap-wrapper,
+  .screen .overlap-6,
+  .screen .text-wrapper-9,
+  .screen .text-wrapper-10,
+  .screen .text-wrapper-11,
+  .screen .text-wrapper-12,
+  .screen .overlap-7,
+  .screen .text-wrapper-13,
+  .screen .line-wrapper,
+  .screen .line-2,
+  .screen .div-2,
+  .screen .overlap-group-2,
+  .screen .rectangle-5,
+  .screen .text-wrapper-14,
+  .screen .text,
+  .screen .text-2,
+  .screen .coachtech-white,
+  .screen .text-wrapper-15,
+  .screen .element,
+  .screen .group-2,
+  .screen .group-3,
+  .screen .vector {
+    /* 1512px基準で縮小 */
+    transform: scale(calc(100vw / 1512));
+    transform-origin: top left;
+  }
+}
+
+@media (min-width: 1512px) {
+  html, body {
+    width: 100vw;
+    min-width: 1512px;
+    overflow-x: auto;
+  }
+  .screen {
+    width: 100vw;
+    min-width: 1512px;
+  }
+  .screen .div {
+    width: 1512px;
+    height: 982px;
+    margin: 0 auto;
+  }
+  .header, .screen .rectangle-5 {
+    width: 100vw;
+    min-width: 1512px;
+    left: 0;
+  }
+}

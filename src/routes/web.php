@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -142,4 +143,10 @@ Route::middleware(['auth', 'verified', 'profile.completed'])->group(function () 
     | 商品へのコメント投稿に関するルートです。
     */
     Route::post('/item/{item_id}/comment', [CommentController::class, 'store'])->name('comment.store');
+
+    // 購入者チャット画面
+    Route::get('/purchaser-chat', [ChatController::class, 'purchaser'])->name('purchaser.chat');
+
+    // 出品者チャット画面
+    Route::match(['get', 'post'], '/seller-chat', [ChatController::class, 'seller'])->name('seller.chat');
 });
