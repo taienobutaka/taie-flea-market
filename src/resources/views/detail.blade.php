@@ -106,6 +106,12 @@
                             <img src="{{ asset('img/comment.png') }}" alt="コメント" class="detail__comment-icon">
                             <span class="detail__count">{{ $item->comments->count() }}</span>
                         </div>
+                        <div class="detail__chat-button">
+                            <a href="{{ route('mypage', ['page' => 'trade']) }}" class="chat-button" title="チャットへ移動">
+                                <img src="{{ asset('img/send.jpg') }}" alt="チャット" class="chat-icon">
+                                <span class="chat-label">チャット</span>
+                            </a>
+                        </div>
                     </div>
 
                     <section class="detail__purchase">
@@ -195,4 +201,4 @@
         </main>
     </div>
 </body>
-</html> 
+</html>
