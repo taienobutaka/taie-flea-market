@@ -6,9 +6,17 @@ use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
-    public function purchaser()
+    public function purchaser(Request $request)
     {
-        return view('purchaser');
+        $itemId = $request->query('item_id');
+        $item = \App\Models\Item::with('user.profile')->find($itemId);
+        $seller = $item ? $item->user : null;
+        $sellerProfile = $seller ? $seller->profile : null;
+        return view('purchaser', [
+            'item' => $item,
+            'seller' => $seller,
+            'sellerProfile' => $sellerProfile,
+        ]);
     }
     public function seller(Request $request)
     {

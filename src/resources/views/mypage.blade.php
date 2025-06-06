@@ -84,7 +84,7 @@
                             @endif
                         </div>
                     @else
-                        <h2 class="visually-hidden">{{ $page === 'sell' ? '出品した商品一覧' : '購入した商品一覧' }}</h2>
+                        <h2 class="visually-hidden">{{ $page === 'sell' ? '出品した商品一覧' : ($page === 'buy' ? '購入した商品一覧' : '取引中の商品一覧') }}</h2>
                         <ul class="product-grid">
                             @foreach($items as $item)
                                 <li class="product-card {{ $item->status === 'sold' ? 'sold' : '' }}">
@@ -108,7 +108,7 @@
                                                      onerror="this.onerror=null; this.src='{{ asset('img/no-image.png') }}';">
                                             @else
                                                 <img src="{{ asset('img/no-image.png') }}" 
-                                                     alt="No Image" 
+                                                     alt="No Image"
                                                      class="product-card__img">
                                             @endif
                                             @if($item->status === 'sold')

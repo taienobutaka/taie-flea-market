@@ -325,18 +325,27 @@ body {
     border-radius: 10px;
     background: #fff;
 }
+.screen .overlap-wrapper img {
+    width: 203px;
+    height: 206px;
+    object-fit: cover;
+    border-radius: 0;
+    position: relative;
+    top: -50px;
+}
 .screen .text-wrapper-9 {
     /* 商品画像テキスト */
-    width: 165px;
-    top: 23px;
-    left: 29px;
-    font-family: "Inter-Regular", Helvetica;
-    font-weight: 400;
-    color: #000000;
-    font-size: 30px;
-    letter-spacing: 0;
-    position: absolute;
-    line-height: normal;
+    width: 203px;
+    height: 206px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+    color: #888;
+    font-size: 20px;
+    border-radius: 0;
+    position: relative;
+    top: -50px;
 }
 
 /* --- 取引完了・編集・削除ボタン --- */
