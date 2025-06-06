@@ -149,4 +149,10 @@ Route::middleware(['auth', 'verified', 'profile.completed'])->group(function () 
 
     // 出品者チャット画面
     Route::match(['get', 'post'], '/seller-chat', [ChatController::class, 'seller'])->name('seller.chat');
+
+    // 取引中（チャット付き商品）タブ用ルート
+    Route::get('/mypage/trade', [\App\Http\Controllers\ChatController::class, 'trade'])->name('mypage.trade');
+
+    // チャット開始（チャットボタン押下時の保存用）
+    Route::post('/chat/start', [ChatController::class, 'start'])->name('chat.start');
 });

@@ -35,11 +35,11 @@
             <main class="main-content">
                 <section class="user-profile">
                     <div class="user-profile__image">
-                        @if($profile && $profile->image_path)
+                        @if(isset($profile) && $profile && $profile->image_path)
                             <img src="{{ asset('storage/' . $profile->image_path) }}" alt="プロフィール画像">
                         @endif
                     </div>
-                    <h1 class="user-profile__name">{{ $profile ? $profile->username : 'ユーザー名' }}</h1>
+                    <h1 class="user-profile__name">{{ isset($profile) && $profile ? $profile->username : 'ユーザー名' }}</h1>
                     <div class="user-profile__stars-html">
                         <span class="star-html star-html-1">&#9733;</span>
                         <span class="star-html star-html-2">&#9733;</span>
@@ -67,6 +67,10 @@
                        class="content-tabs__link content-tabs__link--buy {{ $page === 'buy' ? 'active' : '' }}">
                         <span class="content-tabs__text">購入した商品</span>
                     </a>
+                    <a href="{{ route('mypage.trade') }}"
+                       class="content-tabs__link content-tabs__link--trade {{ $page === 'trade' ? 'active' : '' }}">
+                        <span class="content-tabs__text">取引中の商品</span>
+                    </a>
                 </nav>
                 <div class="content-tabs-underline"></div>
 
@@ -84,7 +88,18 @@
                         <ul class="product-grid">
                             @foreach($items as $item)
                                 <li class="product-card {{ $item->status === 'sold' ? 'sold' : '' }}">
-                                    <a href="{{ route('item.show', $item->id) }}" class="product-card__link">
+                                    @php
+                                        $isTradeTab = ($page === 'trade');
+                                        $isSeller = isset($profile) && $profile && $item->user_id === $profile->user_id;
+                                        if ($isTradeTab) {
+                                            $link = $isSeller
+                                                ? route('seller.chat', ['item_id' => $item->id])
+                                                : route('purchaser.chat', ['item_id' => $item->id]);
+                                        } else {
+                                            $link = route('item.show', $item->id);
+                                        }
+                                    @endphp
+                                    <a href="{{ $link }}" class="product-card__link">
                                         <div class="product-card__image">
                                             @if($item->image_path)
                                                 <img src="{{ asset('storage/' . $item->image_path) }}" 
@@ -96,7 +111,7 @@
                                                      alt="No Image" 
                                                      class="product-card__img">
                                             @endif
-                                            @if($page === 'sell' && $item->status === 'sold')
+                                            @if($item->status === 'sold')
                                                 <div class="product-card__status" aria-label="売り切れ">SOLD</div>
                                             @endif
                                         </div>
