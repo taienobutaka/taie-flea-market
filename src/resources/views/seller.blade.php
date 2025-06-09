@@ -32,7 +32,7 @@
             <div class="img"></div>
             <div class="rectangle">
               <div class="sidebar-inner">
-                <div class="text-wrapper-2">取引中の商品</div>
+                <div class="sidebar-title">その他の取引</div>
                 <ul class="sidebar-trades">
                   @if(isset($sidebarItems) && $sidebarItems->count())
                     @foreach($sidebarItems as $sidebarItem)
@@ -50,7 +50,7 @@
                       </li>
                     @endforeach
                   @else
-                    <li class="sidebar-trade-item" style="color:#ccc;">取引中の商品はありません</li>
+                    <li class="sidebar-trade-item" style="color:#ccc;text-align:center;">取引中の商品はありません</li>
                   @endif
                 </ul>
               </div>
@@ -64,17 +64,31 @@
               @foreach($chats as $chat)
                 <li class="chat-message {{ $chat->user_id == auth()->id() ? 'my-message' : 'other-message' }}">
                   <div class="chat-user-info">
-                    @if($chat->user && $chat->user->profile && $chat->user->profile->image_path)
-                      <img src="{{ asset('storage/' . $chat->user->profile->image_path) }}" alt="{{ $chat->user->username }}" class="chat-user-img">
+                    @if($chat->user_id == auth()->id())
+                      <span class="chat-username">{{ $chat->user ? $chat->user->username : 'ユーザー' }}</span>
+                      @if($chat->user && $chat->user->profile && $chat->user->profile->image_path)
+                        <img src="{{ asset('storage/' . $chat->user->profile->image_path) }}" alt="{{ $chat->user->username }}" class="chat-user-img">
+                      @else
+                        <div class="chat-user-img chat-user-img--noimg">No Image</div>
+                      @endif
                     @else
-                      <div class="chat-user-img chat-user-img--noimg">No Image</div>
+                      @if($chat->user && $chat->user->profile && $chat->user->profile->image_path)
+                        <img src="{{ asset('storage/' . $chat->user->profile->image_path) }}" alt="{{ $chat->user->username }}" class="chat-user-img">
+                      @else
+                        <div class="chat-user-img chat-user-img--noimg">No Image</div>
+                      @endif
+                      <span class="chat-username">{{ $chat->user ? $chat->user->username : 'ユーザー' }}</span>
                     @endif
-                    <span class="chat-username">{{ $chat->user ? $chat->user->username : 'ユーザー' }}</span>
                   </div>
                   <div class="chat-comment">{{ $chat->comment }}</div>
+                  @if($chat->image_path)
+                    <div class="chat-image">
+                      <img src="{{ asset('storage/' . $chat->image_path) }}" alt="チャット画像" />
+                    </div>
+                  @endif
                   <div class="chat-actions">
                     @if($chat->user_id == auth()->id())
-                      <a href="{{ route('chat.edit.get', $chat->id) }}" class="chat-edit-btn" style="display:inline-block;">編集</a>
+                      <a href="{{ route('chat.edit.get', $chat->id) }}" class="chat-edit-btn">編集</a>
                       <form action="{{ route('chat.delete', $chat->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
@@ -85,24 +99,38 @@
                 </li>
               @endforeach
             </ul>
-            <form action="{{ route('chat.send', ['item_id' => $item->id]) }}" method="POST" class="chat-form">
+            <form action="{{ route('chat.send', ['item_id' => $item->id]) }}" method="POST" class="chat-form" enctype="multipart/form-data" novalidate>
               @csrf
-              @if(isset($editChat))
-                {{-- バリデーションエラー表示 --}}
+              <div style="display:flex;flex-direction:column;width:100%;">
                 @if($errors->any())
-                  <div class="chat-error-message" style="color:#d32f2f;margin-bottom:8px;">
+                  <div class="chat-error-message-row">
                     @foreach($errors->all() as $error)
-                      <div>{{ $error }}</div>
+                      <div style="color:#d32f2f;white-space:nowrap;">{{ $error }}</div>
                     @endforeach
                   </div>
                 @endif
-                <textarea name="comment" class="chat-input" required>{{ old('comment', $editChat->comment) }}</textarea>
-                <button type="submit" class="chat-send-btn">更新</button>
-                <a href="{{ route('seller.chat', ['item_id' => $item->id]) }}" class="chat-send-btn" style="background:#aaa;">キャンセル</a>
-              @else
-                <textarea name="comment" class="chat-input" required placeholder="メッセージを入力">{{ old('comment') }}</textarea>
-                <button type="submit" class="chat-send-btn">送信</button>
-              @endif
+                <div style="display:flex;flex-direction:row;align-items:flex-end;gap:10px;width:100%;">
+                  <textarea name="comment" class="chat-input" placeholder="取引メッセージを記入してください">{{ old('comment', isset($editChat) ? $editChat->comment : null) }}</textarea>
+                  <label class="chat-add-image-btn" for="chat-image-input">
+                    <span class="chat-add-image-btn-text">画像を追加</span>
+                  </label>
+                  <input type="file" id="chat-image-input" name="image" accept="image/*" style="display:none;">
+                  <button type="submit" class="chat-send-btn" style="background:none;border:none;padding:0;min-width:80px;min-height:61px;display:flex;align-items:center;justify-content:center;">
+                    <img src="/img/send.jpg" alt="送信" style="width:80px;height:61px;flex-shrink:0;aspect-ratio:80/61;object-fit:contain;display:block;margin-left:3px;margin-top:15px;" />
+                  </button>
+                </div>
+              </div>
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  const addImageBtn = document.querySelector('.chat-add-image-btn');
+                  const fileInput = document.getElementById('chat-image-input');
+                  if (addImageBtn && fileInput) {
+                    addImageBtn.addEventListener('click', function(e) {
+                      fileInput.click();
+                    });
+                  }
+                });
+              </script>
             </form>
           </div>
           <!-- /チャット欄 -->

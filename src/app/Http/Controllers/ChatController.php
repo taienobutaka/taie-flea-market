@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ChatSendRequest;
 
 class ChatController extends Controller
 {
@@ -88,16 +89,21 @@ class ChatController extends Controller
         // 取引中タブへリダイレクト
         return redirect()->route('mypage.trade', ['item_id' => $itemId]);
     }
-    public function send(Request $request, $item_id)
+    public function send(ChatSendRequest $request, $item_id)
     {
-        $request->validate([
-            'comment' => 'required|string|max:1000',
-        ]);
         $user = auth()->user();
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $fileName = time() . '_' . $image->getClientOriginalName();
+            $path = $image->storeAs('img/chats', $fileName, 'public');
+            $imagePath = $path;
+        }
         \App\Models\Chat::create([
             'user_id' => $user->id,
             'item_id' => $item_id,
             'comment' => $request->input('comment'),
+            'image_path' => $imagePath,
         ]);
         $item = \App\Models\Item::find($item_id);
         if ($item) {
