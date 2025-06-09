@@ -164,4 +164,7 @@ Route::middleware(['auth', 'verified', 'profile.completed'])->group(function () 
     Route::post('/chat/edit/{chat_id}', [ChatController::class, 'edit'])->name('chat.edit');
     // チャット削除
     Route::delete('/chat/delete/{chat_id}', [ChatController::class, 'delete'])->name('chat.delete');
+
+    // 購入者による星評価（POST）
+    Route::post('/purchaser-chat/rate/{item_id}', [ChatController::class, 'rate'])->name('purchaser.rate');
 });

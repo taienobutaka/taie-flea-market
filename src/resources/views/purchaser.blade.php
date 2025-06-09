@@ -9,43 +9,66 @@
 </head>
 <body>
     <div class="screen">
+      <header class="header">
+        <div class="header__logo">
+          <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="header__logo-img">
+        </div>
+      </header>
       <div class="div">
-        <header class="header">
-          <div class="header__logo">
-            <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="header__logo-img">
-          </div>
-          <!-- 必要に応じて検索やナビゲーションを追加可能 -->
-        </header>
         <div class="overlap">
           <div class="text-wrapper">「{{ $seller ? $seller->username : 'ユーザー名' }}」さんとの取引画面</div>
-          <div class="overlap-group">
-            <div class="line" style="background:#ccc;height:4px;width:1508px;position:absolute;top:103px;left:0;"></div>
-            <div class="img" style="background:#ccc;height:4px;width:1502px;position:absolute;top:338px;left:0;"></div>
-            <div class="rectangle">
-              <div class="sidebar-inner">
-                  <div class="sidebar-title">その他の取引</div>
-                  <ul class="sidebar-trades">
-                    @if(isset($sidebarItems) && $sidebarItems->count())
-                      @foreach($sidebarItems as $sidebarItem)
-                        @php
-                          $isSeller = isset($sidebarItem->user_id) && $sidebarItem->user_id === auth()->id();
-                          $link = $isSeller
-                            ? route('seller.chat', ['item_id' => $sidebarItem->id])
-                            : route('purchaser.chat', ['item_id' => $sidebarItem->id]);
-                          $isActive = $sidebarItem->id == ($item->id ?? null);
-                        @endphp
-                        <li class="sidebar-trade-item">
-                          <a href="{{ $link }}" class="sidebar-trade-link{{ $isActive ? ' active' : '' }}">
-                            {{ $sidebarItem->name }}
-                          </a>
-                        </li>
-                      @endforeach
-                    @else
-                      <li class="sidebar-trade-item" style="color:#ccc;text-align:center;">取引中の商品はありません</li>
-                    @endif
-                  </ul>
+          <!-- 取引完了ボタンとモーダルのトリガー要素をoverlap直下で絶対配置 -->
+          <input type="checkbox" id="trade-complete-modal-toggle" style="display:none;">
+          <label for="trade-complete-modal-toggle" class="trade-complete-btn" style="position:absolute;top:26px;left:1190px;z-index:20;">
+            <span class="text-wrapper-13">取引を完了する</span>
+          </label>
+          <div id="trade-complete-modal-content-area" class="trade-complete-modal">
+            <label for="trade-complete-modal-toggle" class="trade-complete-modal-bg"></label>
+            <form id="trade-complete-rating-form" method="POST" action="{{ route('purchaser.rate', ['item_id' => $item->id]) }}" style="margin:0;padding:0;width:100%;height:100%;">
+              @csrf
+              <div class="trade-complete-modal-content">
+                <p class="trade-complete-title">取引が完了しました。</p>
+                <hr class="trade-complete-hr" />
+                <div class="trade-complete-question">今回の取引相手はどうでしたか？</div>
+                <div class="trade-complete-stars">
+                  <span class="star" data-value="1">&#9733;</span>
+                  <span class="star" data-value="2">&#9733;</span>
+                  <span class="star" data-value="3">&#9733;</span>
+                  <span class="star" data-value="4">&#9733;</span>
+                  <span class="star" data-value="5">&#9733;</span>
+                  <input type="hidden" name="rating" id="trade-complete-rating-value" value="">
                 </div>
-            </div>
+                <hr class="trade-complete-stars-hr">
+                <button type="submit" class="trade-complete-submit" style="display:inline-block;text-align:center;cursor:pointer;">送信する</button>
+              </div>
+            </form>
+          </div>
+          <div class="line" style="background:#ccc;height:4px;width:1508px;position:absolute;top:103px;left:0;"></div>
+          <div class="img" style="background:#ccc;height:4px;width:1502px;position:absolute;top:338px;left:0;"></div>
+          <div class="rectangle">
+            <div class="sidebar-inner">
+                <div class="sidebar-title">その他の取引</div>
+                <ul class="sidebar-trades">
+                  @if(isset($sidebarItems) && $sidebarItems->count())
+                    @foreach($sidebarItems as $sidebarItem)
+                      @php
+                        $isSeller = isset($sidebarItem->user_id) && $sidebarItem->user_id === auth()->id();
+                        $link = $isSeller
+                          ? route('seller.chat', ['item_id' => $sidebarItem->id])
+                          : route('purchaser.chat', ['item_id' => $sidebarItem->id]);
+                        $isActive = $sidebarItem->id == ($item->id ?? null);
+                      @endphp
+                      <li class="sidebar-trade-item">
+                        <a href="{{ $link }}" class="sidebar-trade-link{{ $isActive ? ' active' : '' }}">
+                          {{ $sidebarItem->name }}
+                        </a>
+                      </li>
+                    @endforeach
+                  @else
+                    <li class="sidebar-trade-item" style="color:#ccc;text-align:center;">取引中の商品はありません</li>
+                  @endif
+                </ul>
+              </div>
           </div>
           <div class="ellipse">
             @if($sellerProfile && $sellerProfile->image_path)
@@ -144,5 +167,61 @@
         <div class="line-wrapper"><div class="line-2"></div></div>
       </div>
     </div>
-</body>
+    <script>
+      // モーダル表示/非表示
+      const completeBtn = document.getElementById('complete-trade-btn');
+      const modal = document.getElementById('trade-complete-modal');
+      completeBtn.addEventListener('click', () => { modal.style.display = 'block'; });
+      modal.addEventListener('click', e => { if(e.target === modal) modal.style.display = 'none'; });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // 星評価UI
+        const modal = document.getElementById('trade-complete-modal-content-area');
+        const stars = modal.querySelectorAll('.star');
+        const ratingInput = document.getElementById('trade-complete-rating-value');
+        let selected = 0;
+        stars.forEach(star => {
+          star.addEventListener('mouseover', function() {
+            const val = +this.dataset.value;
+            stars.forEach((s, i) => s.style.color = i < val ? '#FFF048' : '#D9D9D9');
+          });
+          star.addEventListener('mouseout', function() {
+            stars.forEach((s, i) => s.style.color = i < selected ? '#FFF048' : '#D9D9D9');
+          });
+          star.addEventListener('click', function() {
+            selected = +this.dataset.value;
+            ratingInput.value = selected;
+            stars.forEach((s, i) => s.style.color = i < selected ? '#FFF048' : '#D9D9D9');
+          });
+        });
+        // 送信時にモーダルを閉じて商品一覧へ遷移
+        const form = document.getElementById('trade-complete-rating-form');
+        form.addEventListener('submit', function(e) {
+          if (!ratingInput.value) {
+            e.preventDefault();
+            alert('星を選択してください');
+            return false;
+          }
+          e.preventDefault();
+          const formData = new FormData(form);
+          fetch(form.action, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': form.querySelector('[name=_token]').value
+            },
+            body: formData
+          })
+          .then(res => {
+            if (res.redirected) {
+              window.location.href = '/'; // 商品一覧画面に遷移
+            } else {
+              return res.text().then(text => { alert('送信に失敗しました'); });
+            }
+          })
+          .catch(() => { alert('送信に失敗しました'); });
+        });
+      });
+    </script>
+  </body>
 </html>

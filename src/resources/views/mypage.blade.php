@@ -39,13 +39,24 @@
                             <img src="{{ asset('storage/' . $profile->image_path) }}" alt="プロフィール画像">
                         @endif
                     </div>
-                    <h1 class="user-profile__name">{{ isset($profile) && $profile ? $profile->username : 'ユーザー名' }}</h1>
+                    <h1 class="user-profile__name">{{ $profile->username ?? 'ユーザー名' }}</h1>
                     <div class="user-profile__stars-html">
-                        <span class="star-html star-html-1">&#9733;</span>
-                        <span class="star-html star-html-2">&#9733;</span>
-                        <span class="star-html star-html-3">&#9733;</span>
-                        <span class="star-html star-html-4">&#9733;</span>
-                        <span class="star-html star-html-5">&#9733;</span>
+                        <div style="display:inline-block;margin-right:16px;">
+                            <span style="font-size:14px;color:#888;vertical-align:middle;">出品者としての評価</span><br>
+                            @php $avg = $ratingAvg ?? 0; @endphp
+                            @for($i = 1; $i <= 5; $i++)
+                                <span class="star-html star-html-{{ $i }}" style="color:{{ $i <= $avg ? '#FFF048' : '#D9D9D9' }};font-size:28px;">&#9733;</span>
+                            @endfor
+                            <span style="font-size:16px;color:#888;margin-left:6px;vertical-align:middle;">({{ $ratingCount ?? 0 }})</span>
+                        </div>
+                        <div style="display:inline-block;">
+                            <span style="font-size:14px;color:#888;vertical-align:middle;">購入者としての評価</span><br>
+                            @php $avgBuyer = $ratingAvgBuyer ?? 0; @endphp
+                            @for($i = 1; $i <= 5; $i++)
+                                <span class="star-html star-html-{{ $i }}" style="color:{{ $i <= $avgBuyer ? '#FFF048' : '#D9D9D9' }};font-size:28px;">&#9733;</span>
+                            @endfor
+                            <span style="font-size:16px;color:#888;margin-left:6px;vertical-align:middle;">({{ $ratingCountBuyer ?? 0 }})</span>
+                        </div>
                     </div>
                     <div class="user-profile__edit">
                         <a href="/mypage/profile" class="edit-button" role="button" aria-label="プロフィールを編集">

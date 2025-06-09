@@ -546,6 +546,150 @@ html, body {
   pointer-events: none;
 }
 
+/* --- 取引完了モーダル --- */
+.trade-complete-modal {
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.trade-complete-modal-content {
+  width: 598px;
+  height: 367px;
+  background: #fdfce6;
+  border-radius: 15px;
+  border: 1px solid #000;
+  position: relative;
+  box-shadow: 0 4px 32px #0002;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  left: 0;
+  top: 0;
+  margin: 0 auto;
+}
+@media (max-width: 700px) {
+  .trade-complete-modal-content {
+    width: 95vw;
+    min-width: 0;
+    height: auto;
+    padding-bottom: 30px;
+    left: 0;
+    top: 0;
+    margin: 0 auto;
+  }
+}
+.trade-complete-title {
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-size: 35px;
+  color: #000;
+  margin: 20px 0 0 23px;
+  font-weight: 400;
+}
+.trade-complete-hr {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #888;
+  margin: 18px 0 0 0;
+}
+.trade-complete-question {
+  color: #868686;
+  font-size: 20px;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  margin: 19px 0 0 23px;
+}
+.trade-complete-stars {
+  margin: 18px 0 0 0;
+  display: flex;
+  padding-bottom: 0;
+  position: relative;
+}
+.trade-complete-stars .star {
+  font-size: 90px;
+  color: #D9D9D9;
+  cursor: pointer;
+  transition: color 0.15s;
+  user-select: none;
+}
+.trade-complete-stars-hr {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 74px;
+  height: 0;
+  border: none;
+  border-bottom: 2px solid #cccccc;
+  width: 100%;
+  z-index: 1;
+}
+.trade-complete-submit {
+  position: absolute;
+  right: 23px;
+  bottom: 18px;
+  width: 127px;
+  height: 49px;
+  background: #ff8282;
+  color: #fff;
+  font-size: 24px;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  transition: background 0.2s;
+}
+.trade-complete-submit:hover {
+  background: #ff5454;
+}
+@media (max-width: 700px) {
+  .trade-complete-modal-content {
+    width: 95vw;
+    min-width: 0;
+    height: auto;
+    padding-bottom: 30px;
+  }
+  .trade-complete-stars .star {
+    font-size: 50px;
+  }
+  .trade-complete-title, .trade-complete-question {
+    font-size: 20px;
+  }
+  .trade-complete-submit {
+    width: 90px;
+    height: 38px;
+    font-size: 16px;
+  }
+}
+#trade-complete-modal-toggle:not(:checked) ~ #trade-complete-modal-content-area {
+  display: none !important;
+}
+#trade-complete-modal-toggle:checked ~ #trade-complete-modal-content-area {
+  display: flex !important;
+}
+.trade-complete-modal-bg {
+  position: fixed;
+  z-index: 2001;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  cursor: pointer;
+}
+.trade-complete-modal-content {
+  z-index: 2002;
+  position: relative;
+}
+.trade-complete-btn {
+  position: absolute;
+}
+
 /* --- チャット欄 --- */
 .chat-area {
   position: absolute;

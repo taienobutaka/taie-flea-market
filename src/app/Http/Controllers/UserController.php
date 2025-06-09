@@ -119,27 +119,57 @@ class UserController extends Controller
     public function showMypage()
     {
         $user = Auth::user();
-        $page = request('page', 'sell');  // tabをpageに変更
+        $page = request('page', 'sell');
         $profile = $user->profile;
-        
-        // 出品した商品を取得
-        $sellingItems = Item::where('user_id', $user->id)
-            ->latest()
-            ->get();
-            
-        // 購入した商品を取得（purchasesテーブルから）
+
+        // 出品した商品
+        $sellingItems = Item::where('user_id', $user->id)->latest()->get();
+        // 購入した商品
         $purchasedItems = Item::whereHas('purchases', function($query) use ($user) {
             $query->where('user_id', $user->id);
         })->latest()->get();
 
-        // アクティブなページに応じて表示する商品を選択
+        // ★評価平均値（四捨五入）
+        $ratingAvg = 0;
+        $ratingCount = 0;
+        if ($page === 'sell') {
+            // 出品者としての評価（購入者から自分への評価）
+            $itemIds = $sellingItems->pluck('id');
+            if ($itemIds->count() > 0) {
+                $ratings = \App\Models\Chat::whereIn('item_id', $itemIds)
+                    ->where('user_id', '!=', $user->id)
+                    ->whereNotNull('rating')
+                    ->pluck('rating');
+                if ($ratings->count() > 0) {
+                    $ratingAvg = round($ratings->avg());
+                    $ratingCount = $ratings->count();
+                }
+            }
+        } elseif ($page === 'buy') {
+            // 購入者としての評価（出品者から自分への評価）
+            $itemIds = $purchasedItems->pluck('id');
+            if ($itemIds->count() > 0) {
+                // 出品者id一覧
+                $sellerIds = $purchasedItems->pluck('user_id')->unique();
+                $ratings = \App\Models\Chat::whereIn('item_id', $itemIds)
+                    ->whereIn('user_id', $sellerIds)
+                    ->whereNotNull('rating')
+                    ->pluck('rating');
+                if ($ratings->count() > 0) {
+                    $ratingAvg = round($ratings->avg());
+                    $ratingCount = $ratings->count();
+                }
+            }
+        }
+
         $items = $page === 'sell' ? $sellingItems : $purchasedItems;
-        
         return view('mypage', [
             'user' => $user,
             'profile' => $profile,
             'items' => $items,
-            'page' => $page  // activeTabをpageに変更
+            'page' => $page,
+            'ratingAvg' => $ratingAvg,
+            'ratingCount' => $ratingCount,
         ]);
     }
 
