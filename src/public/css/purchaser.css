@@ -572,6 +572,12 @@ body {
 }
 
 /* --- サイドバー商品リスト --- */
+.sidebar-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .sidebar-trades {
   list-style: none;
   padding: 0;
@@ -589,10 +595,34 @@ body {
   display: block;
   background: transparent;
   transition: background 0.2s;
+  word-break: break-all;
 }
 .sidebar-trade-link.active,
 .sidebar-trade-link:hover {
   background: #444;
+}
+
+/* サイドバー背景・見出しもseller.cssと統一 */
+.screen .rectangle {
+  position: absolute;
+  width: 259px;
+  height: 902px;
+  top: 0;
+  left: 0;
+  background-color: #868686;
+}
+.screen .text-wrapper-2 {
+  top: 7px;
+  left: 29px;
+  -webkit-text-stroke: 1px #ffffff;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 30px;
+  letter-spacing: 3.00px;
+  white-space: nowrap;
+  position: absolute;
+  line-height: normal;
 }
 
 /* --- チャット欄 --- */

@@ -21,17 +21,32 @@
           <div class="overlap-group">
             <div class="line" style="background:#ccc;height:4px;width:1508px;position:absolute;top:103px;left:0;"></div>
             <div class="img" style="background:#ccc;height:4px;width:1502px;position:absolute;top:338px;left:0;"></div>
-            <div class="rectangle"></div>
-            <div class="text-wrapper-2">その他の取引</div>
-            <ul class="sidebar-trades">
-              @foreach($sidebarItems as $sidebarItem)
-                <li class="sidebar-trade-item">
-                  <a href="{{ route('purchaser.chat', ['item_id' => $sidebarItem->id]) }}" class="sidebar-trade-link {{ $sidebarItem->id == ($item->id ?? null) ? 'active' : '' }}">
-                    {{ $sidebarItem->name }}
-                  </a>
-                </li>
-              @endforeach
-            </ul>
+            <div class="rectangle">
+              <div class="sidebar-inner">
+                <div class="text-wrapper-2">取引中の商品</div>
+                <ul class="sidebar-trades">
+                  @if(isset($sidebarItems) && $sidebarItems->count())
+                    @foreach($sidebarItems as $sidebarItem)
+                      @php
+                        // 「自分が出品した商品」かどうかは「sidebarItem.user_id === auth()->id()」で判定
+                        $isSeller = isset($sidebarItem->user_id) && $sidebarItem->user_id === auth()->id();
+                        $link = $isSeller
+                          ? route('seller.chat', ['item_id' => $sidebarItem->id])
+                          : route('purchaser.chat', ['item_id' => $sidebarItem->id]);
+                        $isActive = $sidebarItem->id == ($item->id ?? null);
+                      @endphp
+                      <li class="sidebar-trade-item">
+                        <a href="{{ $link }}" class="sidebar-trade-link{{ $isActive ? ' active' : '' }}">
+                          {{ $sidebarItem->name }}
+                        </a>
+                      </li>
+                    @endforeach
+                  @else
+                    <li class="sidebar-trade-item" style="color:#ccc;">取引中の商品はありません</li>
+                  @endif
+                </ul>
+              </div>
+            </div>
           </div>
           <div class="ellipse">
             @if($sellerProfile && $sellerProfile->image_path)
