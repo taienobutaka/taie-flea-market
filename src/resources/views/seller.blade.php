@@ -144,13 +144,13 @@
             </div>
           </div>
           <div class="line-wrapper"><div class="line-2"></div></div>
-          <input type="checkbox" id="trade-complete-modal-toggle" style="display:none;" @if($purchaserRated) checked @endif>
+          <input type="checkbox" id="trade-complete-modal-toggle" style="display:none;" @if($purchaserRated && !$sellerRated) checked @endif>
           <label for="trade-complete-modal-toggle" class="trade-complete-btn" style="position:absolute;top:26px;left:1190px;z-index:20;">
             <span class="text-wrapper-13">取引を完了する</span>
           </label>
           <div id="trade-complete-modal-content-area" class="trade-complete-modal">
             <label for="trade-complete-modal-toggle" class="trade-complete-modal-bg"></label>
-            <form id="trade-complete-rating-form" method="POST" action="{{ route('purchaser.rate', ['item_id' => $item->id]) }}" style="margin:0;padding:0;width:100%;height:100%;">
+            <form id="trade-complete-rating-form" method="POST" action="{{ route('seller.rate', ['item_id' => $item->id]) }}" style="margin:0;padding:0;width:100%;height:100%;">
               @csrf
               <div class="trade-complete-modal-content">
                 <p class="trade-complete-title">取引が完了しました。</p>

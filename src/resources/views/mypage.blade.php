@@ -42,7 +42,20 @@
                     <h1 class="user-profile__name">{{ $profile->username ?? 'ユーザー名' }}</h1>
                     <div class="user-profile__stars-html">
                         <div>
-                            @php $avg = $ratingAvg ?? 0; @endphp
+                            @php 
+                                if ($page === 'buy') {
+                                    $avg = $ratingAvgBuyer ?? 0;
+                                } else {
+                                    $avg = $ratingAvg ?? 0;
+                                }
+                                // デバッグ情報をログに記録
+                                \Log::info('マイページ星マーク表示', [
+                                    'page' => $page,
+                                    'rating_avg' => $ratingAvg ?? 0,
+                                    'rating_avg_buyer' => $ratingAvgBuyer ?? 0,
+                                    'display_avg' => $avg
+                                ]);
+                            @endphp
                             @for($i = 1; $i <= 5; $i++)
                                 <span class="star-html{{ $i <= $avg ? ' selected' : '' }}">&#9733;</span>
                             @endfor

@@ -167,4 +167,7 @@ Route::middleware(['auth', 'verified', 'profile.completed'])->group(function () 
 
     // 購入者による星評価（POST）
     Route::post('/purchaser-chat/rate/{item_id}', [ChatController::class, 'rate'])->name('purchaser.rate');
+    
+    // 出品者による星評価（POST）
+    Route::post('/seller-chat/rate/{item_id}', [ChatController::class, 'sellerRate'])->name('seller.rate');
 });
