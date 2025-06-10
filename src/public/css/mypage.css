@@ -320,28 +320,32 @@ body {
 
 /* HTML+CSS星表示用 */
 .user-profile__stars-html {
-    position: absolute;
-    top: 251px;
-    left: 476px;
-    width: 220px;
-    height: 40px;
-    z-index: 3;
+    display: flex;
+    gap: 24px;
+    margin-bottom: 12px;
+    margin-top: 170px;
+    margin-left: -240px;
+}
+.user-profile__stars-html > div {
+    display: flex;
+    align-items: center;
 }
 .star-html {
-    position: absolute;
+    font-size: 40px;
     width: 40px;
     height: 40px;
-    font-size: 40px;
-    color: #D9D9D9;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 40px;
-    display: inline-block;
+    color: #d9d9d9;
+    vertical-align: middle;
+    margin-right: 2px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
-.star-html-1 { left: 0px;  top: 0px; }
-.star-html-2 { left: 45px; top: 0px; }
-.star-html-3 { left: 90px; top: 0px; }
-.star-html-4 { left: 135px; top: 0px; }
-.star-html-5 { left: 180px; top: 0px; }
+.star-html.selected {
+    color: #fff048;
+}
 
 /* コンテンツタブ
    -------------------------------------------------------------------------- */
@@ -354,7 +358,7 @@ body {
     height: 40px;
     display: flex;
     align-items: center;
-    gap: 35px;
+    gap: 91px;
     background-color: #ffffff;
     padding: 20px 0;
     z-index: 2;
@@ -391,7 +395,6 @@ body {
     position: relative;
     cursor: pointer;
     z-index: 2;
-    margin-left: -116px;
 }
 
 /* ホバー効果を削除 */
@@ -421,7 +424,13 @@ body {
 /* 購入タブ
    特別なマージン */
 .content-tabs__link--buy {
-    margin-left: 8px;
+}
+
+/* 取引中タブ
+   件数表示を含む */
+.content-tabs__link--trade {
+    display: flex;
+    align-items: center;
 }
 
 /* 取引中の商品ラベル */
@@ -442,6 +451,55 @@ body {
     font-size: 24px;
     letter-spacing: 0;
     line-height: normal;
+    margin-left: 10px;
+}
+
+/* 取引中タブ横のメッセージ件数バッジ */
+.trade-message-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 26px;
+    border-radius: 10px;
+    background: #f00;
+    margin-left: 8px;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+.trade-message-badge__count {
+    color: #fff;
+    font-family: Inter, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-align: center;
+}
+
+/* 商品カード左上のメッセージ件数バッジ */
+.product-message-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: #f00;
+    z-index: 10;
+    flex-shrink: 0;
+}
+.product-message-badge__count {
+    color: #fff;
+    font-family: Inter, sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-align: center;
 }
 
 /* 商品リスト

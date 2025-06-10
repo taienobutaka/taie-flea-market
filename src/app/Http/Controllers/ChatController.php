@@ -80,6 +80,10 @@ class ChatController extends Controller
                 ->whereNotIn('id', $ratedItemIds)
                 ->get();
         }
+        
+        // 取引中の商品数を計算
+        $tradeCount = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id')->unique()->count();
+        
         // ★出品者としての評価（購入者から自分への評価）
         $itemIds = \App\Models\Item::where('user_id', $user->id)->pluck('id');
         $ratingAvg = 0;
@@ -100,6 +104,21 @@ class ChatController extends Controller
             ->pluck('rating');
         $ratingAvgBuyer = $buyerRatings->count() > 0 ? round($buyerRatings->avg()) : 0;
         $ratingCountBuyer = $buyerRatings->count();
+        // 取引中タブ用：各商品ごとの「相手からの」メッセージ件数（空コメントは除外）を取得
+        $messageCounts = [];
+        $totalReceived = 0;
+        if ($items && $items->count()) {
+            foreach ($items as $item) {
+                // 自分以外のユーザーからの「空でない」メッセージ件数
+                $count = \App\Models\Chat::where('item_id', $item->id)
+                    ->where('user_id', '!=', $user->id)
+                    ->whereNotNull('comment')
+                    ->where('comment', '!=', '')
+                    ->count();
+                $messageCounts[$item->id] = $count;
+                $totalReceived += $count;
+            }
+        }
         return view('mypage', [
             'items' => $items,
             'page' => 'trade',
@@ -108,6 +127,9 @@ class ChatController extends Controller
             'ratingCount' => $ratingCount,
             'ratingAvgBuyer' => $ratingAvgBuyer,
             'ratingCountBuyer' => $ratingCountBuyer,
+            'messageCounts' => $messageCounts,
+            'totalReceived' => $totalReceived,
+            'tradeCount' => $tradeCount,
         ]);
     }
     /**
@@ -260,6 +282,28 @@ class ChatController extends Controller
         $items = \App\Models\Item::where('user_id', $user->id)
             ->whereNotIn('id', $ratedItemIds)
             ->latest()->get();
+        
+        // 出品した商品数を計算
+        $sellCount = \App\Models\Item::where('user_id', $user->id)->count();
+        
+        // メッセージ件数を計算（取引中タブと同じロジック）
+        $chatItemIds = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id');
+        $messageCounts = [];
+        $totalReceived = 0;
+        if ($chatItemIds->count() > 0) {
+            $chatItems = \App\Models\Item::whereIn('id', $chatItemIds)->get();
+            foreach ($chatItems as $item) {
+                // 自分以外のユーザーからの「空でない」メッセージ件数
+                $count = \App\Models\Chat::where('item_id', $item->id)
+                    ->where('user_id', '!=', $user->id)
+                    ->whereNotNull('comment')
+                    ->where('comment', '!=', '')
+                    ->count();
+                $messageCounts[$item->id] = $count;
+                $totalReceived += $count;
+            }
+        }
+        
         // ★出品者としての評価（購入者から自分への評価）
         $itemIds = \App\Models\Item::where('user_id', $user->id)->pluck('id');
         $ratingAvg = 0;
@@ -288,6 +332,8 @@ class ChatController extends Controller
             'ratingCount' => $ratingCount,
             'ratingAvgBuyer' => $ratingAvgBuyer,
             'ratingCountBuyer' => $ratingCountBuyer,
+            'sellCount' => $sellCount,
+            'totalReceived' => $totalReceived,
         ]);
     }
 
@@ -316,6 +362,30 @@ class ChatController extends Controller
         $items = \App\Models\Item::whereIn('id', $purchasedItemIds)
             ->whereNotIn('id', $ratedItemIds)
             ->latest()->get();
+        
+        // 購入した商品数を計算
+        $buyCount = \App\Models\Item::whereHas('purchases', function($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->count();
+        
+        // メッセージ件数を計算（取引中タブと同じロジック）
+        $chatItemIds = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id');
+        $messageCounts = [];
+        $totalReceived = 0;
+        if ($chatItemIds->count() > 0) {
+            $chatItems = \App\Models\Item::whereIn('id', $chatItemIds)->get();
+            foreach ($chatItems as $item) {
+                // 自分以外のユーザーからの「空でない」メッセージ件数
+                $count = \App\Models\Chat::where('item_id', $item->id)
+                    ->where('user_id', '!=', $user->id)
+                    ->whereNotNull('comment')
+                    ->where('comment', '!=', '')
+                    ->count();
+                $messageCounts[$item->id] = $count;
+                $totalReceived += $count;
+            }
+        }
+        
         // ★出品者としての評価（購入者から自分への評価）
         $allMyItemIds = \App\Models\Item::where('user_id', $user->id)->pluck('id');
         $ratings = collect();
@@ -342,6 +412,8 @@ class ChatController extends Controller
             'ratingCount' => $ratingCount,
             'ratingAvgBuyer' => $ratingAvgBuyer,
             'ratingCountBuyer' => $ratingCountBuyer,
+            'buyCount' => $buyCount,
+            'totalReceived' => $totalReceived,
         ]);
     }
 }

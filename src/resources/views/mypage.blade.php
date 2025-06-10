@@ -41,21 +41,11 @@
                     </div>
                     <h1 class="user-profile__name">{{ $profile->username ?? 'ユーザー名' }}</h1>
                     <div class="user-profile__stars-html">
-                        <div style="display:inline-block;margin-right:16px;">
-                            <span style="font-size:14px;color:#888;vertical-align:middle;">出品者としての評価</span><br>
+                        <div>
                             @php $avg = $ratingAvg ?? 0; @endphp
                             @for($i = 1; $i <= 5; $i++)
-                                <span class="star-html star-html-{{ $i }}" style="color:{{ $i <= $avg ? '#FFF048' : '#D9D9D9' }};font-size:28px;">&#9733;</span>
+                                <span class="star-html{{ $i <= $avg ? ' selected' : '' }}">&#9733;</span>
                             @endfor
-                            <span style="font-size:16px;color:#888;margin-left:6px;vertical-align:middle;">({{ $ratingCount ?? 0 }})</span>
-                        </div>
-                        <div style="display:inline-block;">
-                            <span style="font-size:14px;color:#888;vertical-align:middle;">購入者としての評価</span><br>
-                            @php $avgBuyer = $ratingAvgBuyer ?? 0; @endphp
-                            @for($i = 1; $i <= 5; $i++)
-                                <span class="star-html star-html-{{ $i }}" style="color:{{ $i <= $avgBuyer ? '#FFF048' : '#D9D9D9' }};font-size:28px;">&#9733;</span>
-                            @endfor
-                            <span style="font-size:16px;color:#888;margin-left:6px;vertical-align:middle;">({{ $ratingCountBuyer ?? 0 }})</span>
                         </div>
                     </div>
                     <div class="user-profile__edit">
@@ -65,9 +55,11 @@
                     </div>
                 </section>
 
+                @if($page === 'trade')
                 <div class="trade-label">
-                  <span class="trade-label__text">取引中の商品</span>
+                  <span class="trade-label__text"></span>
                 </div>
+                @endif
 
                 <nav class="content-tabs">
                     <a href="{{ route('mypage', ['page' => 'sell']) }}" 
@@ -81,6 +73,11 @@
                     <a href="{{ route('mypage.trade') }}"
                        class="content-tabs__link content-tabs__link--trade {{ $page === 'trade' ? 'active' : '' }}">
                         <span class="content-tabs__text">取引中の商品</span>
+                        @if($page === 'trade')
+                        <span class="trade-message-badge">
+                            <span class="trade-message-badge__count">{{ $totalReceived ?? 0 }}</span>
+                        </span>
+                        @endif
                     </a>
                 </nav>
                 <div class="content-tabs-underline"></div>
@@ -124,6 +121,11 @@
                                             @endif
                                             @if($item->status === 'sold')
                                                 <div class="product-card__status" aria-label="売り切れ">SOLD</div>
+                                            @endif
+                                            @if($isTradeTab && isset($messageCounts[$item->id]))
+                                                <span class="product-message-badge">
+                                                    <span class="product-message-badge__count">{{ $messageCounts[$item->id] }}</span>
+                                                </span>
                                             @endif
                                         </div>
                                         <div class="product-card__info">
