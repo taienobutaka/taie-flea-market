@@ -43,12 +43,38 @@
                     <div class="user-profile__stars-html">
                         <div>
                             @php 
-                                // すべてのタブで統一された評価を表示
-                                // 出品者としての評価（購入者から自分への評価）を表示
-                                $avg = $ratingAvg ?? 0;
+                                // ユーザーが出品者か購入者かを判定
+                                $isSeller = isset($profile) && $profile && isset($profile->user_id);
+                                $hasSoldItems = \App\Models\Item::where('user_id', $profile->user_id ?? 0)->exists();
+                                $hasBoughtItems = \App\Models\Chat::where('user_id', $profile->user_id ?? 0)->whereNotNull('rating')->exists();
+                                
+                                // 評価を決定
+                                if ($hasSoldItems && $hasBoughtItems) {
+                                    // 両方の場合は、より多くの評価がある方を表示
+                                    $sellerRatingCount = $ratingCount ?? 0;
+                                    $buyerRatingCount = $ratingCountBuyer ?? 0;
+                                    if ($sellerRatingCount >= $buyerRatingCount) {
+                                        $avg = $ratingAvg ?? 0;
+                                    } else {
+                                        $avg = $ratingAvgBuyer ?? 0;
+                                    }
+                                } elseif ($hasSoldItems) {
+                                    // 出品者のみの場合
+                                    $avg = $ratingAvg ?? 0;
+                                } elseif ($hasBoughtItems) {
+                                    // 購入者のみの場合
+                                    $avg = $ratingAvgBuyer ?? 0;
+                                } else {
+                                    // どちらでもない場合
+                                    $avg = 0;
+                                }
+                                
                                 // デバッグ情報をログに記録
                                 \Log::info('マイページ星マーク表示', [
                                     'page' => $page,
+                                    'user_id' => $profile->user_id ?? 0,
+                                    'has_sold_items' => $hasSoldItems,
+                                    'has_bought_items' => $hasBoughtItems,
                                     'rating_avg' => $ratingAvg ?? 0,
                                     'rating_avg_buyer' => $ratingAvgBuyer ?? 0,
                                     'display_avg' => $avg

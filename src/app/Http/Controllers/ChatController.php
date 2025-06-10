@@ -397,9 +397,24 @@ class ChatController extends Controller
         }
         
         // 購入者としての評価（出品者から自分への評価）
-        $buyerRatings = \App\Models\Chat::where('user_id', $user->id)
-            ->whereNotNull('rating')
-            ->pluck('rating');
+        // チャットに関わった商品の出品者からの評価を計算
+        $chatItemIds = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id')->unique();
+        $buyerRatings = collect();
+        if ($chatItemIds->count() > 0) {
+            $chatItems = \App\Models\Item::whereIn('id', $chatItemIds)->get();
+            foreach ($chatItems as $item) {
+                // 各商品について、出品者（item->user_id）が購入者（$user->id）を評価した内容を取得
+                $rating = \App\Models\Chat::where('item_id', $item->id)
+                    ->where('user_id', $item->user_id) // 出品者の評価
+                    ->whereNotNull('rating')
+                    ->value('rating');
+                
+                if ($rating) {
+                    $buyerRatings->push($rating);
+                }
+            }
+        }
+        
         $ratingAvgBuyer = $buyerRatings->count() > 0 ? round($buyerRatings->avg()) : 0;
         $ratingCountBuyer = $buyerRatings->count();
         
@@ -410,6 +425,7 @@ class ChatController extends Controller
             'ratings' => $ratings ?? collect(),
             'rating_avg' => $ratingAvg,
             'rating_count' => $ratingCount,
+            'chat_item_ids' => $chatItemIds->toArray(),
             'buyer_ratings' => $buyerRatings->toArray(),
             'rating_avg_buyer' => $ratingAvgBuyer,
             'rating_count_buyer' => $ratingCountBuyer
