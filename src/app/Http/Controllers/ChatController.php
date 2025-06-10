@@ -292,6 +292,15 @@ class ChatController extends Controller
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
         ]);
+        
+        // 商品と出品者情報を取得
+        $item = \App\Models\Item::with('user')->find($item_id);
+        if (!$item) {
+            return redirect()->back()->with('error', '商品が見つかりません');
+        }
+        
+        $seller = $item->user;
+        
         // 既存の自分のチャットレコードを取得（item_id, user_idで1件）
         $chat = \App\Models\Chat::where('item_id', $item_id)->where('user_id', $user->id)->first();
         if (!$chat) {
@@ -302,6 +311,25 @@ class ChatController extends Controller
         }
         $chat->rating = $request->input('rating');
         $chat->save();
+        
+        // 出品者へメール通知を送信
+        try {
+            \Mail::to($seller->email)->send(new \App\Mail\RatingNotification($user, $seller, $item, $request->input('rating')));
+            \Log::info('評価通知メール送信完了', [
+                'purchaser_id' => $user->id,
+                'seller_id' => $seller->id,
+                'item_id' => $item_id,
+                'rating' => $request->input('rating')
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('評価通知メール送信エラー', [
+                'error' => $e->getMessage(),
+                'purchaser_id' => $user->id,
+                'seller_id' => $seller->id,
+                'item_id' => $item_id
+            ]);
+        }
+        
         return redirect()->route('purchaser.chat', ['item_id' => $item_id])->with('success', '評価を送信しました');
     }
 
