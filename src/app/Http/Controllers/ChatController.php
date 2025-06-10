@@ -121,26 +121,17 @@ class ChatController extends Controller
         // 取引中の商品数を計算
         $tradeCount = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id')->unique()->count();
         
-        // ★出品者としての評価（購入者から自分への評価）
-        $itemIds = \App\Models\Item::where('user_id', $user->id)->pluck('id');
-        $ratingAvg = 0;
-        $ratingCount = 0;
-        if ($itemIds->count() > 0) {
-            $ratings = \App\Models\Chat::whereIn('item_id', $itemIds)
-                ->where('user_id', '!=', $user->id)
-                ->whereNotNull('rating')
-                ->pluck('rating');
-            if ($ratings->count() > 0) {
-                $ratingAvg = round($ratings->avg());
-                $ratingCount = $ratings->count();
-            }
-        }
-        // ★購入者としての評価（出品者から自分への評価）
-        $buyerRatings = \App\Models\Chat::where('user_id', $user->id)
-            ->whereNotNull('rating')
-            ->pluck('rating');
-        $ratingAvgBuyer = $buyerRatings->count() > 0 ? round($buyerRatings->avg()) : 0;
-        $ratingCountBuyer = $buyerRatings->count();
+        // 共通の評価計算を使用
+        $ratings = $this->calculateUserRatings($user);
+        
+        // デバッグ情報をログに記録
+        \Log::info('tradeメソッド評価計算', [
+            'user_id' => $user->id,
+            'user_name' => $profile->username ?? $user->name,
+            'ratings' => $ratings,
+            'page' => 'trade'
+        ]);
+        
         // 取引中タブ用：各商品ごとの「相手からの」メッセージ件数（空コメントは除外）を取得
         $messageCounts = [];
         $totalReceived = 0;
@@ -160,10 +151,10 @@ class ChatController extends Controller
             'items' => $items,
             'page' => 'trade',
             'profile' => $profile,
-            'ratingAvg' => $ratingAvg,
-            'ratingCount' => $ratingCount,
-            'ratingAvgBuyer' => $ratingAvgBuyer,
-            'ratingCountBuyer' => $ratingCountBuyer,
+            'ratingAvg' => $ratings['ratingAvg'],
+            'ratingCount' => $ratings['ratingCount'],
+            'ratingAvgBuyer' => $ratings['ratingAvgBuyer'],
+            'ratingCountBuyer' => $ratings['ratingCountBuyer'],
             'messageCounts' => $messageCounts,
             'totalReceived' => $totalReceived,
             'tradeCount' => $tradeCount,
@@ -385,6 +376,53 @@ class ChatController extends Controller
         
         return redirect()->route('seller.chat', ['item_id' => $item_id])->with('success', '評価を送信しました');
     }
+    /**
+     * 共通の評価計算メソッド
+     */
+    private function calculateUserRatings($user)
+    {
+        // 出品者としての評価（購入者から自分への評価）
+        $itemIds = \App\Models\Item::where('user_id', $user->id)->pluck('id');
+        $ratingAvg = 0;
+        $ratingCount = 0;
+        if ($itemIds->count() > 0) {
+            $ratings = \App\Models\Chat::whereIn('item_id', $itemIds)
+                ->where('user_id', '!=', $user->id)
+                ->whereNotNull('rating')
+                ->pluck('rating');
+            if ($ratings->count() > 0) {
+                $ratingAvg = round($ratings->avg());
+                $ratingCount = $ratings->count();
+            }
+        }
+        
+        // 購入者としての評価（出品者から自分への評価）
+        $buyerRatings = \App\Models\Chat::where('user_id', $user->id)
+            ->whereNotNull('rating')
+            ->pluck('rating');
+        $ratingAvgBuyer = $buyerRatings->count() > 0 ? round($buyerRatings->avg()) : 0;
+        $ratingCountBuyer = $buyerRatings->count();
+        
+        // デバッグ情報をログに記録
+        \Log::info('calculateUserRatings詳細', [
+            'user_id' => $user->id,
+            'item_ids' => $itemIds->toArray(),
+            'ratings' => $ratings ?? collect(),
+            'rating_avg' => $ratingAvg,
+            'rating_count' => $ratingCount,
+            'buyer_ratings' => $buyerRatings->toArray(),
+            'rating_avg_buyer' => $ratingAvgBuyer,
+            'rating_count_buyer' => $ratingCountBuyer
+        ]);
+        
+        return [
+            'ratingAvg' => $ratingAvg,
+            'ratingCount' => $ratingCount,
+            'ratingAvgBuyer' => $ratingAvgBuyer,
+            'ratingCountBuyer' => $ratingCountBuyer
+        ];
+    }
+
     // 出品した商品タブ
     public function sell(Request $request)
     {
@@ -422,34 +460,25 @@ class ChatController extends Controller
             }
         }
         
-        // ★出品者としての評価（購入者から自分への評価）
-        $itemIds = \App\Models\Item::where('user_id', $user->id)->pluck('id');
-        $ratingAvg = 0;
-        $ratingCount = 0;
-        if ($itemIds->count() > 0) {
-            $ratings = \App\Models\Chat::whereIn('item_id', $itemIds)
-                ->where('user_id', '!=', $user->id)
-                ->whereNotNull('rating')
-                ->pluck('rating');
-            if ($ratings->count() > 0) {
-                $ratingAvg = round($ratings->avg());
-                $ratingCount = $ratings->count();
-            }
-        }
-        // ★購入者としての評価（出品者から自分への評価）
-        $buyerRatings = \App\Models\Chat::where('user_id', $user->id)
-            ->whereNotNull('rating')
-            ->pluck('rating');
-        $ratingAvgBuyer = $buyerRatings->count() > 0 ? round($buyerRatings->avg()) : 0;
-        $ratingCountBuyer = $buyerRatings->count();
+        // 共通の評価計算を使用
+        $ratings = $this->calculateUserRatings($user);
+        
+        // デバッグ情報をログに記録
+        \Log::info('sellメソッド評価計算', [
+            'user_id' => $user->id,
+            'user_name' => $profile->username ?? $user->name,
+            'ratings' => $ratings,
+            'page' => 'sell'
+        ]);
+        
         return view('mypage', [
             'items' => $items,
             'page' => 'sell',
             'profile' => $profile,
-            'ratingAvg' => $ratingAvg,
-            'ratingCount' => $ratingCount,
-            'ratingAvgBuyer' => $ratingAvgBuyer,
-            'ratingCountBuyer' => $ratingCountBuyer,
+            'ratingAvg' => $ratings['ratingAvg'],
+            'ratingCount' => $ratings['ratingCount'],
+            'ratingAvgBuyer' => $ratings['ratingAvgBuyer'],
+            'ratingCountBuyer' => $ratings['ratingCountBuyer'],
             'sellCount' => $sellCount,
             'totalReceived' => $totalReceived,
         ]);
@@ -503,59 +532,25 @@ class ChatController extends Controller
             }
         }
         
-        // ★購入者としての評価（出品者から自分への評価）
-        // チャットに関わった商品の出品者IDを取得
-        $chatItems = \App\Models\Item::whereIn('id', $chatItemIds)->get();
+        // 共通の評価計算を使用
+        $ratings = $this->calculateUserRatings($user);
         
         // デバッグ情報をログに記録
-        \Log::info('購入者評価計算開始', [
+        \Log::info('buyメソッド評価計算', [
             'user_id' => $user->id,
-            'chat_items_count' => $chatItems->count(),
-            'chat_items' => $chatItems->pluck('id')->toArray()
-        ]);
-        
-        $buyerRatings = collect();
-        foreach ($chatItems as $item) {
-            // 各商品について、出品者（item->user_id）が購入者（$user->id）を評価した内容を取得
-            $rating = \App\Models\Chat::where('item_id', $item->id)
-                ->where('user_id', $item->user_id) // 出品者の評価
-                ->whereNotNull('rating')
-                ->value('rating');
-            
-            // デバッグ情報をログに記録
-            \Log::info('商品評価確認', [
-                'item_id' => $item->id,
-                'item_name' => $item->name,
-                'seller_id' => $item->user_id,
-                'buyer_id' => $user->id,
-                'rating_found' => $rating,
-                'chat_records' => \App\Models\Chat::where('item_id', $item->id)->get(['user_id', 'rating'])->toArray()
-            ]);
-            
-            if ($rating) {
-                $buyerRatings->push($rating);
-            }
-        }
-        
-        $ratingAvgBuyer = $buyerRatings->count() > 0 ? round($buyerRatings->avg()) : 0;
-        $ratingCountBuyer = $buyerRatings->count();
-        
-        // 最終結果をログに記録
-        \Log::info('購入者評価計算完了', [
-            'user_id' => $user->id,
-            'buyer_ratings' => $buyerRatings->toArray(),
-            'rating_avg_buyer' => $ratingAvgBuyer,
-            'rating_count_buyer' => $ratingCountBuyer
+            'user_name' => $profile->username ?? $user->name,
+            'ratings' => $ratings,
+            'page' => 'buy'
         ]);
         
         return view('mypage', [
             'items' => $items,
             'page' => 'buy',
             'profile' => $profile,
-            'ratingAvg' => $ratingAvgBuyer,
-            'ratingCount' => $ratingCountBuyer,
-            'ratingAvgBuyer' => $ratingAvgBuyer,
-            'ratingCountBuyer' => $ratingCountBuyer,
+            'ratingAvg' => $ratings['ratingAvg'],
+            'ratingCount' => $ratings['ratingCount'],
+            'ratingAvgBuyer' => $ratings['ratingAvgBuyer'],
+            'ratingCountBuyer' => $ratings['ratingCountBuyer'],
             'buyCount' => $buyCount,
             'totalReceived' => $totalReceived,
         ]);

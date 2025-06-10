@@ -129,38 +129,8 @@ class UserController extends Controller
             $query->where('user_id', $user->id);
         })->latest()->get();
 
-        // ★評価平均値（四捨五入）
-        $ratingAvg = 0;
-        $ratingCount = 0;
-        if ($page === 'sell') {
-            // 出品者としての評価（購入者から自分への評価）
-            $itemIds = $sellingItems->pluck('id');
-            if ($itemIds->count() > 0) {
-                $ratings = \App\Models\Chat::whereIn('item_id', $itemIds)
-                    ->where('user_id', '!=', $user->id)
-                    ->whereNotNull('rating')
-                    ->pluck('rating');
-                if ($ratings->count() > 0) {
-                    $ratingAvg = round($ratings->avg());
-                    $ratingCount = $ratings->count();
-                }
-            }
-        } elseif ($page === 'buy') {
-            // 購入者としての評価（出品者から自分への評価）
-            $itemIds = $purchasedItems->pluck('id');
-            if ($itemIds->count() > 0) {
-                // 出品者id一覧
-                $sellerIds = $purchasedItems->pluck('user_id')->unique();
-                $ratings = \App\Models\Chat::whereIn('item_id', $itemIds)
-                    ->whereIn('user_id', $sellerIds)
-                    ->whereNotNull('rating')
-                    ->pluck('rating');
-                if ($ratings->count() > 0) {
-                    $ratingAvg = round($ratings->avg());
-                    $ratingCount = $ratings->count();
-                }
-            }
-        }
+        // 共通の評価計算メソッドを使用
+        $ratings = $this->calculateUserRatings($user);
 
         $items = $page === 'sell' ? $sellingItems : $purchasedItems;
         return view('mypage', [
@@ -168,9 +138,58 @@ class UserController extends Controller
             'profile' => $profile,
             'items' => $items,
             'page' => $page,
+            'ratingAvg' => $ratings['ratingAvg'],
+            'ratingCount' => $ratings['ratingCount'],
+            'ratingAvgBuyer' => $ratings['ratingAvgBuyer'],
+            'ratingCountBuyer' => $ratings['ratingCountBuyer'],
+        ]);
+    }
+
+    /**
+     * 共通の評価計算メソッド
+     */
+    private function calculateUserRatings($user)
+    {
+        // 出品者としての評価（購入者から自分への評価）
+        $itemIds = \App\Models\Item::where('user_id', $user->id)->pluck('id');
+        $ratingAvg = 0;
+        $ratingCount = 0;
+        if ($itemIds->count() > 0) {
+            $ratings = \App\Models\Chat::whereIn('item_id', $itemIds)
+                ->where('user_id', '!=', $user->id)
+                ->whereNotNull('rating')
+                ->pluck('rating');
+            if ($ratings->count() > 0) {
+                $ratingAvg = round($ratings->avg());
+                $ratingCount = $ratings->count();
+            }
+        }
+        
+        // 購入者としての評価（出品者から自分への評価）
+        $buyerRatings = \App\Models\Chat::where('user_id', $user->id)
+            ->whereNotNull('rating')
+            ->pluck('rating');
+        $ratingAvgBuyer = $buyerRatings->count() > 0 ? round($buyerRatings->avg()) : 0;
+        $ratingCountBuyer = $buyerRatings->count();
+        
+        // デバッグ情報をログに記録
+        \Log::info('UserController calculateUserRatings詳細', [
+            'user_id' => $user->id,
+            'item_ids' => $itemIds->toArray(),
+            'ratings' => $ratings ?? collect(),
+            'rating_avg' => $ratingAvg,
+            'rating_count' => $ratingCount,
+            'buyer_ratings' => $buyerRatings->toArray(),
+            'rating_avg_buyer' => $ratingAvgBuyer,
+            'rating_count_buyer' => $ratingCountBuyer
+        ]);
+        
+        return [
             'ratingAvg' => $ratingAvg,
             'ratingCount' => $ratingCount,
-        ]);
+            'ratingAvgBuyer' => $ratingAvgBuyer,
+            'ratingCountBuyer' => $ratingCountBuyer
+        ];
     }
 
     public function showEditProfile()

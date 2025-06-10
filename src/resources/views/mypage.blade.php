@@ -43,11 +43,9 @@
                     <div class="user-profile__stars-html">
                         <div>
                             @php 
-                                if ($page === 'buy') {
-                                    $avg = $ratingAvgBuyer ?? 0;
-                                } else {
-                                    $avg = $ratingAvg ?? 0;
-                                }
+                                // すべてのタブで統一された評価を表示
+                                // 出品者としての評価（購入者から自分への評価）を表示
+                                $avg = $ratingAvg ?? 0;
                                 // デバッグ情報をログに記録
                                 \Log::info('マイページ星マーク表示', [
                                     'page' => $page,
