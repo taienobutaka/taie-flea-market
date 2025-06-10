@@ -51,14 +51,16 @@
     </div>
     
     <div class="content">
-        <p>{{ $seller->name }}さん、</p>
+        <p>{{ $seller->profile->username ?? $seller->name }}さん、</p>
         
-        <p>{{ $purchaser->name }}さんが、あなたの商品に評価を付けました。</p>
+        <p>{{ $purchaser->profile->username ?? $purchaser->name }}さんが、あなたの商品に評価を付けました。</p>
         
         <div class="item-info">
             <h3>商品情報</h3>
             <p><strong>商品名：</strong>{{ $item->name }}</p>
             <p><strong>価格：</strong>¥{{ number_format($item->price) }}</p>
+            <p><strong>出品者：</strong>{{ $seller->profile->username ?? $seller->name }}</p>
+            <p><strong>評価者：</strong>{{ $purchaser->profile->username ?? $purchaser->name }}</p>
         </div>
         
         <div class="rating">

@@ -288,13 +288,13 @@ class ChatController extends Controller
      */
     public function rate(Request $request, $item_id)
     {
-        $user = auth()->user();
+        $user = auth()->user()->load('profile');
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
         ]);
         
-        // 商品と出品者情報を取得
-        $item = \App\Models\Item::with('user')->find($item_id);
+        // 商品と出品者情報を取得（プロフィールも含む）
+        $item = \App\Models\Item::with('user.profile')->find($item_id);
         if (!$item) {
             return redirect()->back()->with('error', '商品が見つかりません');
         }
@@ -317,7 +317,9 @@ class ChatController extends Controller
             \Mail::to($seller->email)->send(new \App\Mail\RatingNotification($user, $seller, $item, $request->input('rating')));
             \Log::info('評価通知メール送信完了', [
                 'purchaser_id' => $user->id,
+                'purchaser_name' => $user->profile->username ?? $user->name,
                 'seller_id' => $seller->id,
+                'seller_name' => $seller->profile->username ?? $seller->name,
                 'item_id' => $item_id,
                 'rating' => $request->input('rating')
             ]);
