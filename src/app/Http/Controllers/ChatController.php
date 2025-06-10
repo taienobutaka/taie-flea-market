@@ -323,7 +323,7 @@ class ChatController extends Controller
             ]);
         }
         
-        return redirect()->route('purchaser.chat', ['item_id' => $item_id])->with('success', '評価を送信しました');
+        return redirect()->route('items.index')->with('success', '評価を送信しました');
     }
 
     /**
@@ -374,7 +374,7 @@ class ChatController extends Controller
             'saved_at' => $chat->updated_at
         ]);
         
-        return redirect()->route('seller.chat', ['item_id' => $item_id])->with('success', '評価を送信しました');
+        return redirect()->route('items.index')->with('success', '評価を送信しました');
     }
     /**
      * 共通の評価計算メソッド

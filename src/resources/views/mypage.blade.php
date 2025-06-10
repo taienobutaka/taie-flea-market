@@ -19,16 +19,12 @@
                     <input type="hidden" name="page" value="recommended">
                 </form>
                 <nav class="header__nav">
-                    <ul class="header__nav-list">
-                        <li class="header__nav-item">
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="header__nav-link header__nav-link--logout">ログアウト</a>
-                        </li>
-                        <li class="header__nav-item"><a href="{{ route('mypage') }}" class="header__nav-link">マイページ</a></li>
-                        <li class="header__nav-item"><a href="{{ route('sell.form') }}" class="header__nav-link header__nav-link--sell">出品</a></li>
-                    </ul>
+                    <form action="{{ route('logout') }}" method="POST" class="header__nav-form">
+                        @csrf
+                        <button type="submit" class="header__nav-button">ログアウト</button>
+                    </form>
+                    <a href="{{ route('mypage') }}" class="header__nav-item">マイページ</a>
+                    <a href="{{ route('sell.form') }}" class="header__nav-item header__nav-item--sell">出品</a>
                 </nav>
             </header>
 
@@ -149,8 +145,7 @@
                                             @if($item->image_path)
                                                 <img src="{{ asset('storage/' . $item->image_path) }}" 
                                                      alt="{{ $item->name }}" 
-                                                     class="product-card__img"
-                                                     onerror="this.onerror=null; this.src='{{ asset('img/no-image.png') }}';">
+                                                     class="product-card__img">
                                             @else
                                                 <img src="{{ asset('img/no-image.png') }}" 
                                                      alt="No Image"

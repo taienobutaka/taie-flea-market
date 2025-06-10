@@ -138,51 +138,64 @@ body {
 }
 
 .header__nav-item {
-    margin: 0;
-    padding: 0;
-}
-
-/* ナビゲーションリンク
-   共通スタイル */
-.header__nav-link {
-    display: block;
     width: 135px;
     height: 47px;
-    font-family: "Inter-Regular", Helvetica;
-    font-weight: 400;
+    position: relative;
+    top: 18px;
+    font-family: "Inter", sans-serif;
     font-size: 24px;
     line-height: 47px;
-    text-align: center;
     color: #ffffff;
     text-decoration: none;
-    position: relative;
-    top: 21px;
+    text-align: center;
+    transition: opacity 0.2s;
 }
 
-/* ログアウトリンク
-   特別なスタイル */
-.header__nav-link--logout {
-    width: 135px;
-    height: 47px;
-    font-size: 24px;
-    line-height: 47px;
-    margin-left: 52px;
+.header__nav-item:hover {
+    opacity: 0.8;
 }
 
-/* 出品リンク
-   特別なスタイル（白背景） */
-.header__nav-link--sell {
+/* マイページボタンの位置調整 */
+.header__nav a[href*="mypage"] {
+    margin-left: 0;
+}
+
+/* 出品ボタン */
+.header__nav-item--sell {
     width: 100px;
     height: 50px;
-    background-color: #ffffff;
-    border-radius: 4px;
-    color: #000000;
     position: absolute;
-    right: 11px;
     top: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    right: 110px;
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 4px;
+    line-height: 46px;
+}
+
+/* ログアウトボタン */
+.header__nav-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.header__nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 135px;
+    height: 47px;
+    position: relative;
+    top: 18px;
+    font-family: "Inter", sans-serif;
+    font-size: 24px;
+    line-height: 47px;
+    color: #ffffff;
+    text-align: center;
+    margin-left: -49px;
 }
 
 /* メインコンテンツ

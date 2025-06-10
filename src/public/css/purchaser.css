@@ -249,16 +249,16 @@ body {
 /* --- 画像追加・送信ボタン --- */
 .screen .overlap-5 .rectangle-3,
 .screen .overlap-5.rectangle-3 {
-  position: absolute;
-  width: 143px;
-  height: 44px;
-  top: 0;
-  left: 0;
-  border-radius: 10px;
-  border: 2px solid;
-  border-color: #ff5454;
-  background: #fff;
-  z-index: 1;
+    position: absolute;
+    width: 143px;
+    height: 44px;
+    top: 0;
+    left: 0;
+    border-radius: 10px;
+    border: 2px solid;
+    border-color: #ff5454;
+    background: #fff;
+    z-index: 1;
 }
 .screen .overlap-4 {
     position: absolute;
@@ -315,54 +315,54 @@ body {
     vertical-align: middle;
 }
 .chat-add-image-btn {
-  width: 143px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  border: 2px solid #F55;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-  margin-left: 20px;
-  cursor: pointer;
+    width: 143px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 2px solid #f55;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    margin-left: 20px;
+    cursor: pointer;
 }
 .chat-add-image-btn-text {
-  display: flex;
-  width: 143px;
-  height: 43.491px;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #F55;
-  text-align: center;
-  font-family: Inter, sans-serif;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
+    display: flex;
+    width: 143px;
+    height: 43.491px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #f55;
+    text-align: center;
+    font-family: Inter, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
 }
 
 /* --- 商品画像 --- */
 /* 商品画像の外枠 */
 .screen .overlap-wrapper {
-  position: absolute;
-  width: 205px;
-  height: 206px;
-  top: 119px;
-  left: 299px;
-  overflow: hidden;
-  background: #d9d9d9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0;
+    position: absolute;
+    width: 205px;
+    height: 206px;
+    top: 119px;
+    left: 299px;
+    overflow: hidden;
+    background: #d9d9d9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
 }
 .screen .overlap-6 {
     position: relative;
@@ -377,7 +377,6 @@ body {
     object-fit: cover;
     border-radius: 0;
     position: relative;
-    top: -50px;
 }
 .screen .text-wrapper-9 {
     /* 商品画像テキスト */
@@ -391,7 +390,6 @@ body {
     font-size: 20px;
     border-radius: 0;
     position: relative;
-    top: -50px;
 }
 
 /* --- 取引完了・編集・削除ボタン --- */
@@ -613,488 +611,531 @@ body {
 
 /* --- サイドバー商品リスト --- */
 .sidebar-inner {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-top: 16px;
-  background: #888;
-  min-height: 100vh;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 16px;
+    background: #888;
+    min-height: 100vh;
 }
 .sidebar-title {
-  color: #FFF;
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: #FFF;
-  font-family: Inter, sans-serif;
-  font-size: 30px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: 3px;
-  text-align: center;
-  margin-top: -9px;
-  margin-bottom: 32px;
+    color: #fff;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #fff;
+    font-family: Inter, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-top: -9px;
+    margin-bottom: 32px;
 }
 .sidebar-trades {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
 .sidebar-trade-item {
-  list-style: none;
-  margin-bottom: 43px;
-  text-align: center;
+    list-style: none;
+    margin-bottom: 43px;
+    text-align: center;
 }
 .sidebar-trade-link {
-  display: inline-flex;
-  padding: 2.5px 18.5px 3.5px 19.5px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-  background: #EEEFEB;
-  color: #000;
-  font-family: Inter, sans-serif;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  text-align: center;
-  text-decoration: none;
-  width: auto;
-  min-width: 160px;
-  box-shadow: none;
-  transition: background 0.2s;
-  position: relative;
-  left: 0;
-  top: 20px;
-  margin-left: 0px;
+    display: inline-flex;
+    padding: 2.5px 18.5px 3.5px 19.5px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: #eeefeb;
+    color: #000;
+    font-family: Inter, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+    text-decoration: none;
+    width: auto;
+    min-width: 160px;
+    box-shadow: none;
+    transition: background 0.2s;
+    position: relative;
+    left: 0;
+    top: 20px;
+    margin-left: 0px;
 }
 
 /* --- チャット欄 --- */
 .chat-area {
-  position: absolute;
-  left: 259px; /* サイドバー（.rectangle）の幅に合わせて259pxに */
-  top: 342px; /* 338px+4pxで下線の直後に移動 */
-  right: 0;
-  width: auto;
-  bottom: 0;
-  height: auto;
-  max-height: calc(902px - 338px);
-  background: #fff; /* 画面の背景色に統一 */
-  padding: 30px 40px 30px 40px;
-  box-sizing: border-box;
-  overflow-y: auto;
+    position: absolute;
+    left: 259px; /* サイドバー（.rectangle）の幅に合わせて259pxに */
+    top: 342px; /* 338px+4pxで下線の直後に移動 */
+    right: 0;
+    width: auto;
+    bottom: 0;
+    height: auto;
+    max-height: calc(902px - 338px);
+    background: #fff; /* 画面の背景色に統一 */
+    padding: 30px 40px 30px 40px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 .chat-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 30px 0;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px 0;
 }
 .chat-message {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 24px;
-  max-width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    max-width: 70%;
 }
 .my-message {
-  align-items: flex-end;
-  margin-left: auto;
+    align-items: flex-end;
+    margin-left: auto;
 }
 .other-message {
-  align-items: flex-start;
-  margin-right: auto;
+    align-items: flex-start;
+    margin-right: auto;
 }
 .chat-user-info {
-  display: flex;
-  align-items: center;
-  margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
 }
 .chat-user-img {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #eee;
-  margin-right: 10px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eee;
+    margin-right: 10px;
 }
 .chat-user-img--noimg {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #ccc;
-  color: #888;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  margin-right: 10px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #ccc;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    margin-right: 10px;
 }
 .chat-username {
-  font-size: 15px;
-  color: #333;
-  font-weight: 600;
+    font-size: 15px;
+    color: #333;
+    font-weight: 600;
 }
 .chat-comment {
-  background: #D9D9D9;
-  border-radius: 4px;
-  padding: 12px 18px;
-  font-size: 17px;
-  color: #222;
-  margin-bottom: 4px;
-  word-break: break-all;
+    background: #d9d9d9;
+    border-radius: 4px;
+    padding: 12px 18px;
+    font-size: 17px;
+    color: #222;
+    margin-bottom: 4px;
+    word-break: break-all;
 }
 .my-message .chat-comment {
-  background: #D9D9D9;
+    background: #d9d9d9;
 }
 .other-message .chat-comment {
-  background: #D9D9D9;
+    background: #d9d9d9;
 }
 .chat-actions {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 0;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 0;
 }
 .chat-edit-btn,
 .chat-delete-btn {
-  background: #eee;
-  border: none;
-  border-radius: 4px;
-  padding: 2px 10px;
-  font-size: 13px;
-  color: #333;
-  cursor: pointer;
-  margin-right: 2px;
+    background: #eee;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 10px;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+    margin-right: 2px;
 }
 .chat-edit-btn:hover,
 .chat-delete-btn:hover {
-  background: #ccc;
+    background: #ccc;
 }
 .chat-form {
-  display: flex;
-  gap: 10px;
-  align-items: flex-end;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
 }
 .chat-input {
-  width: 937px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: 4px;
-  border: 1px solid #5F5F5F;
-  font-family: Inter, sans-serif;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  color: #7B7B7B;
-  line-height: normal;
-  padding: 8px 16px;
-  box-sizing: border-box;
+    width: 937px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    border: 1px solid #5f5f5f;
+    font-family: Inter, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    color: #7b7b7b;
+    line-height: normal;
+    padding: 8px 16px;
+    box-sizing: border-box;
 }
 .chat-input::placeholder {
-  color: #7B7B7B;
-  font-family: Inter, sans-serif;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
+    color: #7b7b7b;
+    font-family: Inter, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }
 .chat-send-btn img {
-  position: static;
-  left: unset;
-  margin-top: 15px;
-  margin-left: 3px;
+    position: static;
+    left: unset;
+    margin-top: 15px;
+    margin-left: 3px;
 }
 
 /* --- チャット画像表示用 */
 .chat-image {
-  margin-top: 8px;
-  margin-bottom: 2px;
-  display: flex;
-  align-items: flex-start;
+    margin-top: 8px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: flex-start;
 }
 .chat-image img {
-  max-width: 220px;
-  max-height: 220px;
-  border-radius: 4px;
-  object-fit: contain;
-  box-shadow: 0 1px 6px #ccc;
-  background: #fff;
+    max-width: 220px;
+    max-height: 220px;
+    border-radius: 4px;
+    object-fit: contain;
+    box-shadow: 0 1px 6px #ccc;
+    background: #fff;
 }
 
 /* --- 取引完了モーダル --- */
 .trade-complete-modal {
-  position: fixed;
-  z-index: 2000;
-  left: 0; top: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .trade-complete-modal-content {
-  width: 598px;
-  height: 367px;
-  background: #fdfce6;
-  border-radius: 15px;
-  border: 1px solid #000;
-  position: relative;
-  box-shadow: 0 4px 32px #0002;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  left: 0;
-  top: 0;
-  margin: 0 auto;
-}
-@media (max-width: 700px) {
-  .trade-complete-modal-content {
-    width: 95vw;
-    min-width: 0;
-    height: auto;
-    padding-bottom: 30px;
+    width: 598px;
+    height: 367px;
+    background: #fdfce6;
+    border-radius: 15px;
+    border: 1px solid #000;
+    position: relative;
+    box-shadow: 0 4px 32px #0002;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     left: 0;
     top: 0;
     margin: 0 auto;
-  }
+}
+@media (max-width: 700px) {
+    .trade-complete-modal-content {
+        width: 95vw;
+        min-width: 0;
+        height: auto;
+        padding-bottom: 30px;
+        left: 0;
+        top: 0;
+        margin: 0 auto;
+    }
 }
 .trade-complete-title {
-  font-family: "Inter", Helvetica, Arial, sans-serif;
-  font-size: 35px;
-  color: #000;
-  margin: 20px 0 0 23px;
-  font-weight: 400;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    font-size: 35px;
+    color: #000;
+    margin: 20px 0 0 23px;
+    font-weight: 400;
 }
 .trade-complete-hr {
-  width: 100%;
-  border: none;
-  border-top: 1px solid #888;
-  margin: 18px 0 0 0;
+    width: 100%;
+    border: none;
+    border-top: 1px solid #888;
+    margin: 18px 0 0 0;
 }
 .trade-complete-question {
-  color: #868686;
-  font-size: 20px;
-  font-family: "Inter", Helvetica, Arial, sans-serif;
-  margin: 19px 0 0 23px;
+    color: #868686;
+    font-size: 20px;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    margin: 19px 0 0 23px;
 }
 .trade-complete-stars {
-  margin: 18px 0 0 0; /* 左マージンを0に */
-  display: flex;
-  padding-bottom: 0;
-  position: relative;
+    margin: 18px 0 0 0;
+    display: flex;
+    padding-bottom: 0;
+    position: relative;
+}
+.trade-complete-stars input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 .trade-complete-stars .star {
-  font-size: 90px;
-  color: #D9D9D9;
-  cursor: pointer;
-  transition: color 0.15s;
-  user-select: none;
+    font-size: 90px;
+    color: #d9d9d9;
+    cursor: pointer;
+    transition: color 0.15s;
+    user-select: none;
+}
+/* 各ラジオボタンが選択された時の星の色 */
+#star1:checked ~ .star:nth-child(6) {
+    color: #fff048;
+}
+#star2:checked ~ .star:nth-child(6),
+#star2:checked ~ .star:nth-child(7) {
+    color: #fff048;
+}
+#star3:checked ~ .star:nth-child(6),
+#star3:checked ~ .star:nth-child(7),
+#star3:checked ~ .star:nth-child(8) {
+    color: #fff048;
+}
+#star4:checked ~ .star:nth-child(6),
+#star4:checked ~ .star:nth-child(7),
+#star4:checked ~ .star:nth-child(8),
+#star4:checked ~ .star:nth-child(9) {
+    color: #fff048;
+}
+#star5:checked ~ .star:nth-child(6),
+#star5:checked ~ .star:nth-child(7),
+#star5:checked ~ .star:nth-child(8),
+#star5:checked ~ .star:nth-child(9),
+#star5:checked ~ .star:nth-child(10) {
+    color: #fff048;
 }
 /* --- モーダル下端の下線を常に表示 --- */
 .trade-complete-stars-hr {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 74px;
-  height: 0;
-  border: none;
-  border-bottom: 2px solid #cccccc;
-  width: 100%;
-  z-index: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 74px;
+    height: 0;
+    border: none;
+    border-bottom: 2px solid #cccccc;
+    width: 100%;
+    z-index: 1;
 }
 .trade-complete-submit {
-  position: absolute;
-  right: 23px;
-  bottom: 18px;
-  width: 127px;
-  height: 49px;
-  background: #ff8282;
-  color: #fff;
-  font-size: 24px;
-  font-family: "Inter", Helvetica, Arial, sans-serif;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: normal;
-  transition: background 0.2s;
+    position: absolute;
+    right: 23px;
+    bottom: 18px;
+    width: 127px;
+    height: 49px;
+    background: #ff8282;
+    color: #fff;
+    font-size: 24px;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: normal;
+    transition: background 0.2s;
 }
 .trade-complete-submit:hover {
-  background: #ff5454;
+    background: #ff5454;
 }
 @media (max-width: 700px) {
-  .trade-complete-modal-content {
-    width: 95vw;
-    min-width: 0;
-    height: auto;
-    padding-bottom: 30px;
-  }
-  .trade-complete-stars .star {
-    font-size: 50px;
-  }
-  .trade-complete-title, .trade-complete-question {
-    font-size: 20px;
-  }
-  .trade-complete-submit {
-    width: 90px;
-    height: 38px;
-    font-size: 16px;
-  }
+    .trade-complete-modal-content {
+        width: 95vw;
+        min-width: 0;
+        height: auto;
+        padding-bottom: 30px;
+    }
+    .trade-complete-stars .star {
+        font-size: 50px;
+    }
+    .trade-complete-title,
+    .trade-complete-question {
+        font-size: 20px;
+    }
+    .trade-complete-submit {
+        width: 90px;
+        height: 38px;
+        font-size: 16px;
+    }
 }
 
 /* --- 取引完了モーダル（CSSトリガー対応） --- */
-#trade-complete-modal-toggle:not(:checked) ~ #trade-complete-modal-content-area {
-  display: none !important;
+#trade-complete-modal-toggle:not(:checked)
+    ~ #trade-complete-modal-content-area {
+    display: none !important;
 }
 #trade-complete-modal-toggle:checked ~ #trade-complete-modal-content-area {
-  display: flex !important;
+    display: flex !important;
 }
 .trade-complete-modal-bg {
-  position: fixed;
-  z-index: 2001;
-  left: 0; top: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.25);
-  width: 100vw;
-  height: 100vh;
-  display: block;
-  cursor: pointer;
+    position: fixed;
+    z-index: 2001;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.25);
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    cursor: pointer;
 }
 .trade-complete-modal-content {
-  z-index: 2002;
-  position: relative;
+    z-index: 2002;
+    position: relative;
 }
 
 /* --- 取引完了ボタンのスタイルを指定通りに修正 --- */
 .trade-complete-btn {
-  position: absolute;
-  top: 26px;
-  left: 1200px; /* タイトル右に合わせて調整。必要に応じてpx値を調整してください */
-  width: 165px;
-  height: 54px;
-  flex-shrink: 0;
-  border-radius: 30px;
-  background: #ff8282;
-  color: #fff;
-  font-family: Inter, Helvetica, Arial, sans-serif;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  box-shadow: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1010;
-  transition: background 0.2s;
+    position: absolute;
+    top: 26px;
+    left: 1200px; /* タイトル右に合わせて調整。必要に応じてpx値を調整してください */
+    width: 165px;
+    height: 54px;
+    flex-shrink: 0;
+    border-radius: 30px;
+    background: #ff8282;
+    color: #fff;
+    font-family: Inter, Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1010;
+    transition: background 0.2s;
 }
 .trade-complete-btn:hover {
-  background: #ff5454;
+    background: #ff5454;
 }
 @media (max-width: 700px) {
-  .trade-complete-btn {
-    font-size: 16px;
-    width: 120px;
-    height: 40px;
-    top: 18px;
-    left: 60vw;
-  }
+    .trade-complete-btn {
+        font-size: 16px;
+        width: 120px;
+        height: 40px;
+        top: 18px;
+        left: 60vw;
+    }
 }
 
 /* --- レスポンシブ対応 --- */
 @media (max-width: 1512px) {
-  html, body {
-    width: 100vw;
-    min-width: 320px;
-    overflow-x: hidden;
-  }
-  .screen {
-    width: 100vw;
-    min-width: 320px;
-  }
-  .screen .div {
-    width: 100vw;
-    min-width: 320px;
-    max-width: 1512px;
-    height: calc(100vw * 982 / 1512);
-    max-height: 982px;
-    position: relative;
-    margin: 0 auto;
-  }
-  .screen .overlap,
-  .screen .overlap-group,
-  .screen .line,
-  .screen .img,
-  .screen .rectangle,
-  .screen .text-wrapper,
-  .screen .text-wrapper-2,
-  .screen .ellipse,
-  .screen .text-wrapper-3,
-  .screen .text-wrapper-4,
-  .screen .ellipse-2,
-  .screen .overlap-2,
-  .screen .text-wrapper-5,
-  .screen .rectangle-2,
-  .screen .overlap-3,
-  .screen .rectangle-3,
-  .screen .ellipse-3,
-  .screen .text-wrapper-6,
-  .screen .div-wrapper,
-  .screen .text-wrapper-7,
-  .screen .overlap-4,
-  .screen .inputbuttun,
-  .screen .group,
-  .screen .overlap-5,
-  .screen .text-wrapper-8,
-  .screen .send-image,
-  .screen .overlap-wrapper,
-  .screen .overlap-6,
-  .screen .text-wrapper-9,
-  .screen .text-wrapper-10,
-  .screen .text-wrapper-11,
-  .screen .text-wrapper-12,
-  .screen .overlap-7,
-  .screen .text-wrapper-13,
-  .screen .line-wrapper,
-  .screen .line-2,
-  .screen .div-2,
-  .screen .overlap-group-2,
-  .screen .rectangle-5,
-  .screen .text-wrapper-14,
-  .screen .text,
-  .screen .text-2,
-  .screen .coachtech-white,
-  .screen .text-wrapper-15,
-  .screen .element,
-  .screen .group-2,
-  .screen .group-3,
-  .screen .vector {
-    /* 1512px基準で縮小 */
-    transform: scale(calc(100vw / 1512));
-    transform-origin: top left;
-  }
+    html,
+    body {
+        width: 100vw;
+        min-width: 320px;
+        overflow-x: hidden;
+    }
+    .screen {
+        width: 100vw;
+        min-width: 320px;
+    }
+    .screen .div {
+        width: 100vw;
+        min-width: 320px;
+        max-width: 1512px;
+        height: calc(100vw * 982 / 1512);
+        max-height: 982px;
+        position: relative;
+        margin: 0 auto;
+    }
+    .screen .overlap,
+    .screen .overlap-group,
+    .screen .line,
+    .screen .img,
+    .screen .rectangle,
+    .screen .text-wrapper,
+    .screen .text-wrapper-2,
+    .screen .ellipse,
+    .screen .text-wrapper-3,
+    .screen .text-wrapper-4,
+    .screen .ellipse-2,
+    .screen .overlap-2,
+    .screen .text-wrapper-5,
+    .screen .rectangle-2,
+    .screen .overlap-3,
+    .screen .rectangle-3,
+    .screen .ellipse-3,
+    .screen .text-wrapper-6,
+    .screen .div-wrapper,
+    .screen .text-wrapper-7,
+    .screen .overlap-4,
+    .screen .inputbuttun,
+    .screen .group,
+    .screen .overlap-5,
+    .screen .text-wrapper-8,
+    .screen .send-image,
+    .screen .overlap-wrapper,
+    .screen .overlap-6,
+    .screen .text-wrapper-9,
+    .screen .text-wrapper-10,
+    .screen .text-wrapper-11,
+    .screen .text-wrapper-12,
+    .screen .overlap-7,
+    .screen .text-wrapper-13,
+    .screen .line-wrapper,
+    .screen .line-2,
+    .screen .div-2,
+    .screen .overlap-group-2,
+    .screen .rectangle-5,
+    .screen .text-wrapper-14,
+    .screen .text,
+    .screen .text-2,
+    .screen .coachtech-white,
+    .screen .text-wrapper-15,
+    .screen .element,
+    .screen .group-2,
+    .screen .group-3,
+    .screen .vector {
+        /* 1512px基準で縮小 */
+        transform: scale(calc(100vw / 1512));
+        transform-origin: top left;
+    }
 }
 
 @media (min-width: 1512px) {
-  html, body {
-    width: 100vw;
-    min-width: 1512px;
-    overflow-x: auto;
-  }
-  .screen {
-    width: 100vw;
-    min-width: 1512px;
-  }
-  .screen .div {
-    width: 1512px;
-    height: 982px;
-    margin: 0 auto;
-  }
-  .header, .screen .rectangle-5 {
-    width: 100vw;
-    min-width: 1512px;
-    left: 0;
-  }
+    html,
+    body {
+        width: 100vw;
+        min-width: 1512px;
+        overflow-x: auto;
+    }
+    .screen {
+        width: 100vw;
+        min-width: 1512px;
+    }
+    .screen .div {
+        width: 1512px;
+        height: 982px;
+        margin: 0 auto;
+    }
+    .header,
+    .screen .rectangle-5 {
+        width: 100vw;
+        min-width: 1512px;
+        left: 0;
+    }
 }
