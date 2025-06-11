@@ -68,7 +68,7 @@
 
 チャット機能を追加しました。
 
-![商品詳細画面チャット追加](image.png)
+![alt text](img/image-21.png)
 
 ### マイページ
 
@@ -80,7 +80,7 @@
 <br>
 赤丸の数字は、相手からのチャット件数を表示しています。
 
-![マイページ画面](image-1.png)
+![alt text](img/image-12.png)
 
 マイページ画面の「取引中の商品」をクリックすると、チャット画面に移動します。
 <br>
@@ -92,7 +92,7 @@
 <br>
 購入者から「取引を完了する」ボタンをクリックすると、出品者へ評価できます。
 
-![チャット画面](image-2.png)
+![alt text](img/image-13.png)
 
 購入者から「取引を完了する」ボタンをクリックすると、出品者へ評価できます。
 <br>
@@ -104,9 +104,9 @@
 <br>
 出品者の評価が完了すると、お互いのマイページ画面の「取引中の商品」タブから該当商品はなくなります。
 
-![評価](image-3.png)
+![alt text](img/image-20.png)
 
-![評価メール](image-4.png)
+![alt text](img/image-19.png)
 
 マイページ編集画面では、初回ログイン時で設定したプロフィールを編集して更新できます。
 
@@ -237,21 +237,21 @@ STRIPE_SECRET=your_stripe_secret_key
 
 ## ER 図
 
-![ER図](image-5.png)
+![alt text](img/image-18.png)
 
 ## テーブル仕様
 
-![テーブル仕様](image-6.png)
+![alt text](img/image-17.png)
 
 ## 機能一覧
 
-![バリデーション](image-7.png)
+![alt text](img/image-16.png)
 
 ## 基本設計
 
-![基本設計1](image-8.png)
+![alt text](img/image-15.png)
 
-![基本設計2](image-9.png)
+![基本設計2](img/image-14.png)
 
 ## URL
 
