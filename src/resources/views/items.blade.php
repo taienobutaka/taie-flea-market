@@ -79,7 +79,7 @@
                                         <a href="{{ route('item.show', $item->id) }}" class="product-card__link">
                                             <div class="product-card__image">
                                                 @if($item->image_path)
-                                                    <img src="{{ asset('storage/' . $item->image_path) }}" 
+                                                    <img src="@imageUrl($item->image_path)" 
                                                          alt="{{ $item->name }}" 
                                                          class="product-card__img"
                                                          onerror="this.onerror=null; this.src='{{ asset('img/no-image.png') }}';">

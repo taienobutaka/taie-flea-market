@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
+use App\Helpers\ImageHelper;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // ImageHelperをビューで使用できるように登録
+        Blade::directive('imageUrl', function ($expression) {
+            return "<?php echo App\Helpers\ImageHelper::getImageUrl($expression); ?>";
+        });
     }
 }

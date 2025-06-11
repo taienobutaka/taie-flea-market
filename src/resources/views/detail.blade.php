@@ -59,7 +59,7 @@
             <article class="detail__content">
                 <section class="detail__image">
                     @if($item->image_path)
-                        <img src="{{ asset('storage/' . $item->image_path) }}" alt="{{ $item->name }}" class="detail__product-image">
+                        <img src="@imageUrl($item->image_path)" alt="{{ $item->name }}" class="detail__product-image">
                     @else
                         <div class="detail__no-image">商品画像</div>
                     @endif
@@ -176,7 +176,7 @@
                                 <div class="detail__comment-user">
                                     <div class="detail__user-avatar">
                                         @if($comment->user->profile && $comment->user->profile->image_path)
-                                            <img src="{{ asset('storage/' . $comment->user->profile->image_path) }}" alt="{{ $comment->user->profile->username }}">
+                                            <img src="@imageUrl($comment->user->profile->image_path)" alt="{{ $comment->user->profile->username }}">
                                         @else
                                             <img src="{{ asset('img/no-image.png') }}" alt="{{ $comment->user->profile->username ?? 'ユーザー' }}">
                                         @endif

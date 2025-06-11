@@ -232,7 +232,7 @@ class DatabaseSeeder extends Seeder
                 'description' => '便利なメイクアップセット',
                 'price' => 2500.00,
                 'condition' => '目立った傷や汚れなし',
-                'image_path' => 'img/items/1749565642_外出メイクアップセット.jpg',
+                'image_path' => 'img/items/1749565642_outdoor_makeup_set.jpg',
                 'category' => '["ladies","cosmetics"]',
                 'user_id' => 2,
                 'status' => 'available',

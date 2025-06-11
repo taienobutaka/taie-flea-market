@@ -30,9 +30,9 @@
 
             <main class="main-content">
                 <section class="user-profile">
-                    <div class="user-profile__image">
-                        @if(isset($profile) && $profile && $profile->image_path)
-                            <img src="{{ asset('storage/' . $profile->image_path) }}" alt="プロフィール画像">
+                    <div class="profile-image">
+                        @if($profile && $profile->image_path)
+                            <img src="@imageUrl($profile->image_path)" alt="プロフィール画像" class="profile-image-preview">
                         @endif
                     </div>
                     <h1 class="user-profile__name">{{ $profile->username ?? 'ユーザー名' }}</h1>
@@ -143,7 +143,7 @@
                                     <a href="{{ $link }}" class="product-card__link">
                                         <div class="product-card__image">
                                             @if($item->image_path)
-                                                <img src="{{ asset('storage/' . $item->image_path) }}" 
+                                                <img src="@imageUrl($item->image_path)" 
                                                      alt="{{ $item->name }}" 
                                                      class="product-card__img">
                                             @else
