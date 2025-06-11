@@ -30,9 +30,9 @@
 
             <main class="main-content">
                 <section class="user-profile">
-                    <div class="profile-image">
+                    <div class="user-profile__image">
                         @if($profile && $profile->image_path)
-                            <img src="@imageUrl($profile->image_path)" alt="プロフィール画像" class="profile-image-preview">
+                            <img src="{{ asset('storage/' . $profile->image_path) }}" alt="プロフィール画像" class="profile-image-preview">
                         @endif
                     </div>
                     <h1 class="user-profile__name">{{ $profile->username ?? 'ユーザー名' }}</h1>

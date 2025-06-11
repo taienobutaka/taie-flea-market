@@ -46,7 +46,7 @@
           <!-- ヘッダー下の円形枠に出品者プロフィール画像 -->
           <div class="ellipse">
             @if($item && $item->user && $item->user->profile && $item->user->profile->image_path)
-                <img src="@imageUrl($item->user->profile->image_path)" alt="出品者画像" style="width:79px;height:79px;border-radius:50%;object-fit:cover;" />
+                <img src="{{ asset('storage/' . $item->user->profile->image_path) }}" alt="出品者画像" style="width:79px;height:79px;border-radius:50%;object-fit:cover;" />
             @else
                 <div style="width:79px;height:79px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;">No Image</div>
             @endif
@@ -94,13 +94,13 @@
                     @if($chat->user_id == auth()->id())
                       <span class="chat-username">{{ $chat->user ? $chat->user->username : 'ユーザー' }}</span>
                       @if($chat->user && $chat->user->profile && $chat->user->profile->image_path)
-                        <img src="@imageUrl($chat->user->profile->image_path)" alt="{{ $chat->user->username }}" class="chat-user-img">
+                        <img src="{{ asset('storage/' . $chat->user->profile->image_path) }}" alt="{{ $chat->user->username }}" class="chat-user-img">
                       @else
                         <div class="chat-user-img chat-user-img--noimg">No Image</div>
                       @endif
                     @else
                       @if($chat->user && $chat->user->profile && $chat->user->profile->image_path)
-                        <img src="@imageUrl($chat->user->profile->image_path)" alt="{{ $chat->user->username }}" class="chat-user-img">
+                        <img src="{{ asset('storage/' . $chat->user->profile->image_path) }}" alt="{{ $chat->user->username }}" class="chat-user-img">
                       @else
                         <div class="chat-user-img chat-user-img--noimg">No Image</div>
                       @endif

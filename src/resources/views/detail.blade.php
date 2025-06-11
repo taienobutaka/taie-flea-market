@@ -176,7 +176,7 @@
                                 <div class="detail__comment-user">
                                     <div class="detail__user-avatar">
                                         @if($comment->user->profile && $comment->user->profile->image_path)
-                                            <img src="@imageUrl($comment->user->profile->image_path)" alt="{{ $comment->user->profile->username }}">
+                                            <img src="{{ asset('storage/' . $comment->user->profile->image_path) }}" alt="{{ $comment->user->profile->username }}">
                                         @else
                                             <img src="{{ asset('img/no-image.png') }}" alt="{{ $comment->user->profile->username ?? 'ユーザー' }}">
                                         @endif

@@ -75,8 +75,8 @@
               </div>
           </div>
           <div class="ellipse">
-            @if($sellerProfile && $sellerProfile->image_path)
-                <img src="{{ asset('storage/' . $sellerProfile->image_path) }}" alt="プロフィール画像" style="width:79px;height:79px;border-radius:50%;object-fit:cover;" />
+            @if($item && $item->user && $item->user->profile && $item->user->profile->image_path)
+                <img src="{{ asset('storage/' . $item->user->profile->image_path) }}" alt="プロフィール画像" style="width:79px;height:79px;border-radius:50%;object-fit:cover;" />
             @else
                 <div style="width:79px;height:79px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;">No Image</div>
             @endif
