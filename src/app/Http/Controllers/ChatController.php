@@ -11,6 +11,12 @@ class ChatController extends Controller
     {
         $itemId = $request->query('item_id');
         $item = \App\Models\Item::with('user.profile')->find($itemId);
+        $user = auth()->user();
+        // 購入者でなければアクセス不可
+        $isPurchased = \App\Models\Purchase::where('item_id', $itemId)->where('user_id', $user->id)->exists();
+        if (!$isPurchased) {
+            return redirect()->route('mypage')->with('error', '購入者のみチャットが利用できます。');
+        }
         $seller = $item ? $item->user : null;
         $sellerProfile = $seller ? $seller->profile : null;
         // チャット一覧（この商品のチャット）
@@ -18,7 +24,21 @@ class ChatController extends Controller
         // サイドバー用：ユーザーが関わる全チャットの商品一覧
         $user = auth()->user();
         $sidebarItemIds = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id')->unique();
-        $sidebarItems = \App\Models\Item::whereIn('id', $sidebarItemIds)->get();
+        // 出品者が購入者へ評価した商品は除外
+        $filteredSidebarItemIds = $sidebarItemIds->filter(function($itemId) use ($user) {
+            $item = \App\Models\Item::find($itemId);
+            if (!$item) return false;
+            // 出品者が自分の場合、評価済みなら除外
+            if ($item->user_id === $user->id) {
+                $sellerRated = \App\Models\Chat::where('item_id', $itemId)
+                    ->where('user_id', $user->id)
+                    ->whereNotNull('rating')
+                    ->exists();
+                return !$sellerRated;
+            }
+            return true;
+        });
+        $sidebarItems = \App\Models\Item::whereIn('id', $filteredSidebarItemIds)->get();
         // デバッグログ追加
         \Log::debug('purchaser sidebar debug', [
             'user_id' => $user ? $user->id : null,
@@ -77,16 +97,25 @@ class ChatController extends Controller
         if ($itemId) {
             $items = \App\Models\Item::where('id', $itemId)->get();
         } else {
-            $chatItemIds = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id');
-            
-            // 出品者の場合：自分が購入者へ評価した商品のみを除外
-            // 購入者の場合：自分が出品者へ評価した商品のみを除外
+            // 出品者か購入者かで分岐
+            $soldItemIds = \App\Models\Item::where('user_id', $user->id)
+                ->where('status', 'sold')
+                ->pluck('id');
+            if ($soldItemIds->count() > 0) {
+                // 出品者：自分が出品した sold 商品
+                $allItemIds = $soldItemIds;
+            } else {
+                // 購入者：購入した商品ID＋チャット履歴
+                $purchasedItemIds = \App\Models\Purchase::where('user_id', $user->id)->pluck('item_id');
+                $chatItemIds = \App\Models\Chat::where('user_id', $user->id)->pluck('item_id');
+                $allItemIds = $chatItemIds->merge($purchasedItemIds)->unique();
+            }
+            // 取引完了済み（評価済み）は除外
             $ratedItemIds = collect();
-            foreach ($chatItemIds as $chatItemId) {
+            foreach ($allItemIds as $chatItemId) {
                 $item = \App\Models\Item::find($chatItemId);
                 if ($item) {
                     if ($user->id === $item->user_id) {
-                        // 出品者の場合：自分が購入者へ評価したかチェック
                         $purchaserId = \App\Models\Chat::where('item_id', $chatItemId)
                             ->where('user_id', '!=', $user->id)
                             ->orderByDesc('id')
@@ -101,7 +130,6 @@ class ChatController extends Controller
                             }
                         }
                     } else {
-                        // 購入者の場合：自分が出品者へ評価したかチェック
                         $buyerRated = \App\Models\Chat::where('item_id', $chatItemId)
                             ->where('user_id', $user->id)
                             ->whereNotNull('rating')
@@ -112,8 +140,7 @@ class ChatController extends Controller
                     }
                 }
             }
-            
-            $items = \App\Models\Item::whereIn('id', $chatItemIds)
+            $items = \App\Models\Item::whereIn('id', $allItemIds)
                 ->whereNotIn('id', $ratedItemIds)
                 ->get();
         }

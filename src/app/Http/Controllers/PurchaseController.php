@@ -298,6 +298,26 @@ class PurchaseController extends Controller
                     // 商品のステータスを更新
                     $item->update(['status' => 'sold']);
 
+                    // 購入直後にチャットレコードを必ず作成（購入者・出品者両方）
+                    $buyerId = $purchase->user_id;
+                    $sellerId = $item->user_id;
+                    // 購入者のチャット
+                    if (!\App\Models\Chat::where('item_id', $item->id)->where('user_id', $buyerId)->exists()) {
+                        \App\Models\Chat::create([
+                            'item_id' => $item->id,
+                            'user_id' => $buyerId,
+                            'comment' => null
+                        ]);
+                    }
+                    // 出品者のチャット
+                    if (!\App\Models\Chat::where('item_id', $item->id)->where('user_id', $sellerId)->exists()) {
+                        \App\Models\Chat::create([
+                            'item_id' => $item->id,
+                            'user_id' => $sellerId,
+                            'comment' => null
+                        ]);
+                    }
+
                     DB::commit();
 
                     \Log::info('購入処理完了', [

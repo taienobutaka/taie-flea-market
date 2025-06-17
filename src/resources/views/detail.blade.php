@@ -106,25 +106,6 @@
                             <img src="{{ asset('img/comment.png') }}" alt="コメント" class="detail__comment-icon">
                             <span class="detail__count">{{ $item->comments->count() }}</span>
                         </div>
-                        @auth
-                        <div class="detail__chat-button">
-                            <form action="{{ route('chat.start') }}" method="POST" style="display:inline;">
-                                @csrf
-                                <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                <button type="submit" class="chat-button" title="チャットへ移動" style="background:none;border:none;padding:0;cursor:pointer;">
-                                    <img src="{{ asset('img/send.jpg') }}" alt="チャット" class="chat-icon">
-                                    <span class="chat-label">チャット</span>
-                                </button>
-                            </form>
-                        </div>
-                        @else
-                        <div class="detail__chat-button">
-                            <a href="{{ route('login') }}" class="chat-button" title="チャット機能はログインが必要です" style="background:none;border:none;padding:0;cursor:pointer;">
-                                <img src="{{ asset('img/send.jpg') }}" alt="チャット" class="chat-icon">
-                                <span class="chat-label">チャット</span>
-                            </a>
-                        </div>
-                        @endauth
                     </div>
 
                     <section class="detail__purchase">

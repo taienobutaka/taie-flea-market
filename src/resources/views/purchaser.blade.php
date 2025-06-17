@@ -89,7 +89,7 @@
             @endif
           </div>
           <div class="text-wrapper-3">{{ $item ? '¥' . number_format($item->price) : '商品価格' }}</div>
-          <div class="text-wrapper-4">{{ $item ? $item->name : '商品名' }}</div>
+          <div class="text-wrapper-4" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;display:block;">{{ $item ? $item->name : '商品名' }}</div>
 
           <div class="chat-area">
             <ul class="chat-list">
